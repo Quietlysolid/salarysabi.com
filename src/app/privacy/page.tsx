@@ -52,7 +52,7 @@ export default function PrivacyPage() {
       <section>
         <h2>Early-access email</h2>
         <p>
-          If you join the payroll early-access list, we store your email address,
+          If you join an early-access list, we store your email address,
           the date you consented and the signup source in a private database
           operated by Supabase. We use it only to send the launch update you
           requested. You may ask us to remove it at any time.

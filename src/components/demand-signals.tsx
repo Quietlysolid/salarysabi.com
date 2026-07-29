@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { track } from "@/components/analytics";
+import { EarlyAccessForm } from "@/components/early-access-form";
 
 export function DemandSignals() {
-  const [noted, setNoted] = useState(false);
+  const [showPayslipSignup, setShowPayslipSignup] = useState(false);
 
   function chooseVerification() {
     track("verify_interest");
-    setNoted(true);
+    setShowPayslipSignup(true);
   }
 
   function choosePayroll() {
@@ -36,11 +37,21 @@ export function DemandSignals() {
           <strong>I need payroll for my team</strong>
         </button>
       </div>
-      {noted && (
-        <p className="interest-confirmation" role="status">
-          Thanks. Your interest was counted. Payslip verification is being
-          considered for the next release.
-        </p>
+      {showPayslipSignup && (
+        <div className="employee-interest-panel">
+          <div>
+            <strong>Want to know when payslip checking is ready?</strong>
+            <p>Leave your email and we will send one launch update.</p>
+          </div>
+          <EarlyAccessForm
+            source="payslip_checker"
+            idPrefix="payslip"
+            label="Email me when it launches"
+            placeholder="you@email.com"
+            buttonText="Notify me"
+            successMessage="You are on the payslip-checker list."
+          />
+        </div>
       )}
     </section>
   );

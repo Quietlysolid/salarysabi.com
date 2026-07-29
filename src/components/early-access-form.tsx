@@ -1,22 +1,74 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { track } from "@/components/analytics";
+import type { AnalyticsEvent } from "@/lib/launch";
 
 type FormState = "idle" | "submitting" | "success" | "error";
+type SignupSource = "payslip_checker" | "employer_payroll";
 
-export function EarlyAccessForm() {
+const eventNames: Record<
+  SignupSource,
+  { viewed: AnalyticsEvent; submitted: AnalyticsEvent; succeeded: AnalyticsEvent }
+> = {
+  payslip_checker: {
+    viewed: "payslip_signup_viewed",
+    submitted: "payslip_signup_submitted",
+    succeeded: "payslip_signup_succeeded",
+  },
+  employer_payroll: {
+    viewed: "payroll_signup_viewed",
+    submitted: "payroll_signup_submitted",
+    succeeded: "payroll_signup_succeeded",
+  },
+};
+
+export function EarlyAccessForm({
+  source,
+  idPrefix,
+  label,
+  placeholder,
+  buttonText = "Join the list",
+  successMessage,
+}: {
+  source: SignupSource;
+  idPrefix: string;
+  label: string;
+  placeholder: string;
+  buttonText?: string;
+  successMessage: string;
+}) {
   const startedAt = useRef(0);
+  const formRef = useRef<HTMLFormElement>(null);
   const [state, setState] = useState<FormState>("idle");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     startedAt.current = Date.now();
-  }, []);
+    const form = formRef.current;
+    if (!form) return;
+
+    let recorded = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !recorded) {
+          recorded = true;
+          track(eventNames[source].viewed);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(form);
+    return () => observer.disconnect();
+  }, [source]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setState("submitting");
     setMessage("");
+    track(eventNames[source].submitted);
+
     const form = event.currentTarget;
     const data = new FormData(form);
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -39,26 +91,28 @@ export function EarlyAccessForm() {
       const response = await fetch(
         `${url.replace(/\/$/, "")}/rest/v1/early_access_signups`,
         {
-        method: "POST",
-        headers: {
-          apikey: key,
-          Authorization: `Bearer ${key}`,
-          "Content-Type": "application/json",
-          Prefer: "return=minimal",
+          method: "POST",
+          headers: {
+            apikey: key,
+            Authorization: `Bearer ${key}`,
+            "Content-Type": "application/json",
+            Prefer: "return=minimal",
+          },
+          body: JSON.stringify({
+            email: String(data.get("email") || "").trim().toLowerCase(),
+            consented_at: new Date().toISOString(),
+            source,
+          }),
         },
-        body: JSON.stringify({
-          email: String(data.get("email") || "").trim().toLowerCase(),
-          consented_at: new Date().toISOString(),
-          source: "homepage",
-        }),
-      },
       );
       if (!response.ok && response.status !== 409) {
         throw new Error("We could not save your email. Please try again.");
       }
+
       form.reset();
       setState("success");
-      setMessage("You’re on the list. We’ll email you when team payroll opens.");
+      setMessage(successMessage);
+      track(eventNames[source].succeeded);
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : "Please try again.");
@@ -66,21 +120,21 @@ export function EarlyAccessForm() {
   }
 
   return (
-    <form className="early-access-form" onSubmit={submit}>
-      <label className="email-label" htmlFor="email">
-        Get one email when the payroll beta opens
+    <form className="early-access-form" ref={formRef} onSubmit={submit}>
+      <label className="email-label" htmlFor={`${idPrefix}-email`}>
+        {label}
       </label>
       <div className="email-row">
         <input
-          id="email"
+          id={`${idPrefix}-email`}
           name="email"
           type="email"
-          placeholder="you@business.com"
+          placeholder={placeholder}
           autoComplete="email"
           required
         />
         <button disabled={state === "submitting"} type="submit">
-          {state === "submitting" ? "Joining…" : "Join the list"}
+          {state === "submitting" ? "Joining..." : buttonText}
         </button>
       </div>
       <label className="consent-row">

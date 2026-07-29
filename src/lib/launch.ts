@@ -6,6 +6,12 @@ export const analyticsEvents = [
   "print_opened",
   "verify_interest",
   "payroll_interest",
+  "payslip_signup_viewed",
+  "payslip_signup_submitted",
+  "payslip_signup_succeeded",
+  "payroll_signup_viewed",
+  "payroll_signup_submitted",
+  "payroll_signup_succeeded",
 ] as const;
 
 export type AnalyticsEvent = (typeof analyticsEvents)[number];

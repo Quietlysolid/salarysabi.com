@@ -1012,6 +1012,117 @@ nav {
   font-weight: 700;
 }
 
+.employee-interest-panel {
+  grid-column: 2;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  align-items: center;
+  gap: 22px;
+  border: 1px solid #c8d8cd;
+  border-radius: 14px;
+  background: #edf5eb;
+}
+
+.employee-interest-panel > div > strong {
+  color: var(--green-dark);
+  font-size: 14px;
+}
+
+.employee-interest-panel > div > p {
+  margin-top: 5px;
+}
+
+.employee-interest-panel .email-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.employee-interest-panel .email-row {
+  display: flex;
+  border: 1px solid #aebbb3;
+  border-radius: 10px;
+  background: var(--white);
+  overflow: hidden;
+}
+
+.employee-interest-panel .email-row input {
+  min-width: 0;
+  flex: 1;
+  padding: 12px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+.employee-interest-panel button {
+  margin: 4px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--white);
+  background: var(--green);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.employee-interest-panel .consent-row {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 17px 1fr;
+  align-items: start;
+  gap: 9px;
+  color: #55635d;
+  cursor: pointer;
+}
+
+.employee-interest-panel .consent-row input {
+  width: 16px;
+  height: 16px;
+  margin: 1px 0 0;
+  accent-color: var(--green);
+}
+
+.employee-interest-panel .consent-copy,
+.employee-interest-panel .consent-copy > span,
+.employee-interest-panel .consent-copy small {
+  display: block;
+}
+
+.employee-interest-panel .consent-copy {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.employee-interest-panel .consent-copy > span {
+  font-weight: 600;
+}
+
+.employee-interest-panel .consent-copy small {
+  margin-top: 2px;
+  color: #75817b;
+  font-size: 11px;
+}
+
+.employee-interest-panel .form-message {
+  display: block;
+  margin-top: 8px;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.employee-interest-panel .form-message:empty {
+  display: none;
+}
+
+.employee-interest-panel .form-message.error {
+  color: #a1372a;
+}
+
 .explanation h2,
 .section-intro h2 {
   max-width: 600px;
@@ -1521,6 +1632,10 @@ footer {
     margin: -20px 0 0;
   }
 
+  .employee-interest-panel {
+    grid-column: 1;
+  }
+
   .tax-band-section,
   .payroll-banner {
     gap: 45px;
@@ -1690,6 +1805,20 @@ footer {
 
   .demand-actions {
     grid-template-columns: 1fr;
+  }
+
+  .employee-interest-panel {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .employee-interest-panel .email-row {
+    flex-direction: column;
+  }
+
+  .employee-interest-panel .email-row input,
+  .employee-interest-panel button {
+    min-height: 44px;
   }
 
   .payroll-banner {

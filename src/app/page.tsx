@@ -107,7 +107,13 @@ export default function Home() {
             saved employees, branded payslips and monthly payroll registers.
           </p>
         </div>
-        <EarlyAccessForm />
+        <EarlyAccessForm
+          source="employer_payroll"
+          idPrefix="payroll"
+          label="Get one email when the payroll beta opens"
+          placeholder="you@business.com"
+          successMessage="You are on the payroll early-access list."
+        />
       </section>
 
       <section className="source-note">
