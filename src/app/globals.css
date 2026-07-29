@@ -328,8 +328,7 @@ nav {
   box-shadow: 0 2px 7px rgba(19, 35, 29, 0.08);
 }
 
-.amount-field > span,
-.deduction-grid label > span {
+.amount-field > span {
   display: block;
   margin-bottom: 8px;
   color: #47554e;
@@ -416,17 +415,38 @@ nav {
   transform: rotate(180deg);
 }
 
+.deduction-flow {
+  margin: -5px 0 19px;
+}
+
+.deduction-intro {
+  margin-bottom: 13px;
+  padding: 13px 15px;
+  border-left: 3px solid var(--green);
+  border-radius: 0 10px 10px 0;
+  background: #edf5eb;
+}
+
+.deduction-intro strong {
+  display: block;
+  color: var(--green-dark);
+  font-size: 11px;
+}
+
+.deduction-intro p {
+  margin: 4px 0 0;
+  color: #617068;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
 .deduction-grid {
-  max-height: 275px;
-  padding: 3px 7px 10px 1px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  overflow-y: auto;
+  gap: 9px;
 }
 
 .deduction-period {
-  margin: -7px 0 13px;
+  margin: 0 0 13px;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -455,19 +475,47 @@ nav {
   background: var(--green);
 }
 
-.deduction-grid label > span {
-  margin-bottom: 1px;
+.deduction-field {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 142px;
+  gap: 3px 16px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fbfcfa;
 }
 
-.deduction-grid label > small {
+.deduction-field .deduction-kicker {
+  grid-column: 1;
   display: block;
-  margin-bottom: 6px;
-  color: #8a938e;
+  margin-bottom: 1px;
+  color: var(--green);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.deduction-field > strong {
+  grid-column: 1;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.deduction-field > small {
+  grid-column: 1;
+  display: block;
+  color: #6f7b75;
   font-size: 9px;
+  line-height: 1.45;
 }
 
 .small-currency-input {
-  height: 40px;
+  grid-column: 2;
+  grid-row: 1 / 5;
+  align-self: center;
+  height: 44px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -485,7 +533,54 @@ nav {
   font-size: 13px;
 }
 
+.small-currency-input em {
+  color: #87918c;
+  font-size: 8px;
+  font-style: normal;
+}
+
+.deduction-field .field-example {
+  margin-top: 2px;
+  color: #929a96;
+  font-size: 8px;
+}
+
+.other-deductions-toggle {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px dashed #bcc7c0;
+  border-radius: 10px;
+  color: var(--ink);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.other-deductions-toggle strong,
+.other-deductions-toggle small {
+  display: block;
+}
+
+.other-deductions-toggle strong {
+  font-size: 10px;
+}
+
+.other-deductions-toggle small {
+  margin-top: 2px;
+  color: #7a847f;
+  font-size: 8px;
+}
+
+.other-deduction-grid {
+  margin-top: 9px;
+}
+
 .rent-feedback {
+  grid-column: 1 / -1;
   margin-top: 7px;
   padding: 8px 10px;
   display: grid;
@@ -572,6 +667,13 @@ nav {
   letter-spacing: -2.5px;
 }
 
+.result-explainer {
+  display: block;
+  margin-top: 7px;
+  color: #9db9ad;
+  font-size: 9px;
+}
+
 .per-month {
   margin-left: 9px;
   color: #9db9ad;
@@ -602,6 +704,66 @@ nav {
   margin: 5px 0;
   font-family: var(--font-display), sans-serif;
   font-size: 20px;
+}
+
+.calculation-details {
+  margin-top: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.calculation-details summary {
+  min-height: 64px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.calculation-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.calculation-details summary strong,
+.calculation-details summary small {
+  display: block;
+}
+
+.calculation-details summary strong {
+  font-size: 10px;
+}
+
+.calculation-details summary small {
+  margin-top: 4px;
+  color: #9db9ad;
+  font-size: 8px;
+}
+
+.details-plus {
+  color: var(--lime);
+  font-size: 20px;
+  transition: transform 160ms;
+}
+
+.calculation-details[open] .details-plus {
+  transform: rotate(45deg);
+}
+
+.calculation-details .breakdown,
+.calculation-details .bands {
+  margin-inline: 15px;
+}
+
+.calculation-details .breakdown {
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.calculation-details .bands {
+  padding-bottom: 15px;
 }
 
 .breakdown,
@@ -1412,6 +1574,36 @@ footer > span {
 
   .deduction-grid {
     grid-template-columns: 1fr;
+  }
+
+  .deduction-period {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .deduction-period > span {
+    width: 100%;
+    margin-bottom: 3px;
+  }
+
+  .deduction-period button {
+    flex: 1;
+    min-height: 34px;
+  }
+
+  .deduction-field {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .small-currency-input {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 7px;
+  }
+
+  .deduction-field .field-example {
+    margin-top: 3px;
   }
 
   .band-row {

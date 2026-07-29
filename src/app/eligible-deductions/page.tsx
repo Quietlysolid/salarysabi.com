@@ -10,28 +10,28 @@ export const metadata: Metadata = {
 
 const deductions = [
   {
-    title: "Pension contribution",
-    text: "Enter the actual annual amount deducted and remitted to an approved Pension Fund Administrator.",
+    title: "Pension: money saved for your retirement",
+    text: "Look for “Pension” on your payslip or PFA statement. Enter the amount deducted from your salary—not the total balance in your retirement account. For example, ₦40,000 monthly equals ₦480,000 yearly.",
   },
   {
-    title: "National Housing Fund (NHF)",
-    text: "Enter the actual annual amount contributed to the National Housing Fund.",
+    title: "NHF: a housing-fund deduction",
+    text: "Look for “NHF” on your payslip. Enter the amount actually deducted. If your payslip does not show NHF, leave it at ₦0.",
   },
   {
-    title: "National Health Insurance Scheme (NHIS)",
-    text: "Enter the actual annual amount deducted and remitted.",
+    title: "NHIS or NHIA: national health insurance",
+    text: "Enter the eligible health-insurance contribution shown on your payslip. An ordinary private HMO payment may not qualify, so check with payroll if you are unsure.",
   },
   {
-    title: "Qualifying mortgage interest",
-    text: "Only the interest component for constructing, purchasing or developing an owner-occupied principal residence qualifies. Do not enter principal repayments.",
+    title: "Mortgage interest: interest on your main home",
+    text: "Enter only the interest charged on a qualifying mortgage for the home you live in. Do not enter the full mortgage payment, the amount repaid on the loan, rent or a mortgage for an investment property.",
   },
   {
-    title: "Life assurance premium",
-    text: "The guidance permits qualifying annual premiums for the employee or spouse, subject to documentary evidence and applicable timing rules.",
+    title: "Life assurance: cover for you or your spouse",
+    text: "Enter qualifying premiums shown on your insurer’s receipt or statement. Do not include car, travel or ordinary health insurance.",
   },
   {
-    title: "Rent relief",
-    text: "The relief is 20% of annual rent attributable to the year, capped at ₦500,000. The calculator derives this from annual rent paid.",
+    title: "Rent relief: part of your home rent",
+    text: "Enter the rent paid for your home and SalarySabi calculates 20%, up to ₦500,000 yearly. For example, ₦1,200,000 annual rent gives ₦240,000 relief. This reduces taxable income; it is not a cash refund.",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function DeductionsPage() {
     <InfoPage
       eyebrow="Before tax bands"
       title="Eligible PAYE deductions explained"
-      intro="Use actual annual amounts supported by appropriate records. The calculator does not infer statutory contributions from one gross salary figure."
+      intro="You do not need to know tax language. Use amounts shown on your payslip, PFA statement, lender statement or receipt. If an item does not apply to you, leave it at ₦0."
     >
       <section>
         <h2>What you can enter</h2>
@@ -57,11 +57,11 @@ export default function DeductionsPage() {
         </div>
       </section>
       <aside className="callout">
-        <strong>Keep supporting evidence.</strong>
+        <strong>Use amounts you can confirm.</strong>
         <p>
-          A calculator estimate does not establish eligibility. The JRB
-          guidance requires appropriate documentary evidence for deductions
-          and prescribed information for rent relief.
+          Keep the payslip, statement or receipt supporting each amount.
+          SalarySabi provides an estimate; your employer or tax adviser can
+          confirm whether a deduction applies to your situation.
         </p>
       </aside>
     </InfoPage>
