@@ -8,7 +8,7 @@ export function InfoHeader() {
       <Link className="brand" href="/">
         <span className="brand-mark">₦</span>
         <span>
-          PAYE<span className="brand-accent">wise</span>
+          Salary<span className="brand-accent">Sabi</span>
         </span>
       </Link>
       <nav aria-label="Information navigation">
@@ -28,7 +28,7 @@ export function InfoFooter() {
       <Link className="brand footer-brand" href="/">
         <span className="brand-mark">₦</span>
         <span>
-          PAYE<span className="brand-accent">wise</span>
+          Salary<span className="brand-accent">Sabi</span>
         </span>
       </Link>
       <div className="footer-links">

@@ -17,7 +17,7 @@ export default function Home() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Nigeria PAYE Calculator 2026",
+    name: "SalarySabi Nigeria PAYE Calculator 2026",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     url: siteUrl,
@@ -35,7 +35,7 @@ export default function Home() {
       <header className="site-header">
         <a className="brand" href="#">
           <span className="brand-mark">₦</span>
-          <span>Nigeria <span className="brand-accent">PAYE</span></span>
+          <span>Salary<span className="brand-accent">Sabi</span></span>
         </a>
         <nav aria-label="Main navigation">
           <a href="#how-it-works">How it works</a>
@@ -144,7 +144,7 @@ export default function Home() {
       <footer>
         <a className="brand footer-brand" href="#">
           <span className="brand-mark">₦</span>
-          <span>Nigeria <span className="brand-accent">PAYE</span></span>
+          <span>Salary<span className="brand-accent">Sabi</span></span>
         </a>
         <div className="home-footer-links">
           <Link href="/how-paye-is-calculated">Methodology</Link>
@@ -152,7 +152,7 @@ export default function Home() {
           <Link href="/privacy">Privacy</Link>
           <Link href="/disclaimer">Disclaimer</Link>
         </div>
-        <span>Rules verified {lastVerified} · Independent calculator</span>
+        <span>SalarySabi · Rules verified {lastVerified}</span>
       </footer>
     </main>
   );

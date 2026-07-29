@@ -3,7 +3,7 @@ import { InfoPage } from "@/components/info-page";
 
 export const metadata: Metadata = {
   title: "Privacy",
-  description: "How Nigeria PAYE Calculator handles calculator information and site data.",
+  description: "How SalarySabi handles calculator information and site data.",
   alternates: { canonical: "/privacy" },
   robots: { index: true, follow: true },
 };

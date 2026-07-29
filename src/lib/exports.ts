@@ -26,7 +26,7 @@ function download(blob: Blob, filename: string) {
 
 function exportRows(inputs: PayeInputs, result: PayeResult) {
   return [
-    ["Nigeria PAYE Calculation", ""],
+    ["SalarySabi PAYE Calculation", ""],
     ["Calculation date", today()],
     ["Ruleset", "Nigeria Tax Act 2025 / JRB PIT Guidelines 2026"],
     ["", ""],
@@ -106,7 +106,7 @@ export function downloadExcel(inputs: PayeInputs, result: PayeResult) {
     new Blob([buildExcelWorkbook(inputs, result)], {
       type: "application/vnd.ms-excel;charset=utf-8",
     }),
-    `nigeria-paye-calculation-${new Date().toISOString().slice(0, 10)}.xls`,
+    `salarysabi-paye-calculation-${new Date().toISOString().slice(0, 10)}.xls`,
   );
 }
 
@@ -133,7 +133,7 @@ export async function downloadPdf(inputs: PayeInputs, result: PayeResult) {
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
-  doc.text("Nigeria PAYE Calculation", left, 18);
+  doc.text("SalarySabi PAYE Calculation", left, 18);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.text(`Generated ${today()} | 2026 rules`, left, 27);
@@ -211,5 +211,5 @@ export async function downloadPdf(inputs: PayeInputs, result: PayeResult) {
     "Estimate based on the Nigeria Tax Act 2025 and JRB Personal Income Tax Guidelines 2026. This document is not tax advice or proof of remittance.";
   doc.text(doc.splitTextToSize(disclaimer, 174), left, y);
 
-  doc.save(`nigeria-paye-calculation-${new Date().toISOString().slice(0, 10)}.pdf`);
+  doc.save(`salarysabi-paye-calculation-${new Date().toISOString().slice(0, 10)}.pdf`);
 }

@@ -16,7 +16,7 @@ const displayFont = Manrope({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Nigeria PAYE Calculator 2026 | Free Salary Tax Calculator",
+  title: "SalarySabi | Nigeria PAYE Calculator 2026",
   description:
     "Calculate Nigerian PAYE under the Nigeria Tax Act 2025, effective 2026. See monthly tax, rent relief, eligible deductions and every tax band.",
   keywords: [
@@ -29,15 +29,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_NG",
-    title: "Nigeria PAYE Calculator 2026",
+    title: "SalarySabi — Nigeria PAYE Calculator 2026",
     description:
       "Calculate monthly and annual Nigerian PAYE with transparent 2026 tax bands and eligible deductions.",
     url: "/",
-    siteName: "Nigeria PAYE Calculator",
+    siteName: "SalarySabi",
   },
   twitter: {
     card: "summary",
-    title: "Nigeria PAYE Calculator 2026",
+    title: "SalarySabi — Nigeria PAYE Calculator 2026",
     description:
       "Free, transparent Nigerian PAYE calculations based on the 2026 rules.",
   },

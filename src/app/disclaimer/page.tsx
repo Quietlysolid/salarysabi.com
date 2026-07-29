@@ -4,7 +4,7 @@ import { InfoPage } from "@/components/info-page";
 export const metadata: Metadata = {
   title: "Tax Calculator Disclaimer",
   description:
-    "Important limitations of Nigeria PAYE Calculator estimates and exported calculations.",
+    "Important limitations of SalarySabi estimates and exported calculations.",
   alternates: { canonical: "/disclaimer" },
 };
 
@@ -13,7 +13,7 @@ export default function DisclaimerPage() {
     <InfoPage
       eyebrow="Important"
       title="Calculator estimates are not tax advice"
-      intro="Nigeria PAYE Calculator is an independent educational tool. It is not operated, endorsed or certified by the Joint Revenue Board or a state revenue authority."
+      intro="SalarySabi is an independent educational tool. It is not operated, endorsed or certified by the Joint Revenue Board or a state revenue authority."
     >
       <section>
         <h2>Confirm your obligations</h2>

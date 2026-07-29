@@ -1,4 +1,4 @@
-# Nigeria PAYE Calculator
+# SalarySabi
 
 A search-first MVP for a free 2026 Nigerian PAYE calculator that can grow into
 lightweight payroll software for small employers.
@@ -76,9 +76,9 @@ Not implemented yet:
 
 ## Launch configuration
 
-The public beta uses the descriptive identity **Nigeria PAYE Calculator** while
-a distinctive payroll brand is cleared. `PAYEwise` was retired before launch
-because an existing payroll business already uses the name.
+The public beta is branded **SalarySabi** at `salarysabi.com`. `PAYEwise` was
+retired before launch because an existing payroll business already uses the
+name.
 
 Apply `supabase/migrations/202607290001_launch_infrastructure.sql` in a Supabase
 project, then configure these server-side environment variables:
