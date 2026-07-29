@@ -94,3 +94,6 @@ Row Level Security so browsers can insert signups and increment aggregate
 analytics but cannot read either table. Never use a service-role key here.
 Without the Supabase values, calculations remain functional, analytics fail
 silently, and the early-access form returns a temporary-unavailable message.
+
+Because these `NEXT_PUBLIC_` values are compiled into the static browser bundle,
+the production artifact must be built in an environment where they are present.
