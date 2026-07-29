@@ -32,11 +32,6 @@ const money = new Intl.NumberFormat("en-NG", {
   maximumFractionDigits: 0,
 });
 
-const compactMoney = new Intl.NumberFormat("en-NG", {
-  notation: "compact",
-  maximumFractionDigits: 1,
-});
-
 function parseMoney(value: string) {
   const parsed = Number(value.replace(/[^\d.]/g, ""));
   return Number.isFinite(parsed) ? parsed : 0;
@@ -50,47 +45,47 @@ function formatInput(value: string) {
 const deductionFields: Array<{
   name: Exclude<FieldName, "gross">;
   label: string;
-  hint: string;
 }> = [
-  { name: "pension", label: "Pension contribution", hint: "Actual annual amount" },
-  { name: "nhf", label: "NHF contribution", hint: "Actual annual amount" },
-  { name: "nhis", label: "NHIS contribution", hint: "Actual annual amount" },
+  { name: "pension", label: "Pension contribution" },
+  { name: "nhf", label: "NHF contribution" },
+  { name: "nhis", label: "NHIS contribution" },
   {
     name: "mortgage",
     label: "Qualifying mortgage interest",
-    hint: "Interest only, annual",
   },
   {
     name: "insurance",
     label: "Life insurance premium",
-    hint: "Self or spouse, annual",
   },
   {
     name: "rent",
     label: "Annual rent paid",
-    hint: "We calculate 20%, capped at ₦500,000",
   },
 ];
 
 export function Calculator() {
   const [values, setValues] = useState(initialValues);
   const [period, setPeriod] = useState<"monthly" | "annual">("monthly");
+  const [deductionPeriod, setDeductionPeriod] = useState<"monthly" | "annual">(
+    "annual",
+  );
   const [showDeductions, setShowDeductions] = useState(false);
   const [hasCalculated, setHasCalculated] = useState(true);
   const [exporting, setExporting] = useState<"pdf" | "excel" | null>(null);
 
   const inputs = useMemo(() => {
     const gross = parseMoney(values.gross);
+    const deductionMultiplier = deductionPeriod === "monthly" ? 12 : 1;
     return {
       annualGrossIncome: period === "monthly" ? gross * 12 : gross,
-      pensionContribution: parseMoney(values.pension),
-      nhfContribution: parseMoney(values.nhf),
-      nhisContribution: parseMoney(values.nhis),
-      mortgageInterest: parseMoney(values.mortgage),
-      lifeInsurancePremium: parseMoney(values.insurance),
-      annualRentPaid: parseMoney(values.rent),
+      pensionContribution: parseMoney(values.pension) * deductionMultiplier,
+      nhfContribution: parseMoney(values.nhf) * deductionMultiplier,
+      nhisContribution: parseMoney(values.nhis) * deductionMultiplier,
+      mortgageInterest: parseMoney(values.mortgage) * deductionMultiplier,
+      lifeInsurancePremium: parseMoney(values.insurance) * deductionMultiplier,
+      annualRentPaid: parseMoney(values.rent) * deductionMultiplier,
     };
-  }, [period, values]);
+  }, [deductionPeriod, period, values]);
 
   const result = useMemo(() => calculatePaye(inputs), [inputs]);
 
@@ -137,6 +132,7 @@ export function Calculator() {
           <div>
             <span className="eyebrow">2026 rules</span>
             <h2>Calculate your PAYE</h2>
+            <small className="live-note">Your estimate updates as you type</small>
           </div>
           <span className="status-pill">
             <span />
@@ -165,7 +161,7 @@ export function Calculator() {
           <span>
             {period === "monthly"
               ? "Gross monthly employment income"
-              : "Total annual emolument"}
+              : "Total yearly employment income"}
           </span>
           <div className="currency-input">
             <span>₦</span>
@@ -193,11 +189,37 @@ export function Calculator() {
         </button>
 
         {showDeductions && (
-          <div className="deduction-grid">
+          <>
+            <div className="deduction-period">
+              <span>My deduction amounts are</span>
+              <button
+                className={deductionPeriod === "monthly" ? "active" : ""}
+                type="button"
+                onClick={() => setDeductionPeriod("monthly")}
+              >
+                Monthly
+              </button>
+              <button
+                className={deductionPeriod === "annual" ? "active" : ""}
+                type="button"
+                onClick={() => setDeductionPeriod("annual")}
+              >
+                Yearly
+              </button>
+            </div>
+            <div className="deduction-grid">
             {deductionFields.map((field) => (
               <label className={field.name === "rent" ? "rent-field" : ""} key={field.name}>
-                <span>{field.label}</span>
-                <small>{field.hint}</small>
+                <span>
+                  {field.name === "rent"
+                    ? `${deductionPeriod === "monthly" ? "Monthly" : "Yearly"} rent paid`
+                    : field.label}
+                </span>
+                <small>
+                  {field.name === "rent"
+                    ? `Enter ${deductionPeriod} rent; we apply 20%, capped at ₦500,000 yearly`
+                    : `${deductionPeriod === "monthly" ? "Monthly" : "Yearly"} amount`}
+                </small>
                 <div className="small-currency-input">
                   <span>₦</span>
                   <input
@@ -220,11 +242,12 @@ export function Calculator() {
                 )}
               </label>
             ))}
-          </div>
+            </div>
+          </>
         )}
 
         <button className="primary-button" type="submit">
-          Calculate my PAYE
+          View my result
           <span aria-hidden="true">→</span>
         </button>
         <p className="privacy-note">No signup. Your figures stay in this browser.</p>
@@ -240,9 +263,9 @@ export function Calculator() {
 
         <div className="result-summary">
           <div>
-            <span>Income after tax</span>
+            <span>Income after PAYE</span>
             <strong>{money.format(result.monthlyIncomeAfterTax)}</strong>
-            <small>Monthly gross less PAYE only</small>
+            <small>Excludes pension, NHF and other payroll deductions</small>
           </div>
           <div>
             <span>Effective tax rate</span>
@@ -274,7 +297,7 @@ export function Calculator() {
               </div>
             )}
             <div className="chargeable">
-              <dt>Chargeable income</dt>
+              <dt>Income taxed after eligible deductions</dt>
               <dd>{money.format(result.chargeableIncome)}</dd>
             </div>
             <div>
@@ -317,9 +340,9 @@ export function Calculator() {
           <div>
             <span className="mini-icon">✓</span>
             <p>
-              <strong>Calculated with 2026 tax bands</strong>
+              <strong>Verified against the official JRB example</strong>
               <small>
-                Chargeable income: ₦{compactMoney.format(result.chargeableIncome)}
+                ₦2.4m yearly income → ₦20,000 monthly PAYE
               </small>
             </p>
           </div>

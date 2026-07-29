@@ -49,6 +49,7 @@ a {
 .explanation,
 .tax-band-section,
 .payroll-banner,
+.demand-signals,
 .source-note,
 footer {
   width: min(1180px, calc(100% - 48px));
@@ -271,6 +272,13 @@ nav {
   font-size: 28px;
 }
 
+.live-note {
+  display: block;
+  margin-top: 5px;
+  color: #7a847f;
+  font-size: 9px;
+}
+
 .status-pill {
   display: flex;
   align-items: center;
@@ -415,6 +423,36 @@ nav {
   grid-template-columns: 1fr 1fr;
   gap: 14px;
   overflow-y: auto;
+}
+
+.deduction-period {
+  margin: -7px 0 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6c7771;
+  font-size: 9px;
+}
+
+.deduction-period > span {
+  margin-right: auto;
+}
+
+.deduction-period button {
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #65716b;
+  background: var(--white);
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.deduction-period button.active {
+  border-color: var(--green);
+  color: var(--white);
+  background: var(--green);
 }
 
 .deduction-grid label > span {
@@ -726,6 +764,80 @@ nav {
   grid-template-columns: 1fr 1fr;
   align-items: end;
   gap: 80px;
+}
+
+.demand-signals {
+  margin-top: 28px;
+  padding: 34px 38px;
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  align-items: center;
+  gap: 35px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.demand-signals h2 {
+  margin: 0;
+  font-family: var(--font-display), sans-serif;
+  font-size: 25px;
+  letter-spacing: -1.1px;
+}
+
+.demand-signals p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.demand-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.demand-actions button {
+  min-height: 78px;
+  padding: 15px 17px;
+  border: 1px solid #c8d1cb;
+  border-radius: 12px;
+  color: var(--ink);
+  background: var(--white);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms, transform 160ms, box-shadow 160ms;
+}
+
+.demand-actions button:hover {
+  border-color: var(--green);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(13, 104, 73, 0.08);
+}
+
+.demand-actions span,
+.demand-actions strong {
+  display: block;
+}
+
+.demand-actions span {
+  margin-bottom: 5px;
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.demand-actions strong {
+  font-size: 12px;
+}
+
+.demand-signals .interest-confirmation {
+  grid-column: 2;
+  margin: -22px 0 0;
+  color: var(--green);
+  font-weight: 700;
 }
 
 .explanation h2,
@@ -1212,6 +1324,15 @@ footer > span {
     grid-template-columns: 1fr;
   }
 
+  .demand-signals {
+    grid-template-columns: 1fr;
+  }
+
+  .demand-signals .interest-confirmation {
+    grid-column: 1;
+    margin: -20px 0 0;
+  }
+
   .tax-band-section,
   .payroll-banner {
     gap: 45px;
@@ -1239,6 +1360,7 @@ footer > span {
   .explanation,
   .tax-band-section,
   .payroll-banner,
+  .demand-signals,
   .source-note,
   footer {
     width: min(100% - 28px, 1180px);
@@ -1337,6 +1459,15 @@ footer > span {
   .payroll-banner {
     padding: 38px 24px;
     border-radius: 20px;
+  }
+
+  .demand-signals {
+    padding: 27px 22px;
+    gap: 20px;
+  }
+
+  .demand-actions {
+    grid-template-columns: 1fr;
   }
 
   .payroll-banner {

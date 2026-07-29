@@ -1,5 +1,6 @@
 import { Calculator } from "@/components/calculator";
 import { EarlyAccessForm } from "@/components/early-access-form";
+import { DemandSignals } from "@/components/demand-signals";
 import Link from "next/link";
 import { lastVerified, siteUrl } from "@/lib/site";
 
@@ -75,6 +76,7 @@ export default function Home() {
       <div id="calculator">
         <Calculator />
       </div>
+      <DemandSignals />
 
       <section className="explanation" id="how-it-works">
         <div>

@@ -4,6 +4,8 @@ export const analyticsEvents = [
   "pdf_exported",
   "excel_exported",
   "print_opened",
+  "verify_interest",
+  "payroll_interest",
 ] as const;
 
 export type AnalyticsEvent = (typeof analyticsEvents)[number];

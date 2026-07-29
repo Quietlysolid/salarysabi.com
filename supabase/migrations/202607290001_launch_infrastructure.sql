@@ -30,7 +30,9 @@ create table if not exists public.analytics_daily (
       'paye_calculated',
       'pdf_exported',
       'excel_exported',
-      'print_opened'
+      'print_opened',
+      'verify_interest',
+      'payroll_interest'
     )
   ),
   page_path text not null,
@@ -56,7 +58,9 @@ begin
     'paye_calculated',
     'pdf_exported',
     'excel_exported',
-    'print_opened'
+    'print_opened',
+    'verify_interest',
+    'payroll_interest'
   ) then
     return;
   end if;
