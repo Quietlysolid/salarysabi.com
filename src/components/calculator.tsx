@@ -105,6 +105,7 @@ export function Calculator() {
   );
   const [showDeductions, setShowDeductions] = useState(false);
   const [showOtherDeductions, setShowOtherDeductions] = useState(false);
+  const [isExampleSalary, setIsExampleSalary] = useState(true);
   const [hasCalculated, setHasCalculated] = useState(true);
   const [exporting, setExporting] = useState<"pdf" | "excel" | null>(null);
 
@@ -234,16 +235,21 @@ export function Calculator() {
 
         <label className="amount-field">
           <span>
-            {period === "monthly"
-              ? "Your monthly salary before deductions"
-              : "Your total yearly salary before deductions"}
+            {isExampleSalary
+              ? `Example ${period === "monthly" ? "monthly" : "yearly"} salary`
+              : period === "monthly"
+                ? "Your monthly salary before deductions"
+                : "Your total yearly salary before deductions"}
           </span>
           <div className="currency-input">
             <span>₦</span>
             <input
               inputMode="numeric"
               value={values.gross}
-              onChange={(event) => update("gross", event.target.value)}
+              onChange={(event) => {
+                setIsExampleSalary(false);
+                update("gross", event.target.value);
+              }}
               aria-label="Salary before deductions"
               placeholder="500,000"
             />
@@ -335,7 +341,8 @@ export function Calculator() {
           <strong>{hasCalculated ? money.format(result.monthlyTax) : "Not calculated"}</strong>
           <span className="per-month">per month</span>
           <small className="result-explainer">
-            Based on a {money.format(parseMoney(values.gross))}{" "}
+            {isExampleSalary ? "Example based on a" : "Based on a"}{" "}
+            {money.format(parseMoney(values.gross))}{" "}
             {period === "monthly" ? "monthly" : "yearly"} salary
           </small>
         </div>

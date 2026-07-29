@@ -141,7 +141,7 @@ nav {
   background: var(--lime);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .hero h1 {
@@ -215,7 +215,7 @@ nav {
 
 .hero-stamp span,
 .hero-stamp small {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
 }
 
@@ -259,7 +259,7 @@ nav {
   display: block;
   margin-bottom: 7px;
   color: var(--green);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -286,7 +286,7 @@ nav {
   display: block;
   margin-top: 7px;
   color: #7a847f;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .status-pill {
@@ -297,7 +297,7 @@ nav {
   border-radius: 999px;
   background: #edf7ef;
   color: var(--green);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -413,7 +413,7 @@ nav {
 .deduction-toggle small {
   margin-top: 3px;
   color: #7a847f;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .chevron {
@@ -440,13 +440,13 @@ nav {
 .deduction-intro strong {
   display: block;
   color: var(--green-dark);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .deduction-intro p {
   margin: 4px 0 0;
   color: #617068;
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -461,7 +461,7 @@ nav {
   align-items: center;
   gap: 5px;
   color: #6c7771;
-  font-size: 9px;
+  font-size: 12px;
 }
 
 .deduction-period > span {
@@ -474,7 +474,7 @@ nav {
   border-radius: 999px;
   color: #65716b;
   background: var(--white);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -500,7 +500,7 @@ nav {
   display: block;
   margin-bottom: 1px;
   color: var(--green);
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -509,7 +509,7 @@ nav {
 .deduction-field > strong {
   grid-column: 1;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.35;
 }
 
@@ -517,7 +517,7 @@ nav {
   grid-column: 1;
   display: block;
   color: #6f7b75;
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.45;
 }
 
@@ -545,14 +545,14 @@ nav {
 
 .small-currency-input em {
   color: #87918c;
-  font-size: 8px;
+  font-size: 11px;
   font-style: normal;
 }
 
 .deduction-field .field-example {
   margin-top: 2px;
   color: #929a96;
-  font-size: 8px;
+  font-size: 11px;
 }
 
 .other-deductions-toggle {
@@ -576,13 +576,13 @@ nav {
 }
 
 .other-deductions-toggle strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .other-deductions-toggle small {
   margin-top: 2px;
   color: #7a847f;
-  font-size: 8px;
+  font-size: 11px;
 }
 
 .other-deduction-grid {
@@ -602,7 +602,7 @@ nav {
 }
 
 .rent-feedback > span {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -615,13 +615,13 @@ nav {
 
 .rent-feedback small {
   color: #6f7d76;
-  font-size: 8px;
+  font-size: 11px;
 }
 
 .primary-button {
   width: 100%;
   min-height: 54px;
-  margin-top: auto;
+  margin-top: 28px;
   padding: 0 19px;
   display: flex;
   align-items: center;
@@ -649,7 +649,7 @@ nav {
   margin: 11px 0 0;
   color: #89918d;
   text-align: center;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .results-card {
@@ -666,8 +666,8 @@ nav {
 
 .result-top p {
   margin: 8px 0 5px;
-  color: #b9cec5;
-  font-size: 12px;
+  color: #d5e3dd;
+  font-size: 13px;
 }
 
 .result-top strong {
@@ -680,14 +680,14 @@ nav {
 .result-explainer {
   display: block;
   margin-top: 7px;
-  color: #9db9ad;
-  font-size: 9px;
+  color: #c1d5cc;
+  font-size: 12px;
 }
 
 .per-month {
   margin-left: 9px;
-  color: #9db9ad;
-  font-size: 10px;
+  color: #c1d5cc;
+  font-size: 12px;
 }
 
 .result-summary {
@@ -705,8 +705,8 @@ nav {
 .result-summary span,
 .result-summary small {
   display: block;
-  color: #9db9ad;
-  font-size: 9px;
+  color: #c1d5cc;
+  font-size: 12px;
 }
 
 .result-summary strong {
@@ -744,13 +744,13 @@ nav {
 }
 
 .calculation-details summary strong {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .calculation-details summary small {
   margin-top: 4px;
-  color: #9db9ad;
-  font-size: 8px;
+  color: #c1d5cc;
+  font-size: 11px;
 }
 
 .details-plus {
@@ -788,7 +788,7 @@ nav {
 
 .section-title > span {
   color: #94afa3;
-  font-size: 8px;
+  font-size: 11px;
   letter-spacing: 0.12em;
 }
 
@@ -801,7 +801,7 @@ nav {
   display: flex;
   justify-content: space-between;
   color: #b8cdc4;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .breakdown dd {
@@ -817,7 +817,7 @@ nav {
 .breakdown dl > .subrow {
   padding-left: 10px;
   color: #91aa9f;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .breakdown dl > .chargeable {
@@ -833,7 +833,7 @@ nav {
   align-items: center;
   gap: 11px;
   margin: 8px 0;
-  font-size: 8px;
+  font-size: 11px;
 }
 
 .band-row > div:first-child {
@@ -848,7 +848,7 @@ nav {
 
 .band-row strong {
   text-align: right;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .bar {
@@ -900,13 +900,13 @@ nav {
 }
 
 .result-footer strong {
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .result-footer small {
   margin-top: 3px;
-  color: #93aca1;
-  font-size: 8px;
+  color: #bed2c9;
+  font-size: 11px;
 }
 
 .result-footer button {
@@ -915,7 +915,7 @@ nav {
   border-radius: 8px;
   color: var(--white);
   background: transparent;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -931,7 +931,7 @@ nav {
 }
 
 .explanation {
-  padding: 110px 0 80px;
+  padding: 72px 0 56px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: end;
@@ -960,7 +960,7 @@ nav {
 .demand-signals p {
   margin: 7px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .demand-actions {
@@ -995,14 +995,14 @@ nav {
 .demand-actions span {
   margin-bottom: 5px;
   color: var(--green);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .demand-actions strong {
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .demand-signals .interest-confirmation {
@@ -1019,6 +1019,10 @@ nav {
   line-height: 1.08;
 }
 
+.section-intro h2 {
+  font-size: clamp(30px, 3.4vw, 44px);
+}
+
 .explanation > p,
 .section-intro > p {
   margin: 0;
@@ -1028,11 +1032,11 @@ nav {
 }
 
 .tax-band-section {
-  padding: 75px;
+  padding: 58px;
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
-  gap: 80px;
-  border-radius: 28px;
+  gap: 60px;
+  border-radius: 24px;
   background: #e9e6da;
 }
 
@@ -1054,7 +1058,7 @@ nav {
 
 .band-table span {
   color: #89918d;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .band-table strong {
@@ -1072,8 +1076,8 @@ nav {
 }
 
 .payroll-banner {
-  margin-top: 90px;
-  padding: 62px 70px;
+  margin-top: 62px;
+  padding: 52px 60px;
   display: grid;
   grid-template-columns: 1fr 0.8fr;
   align-items: center;
@@ -1107,7 +1111,7 @@ nav {
 .payroll-banner .email-label {
   display: block;
   margin-bottom: 10px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
 }
 
@@ -1133,7 +1137,7 @@ nav {
   border-radius: 7px;
   color: var(--green-dark);
   background: var(--lime);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   cursor: pointer;
 }
@@ -1148,7 +1152,7 @@ nav {
   display: block;
   margin-top: 9px;
   color: #8a938e;
-  font-size: 8px;
+  font-size: 11px;
 }
 
 .payroll-banner .consent-row {
@@ -1171,7 +1175,7 @@ nav {
 
 .payroll-banner .consent-copy {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.35;
 }
 
@@ -1183,7 +1187,7 @@ nav {
 .payroll-banner .consent-copy small {
   margin-top: 2px;
   color: #7b8781;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .honeypot {
@@ -1228,13 +1232,13 @@ nav {
   max-width: 690px;
   margin: 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
 .source-note a {
   color: var(--green);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -1244,7 +1248,7 @@ footer {
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   color: #7a847f;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .footer-brand {
@@ -1309,7 +1313,7 @@ footer {
   border-radius: 999px;
   color: var(--green-dark);
   background: #e5efe1;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
 }
 
@@ -1380,7 +1384,7 @@ footer {
 .method-steps li > span,
 .deduction-list article > span {
   color: var(--green);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.1em;
 }
@@ -1426,7 +1430,7 @@ footer {
   min-height: 44px;
   color: #748078;
   background: #f0f2ee;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1577,7 +1581,7 @@ footer {
   .trust-row {
     gap: 10px 16px;
     flex-wrap: wrap;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .calculator-shell {
@@ -1664,7 +1668,7 @@ footer {
   }
 
   .explanation {
-    padding: 75px 0 55px;
+    padding: 52px 0 42px;
     gap: 22px;
   }
 
@@ -1675,7 +1679,7 @@ footer {
 
   .tax-band-section,
   .payroll-banner {
-    padding: 38px 24px;
+    padding: 34px 24px;
     border-radius: 20px;
   }
 
@@ -1689,7 +1693,7 @@ footer {
   }
 
   .payroll-banner {
-    margin-top: 55px;
+    margin-top: 44px;
   }
 
   .payroll-banner .email-row {

@@ -24,16 +24,16 @@ export function DemandSignals() {
       <div>
         <span className="eyebrow">Help shape what comes next</span>
         <h2 id="next-need-title">What brought you here today?</h2>
-        <p>Choose one. No account or explanation required.</p>
+        <p>Choose the option closest to what you need.</p>
       </div>
       <div className="demand-actions">
         <button type="button" onClick={chooseVerification}>
           <span>For employees</span>
-          <strong>Verify the PAYE on my payslip</strong>
+          <strong>I want to check my payslip</strong>
         </button>
         <button type="button" onClick={choosePayroll}>
           <span>For employers</span>
-          <strong>Run simple payroll for my team</strong>
+          <strong>I need payroll for my team</strong>
         </button>
       </div>
       {noted && (
