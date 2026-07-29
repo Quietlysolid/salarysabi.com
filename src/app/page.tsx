@@ -2,7 +2,7 @@ import { Calculator } from "@/components/calculator";
 import { EarlyAccessForm } from "@/components/early-access-form";
 import { DemandSignals } from "@/components/demand-signals";
 import Link from "next/link";
-import { lastVerified, siteUrl } from "@/lib/site";
+import { siteUrl } from "@/lib/site";
 
 const bands = [
   ["First ₦800,000", "0%"],
@@ -111,13 +111,11 @@ export default function Home() {
       </section>
 
       <section className="source-note">
-        <div className="source-icon">§</div>
         <div>
-          <h2>Built from the official guidance</h2>
+          <h2>Based on official guidance</h2>
           <p>
-            Calculation logic follows the Joint Revenue Board’s Personal
-            Income Tax Guidelines 2026 and the Nigeria Tax Act 2025.
-            This calculator provides an estimate and is not tax advice.
+            Uses the JRB Personal Income Tax Guidelines 2026 and the Nigeria
+            Tax Act 2025. This is an estimate, not tax advice.
           </p>
         </div>
         <a
@@ -129,18 +127,17 @@ export default function Home() {
         </a>
       </section>
 
-      <footer>
+      <footer className="home-footer">
         <a className="brand footer-brand" href="#">
           <span className="brand-mark">§</span>
           <span>Salary<span className="brand-accent">Sabi</span></span>
         </a>
         <div className="home-footer-links">
-          <Link href="/how-paye-is-calculated">Methodology</Link>
+          <Link href="/how-paye-is-calculated">How PAYE works</Link>
           <Link href="/eligible-deductions">Deductions</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/disclaimer">Disclaimer</Link>
         </div>
-        <span>SalarySabi · Rules verified {lastVerified}</span>
       </footer>
     </main>
   );
