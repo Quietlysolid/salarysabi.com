@@ -19,20 +19,43 @@ export function EarlyAccessForm() {
     setMessage("");
     const form = event.currentTarget;
     const data = new FormData(form);
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     try {
-      const response = await fetch("/api/early-access", {
+      if (!url || !key) {
+        throw new Error(
+          "Early access is being connected. Please try again shortly.",
+        );
+      }
+      if (data.get("website")) {
+        setState("success");
+        return;
+      }
+      if (Date.now() - startedAt.current < 1200) {
+        throw new Error("Please wait a moment and try again.");
+      }
+
+      const response = await fetch(
+        `${url.replace(/\/$/, "")}/rest/v1/early_access_signups`,
+        {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
         body: JSON.stringify({
-          email: data.get("email"),
-          consent: data.get("consent") === "on",
-          website: data.get("website"),
-          elapsed: Date.now() - startedAt.current,
+          email: String(data.get("email") || "").trim().toLowerCase(),
+          consented_at: new Date().toISOString(),
+          source: "homepage",
         }),
-      });
-      const result = (await response.json()) as { message?: string };
-      if (!response.ok) throw new Error(result.message || "Please try again.");
+      },
+      );
+      if (!response.ok && response.status !== 409) {
+        throw new Error("We could not save your email. Please try again.");
+      }
       form.reset();
       setState("success");
       setMessage("You’re on the list. We’ll email you when team payroll opens.");

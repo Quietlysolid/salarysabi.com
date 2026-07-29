@@ -5,22 +5,24 @@ import type { AnalyticsEvent } from "@/lib/launch";
 
 export function track(event: AnalyticsEvent) {
   if (typeof window === "undefined" || navigator.doNotTrack === "1") return;
-  const payload = JSON.stringify({
-    event,
-    path: window.location.pathname,
-    referrer: document.referrer,
-  });
-  if (navigator.sendBeacon) {
-    navigator.sendBeacon(
-      "/api/analytics",
-      new Blob([payload], { type: "application/json" }),
-    );
-    return;
-  }
-  void fetch("/api/analytics", {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return;
+
+  void fetch(`${url.replace(/\/$/, "")}/rest/v1/rpc/record_analytics_event`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: payload,
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      event_name: event,
+      page_path: window.location.pathname,
+      referrer_host: document.referrer
+        ? new URL(document.referrer).hostname
+        : "direct",
+    }),
     keepalive: true,
   });
 }

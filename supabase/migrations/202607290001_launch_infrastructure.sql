@@ -9,6 +9,19 @@ create table if not exists public.early_access_signups (
 
 alter table public.early_access_signups enable row level security;
 
+create policy "allow anonymous early-access signup"
+on public.early_access_signups
+for insert
+to anon
+with check (
+  source = 'homepage'
+  and length(email) between 5 and 254
+  and email = lower(email)
+);
+
+grant insert (email, source, consented_at)
+on public.early_access_signups to anon;
+
 create table if not exists public.analytics_daily (
   event_date date not null,
   event_name text not null check (
@@ -69,3 +82,6 @@ $$;
 
 revoke all on function public.record_analytics_event(text, text, text)
 from public, anon, authenticated;
+
+grant execute on function public.record_analytics_event(text, text, text)
+to anon;

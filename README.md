@@ -84,11 +84,13 @@ Apply `supabase/migrations/202607290001_launch_infrastructure.sql` in a Supabase
 project, then configure these server-side environment variables:
 
 ```text
-SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 NEXT_PUBLIC_SITE_URL=https://YOUR_PUBLIC_HOST
 ```
 
-Never expose `SUPABASE_SERVICE_ROLE_KEY` in a `NEXT_PUBLIC_` variable. Without
-the Supabase values, calculations remain functional, analytics fail silently,
-and the early-access form returns a temporary-unavailable message.
+The Supabase anonymous key is designed for browser use. The migration enables
+Row Level Security so browsers can insert signups and increment aggregate
+analytics but cannot read either table. Never use a service-role key here.
+Without the Supabase values, calculations remain functional, analytics fail
+silently, and the early-access form returns a temporary-unavailable message.
