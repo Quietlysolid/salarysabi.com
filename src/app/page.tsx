@@ -47,11 +47,11 @@ export default function Home() {
       <section className="hero">
         <div className="hero-copy">
           <h1>
-            Check your Nigerian PAYE in a minute.
+            Check your Nigerian income tax in a minute.
           </h1>
           <p>
-            Enter your salary and see your estimated monthly tax under the
-            2026 rules.
+            PAYE means Pay As You Earn: the income tax deducted from your
+            salary. Enter your salary to estimate it under the 2026 rules.
           </p>
           <div className="trust-row">
             <span>No signup</span>
