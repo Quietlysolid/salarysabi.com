@@ -97,3 +97,33 @@ silently, and the early-access form returns a temporary-unavailable message.
 
 Because these `NEXT_PUBLIC_` values are compiled into the static browser bundle,
 the production artifact must be built in an environment where they are present.
+
+## Cloudflare production deployment
+
+The repository is configured for Cloudflare Workers Static Assets in
+`wrangler.jsonc`. Cloudflare serves the generated `out` directory directly; no
+Worker script or server runtime is required.
+
+For a one-off deployment from an authenticated development machine:
+
+```bash
+npm run deploy:cloudflare
+```
+
+For automatic production deployments, import this repository from **Workers &
+Pages → Create application → Import a repository** and use:
+
+```text
+Worker name: salarysabi
+Production branch: main
+Build command: npm run build
+Deploy command: npx wrangler deploy
+```
+
+Add `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and
+`NEXT_PUBLIC_SITE_URL=https://salarysabi.com` as Cloudflare **build variables**.
+The two Supabase values are publishable browser configuration, never a Supabase
+service-role key.
+
+After the first successful deployment, attach `salarysabi.com` as the Worker's
+custom domain. Cloudflare will manage its DNS record and certificate.
