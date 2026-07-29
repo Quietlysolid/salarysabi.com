@@ -42,16 +42,16 @@ create table if not exists public.analytics_daily (
 alter table public.analytics_daily enable row level security;
 
 create or replace function public.record_analytics_event(
-  event_name text,
-  page_path text,
-  referrer_host text
+  p_event_name text,
+  p_page_path text,
+  p_referrer_host text
 ) returns void
 language plpgsql
 security definer
 set search_path = public
 as $$
 begin
-  if event_name not in (
+  if p_event_name not in (
     'page_view',
     'paye_calculated',
     'pdf_exported',
@@ -70,9 +70,9 @@ begin
   )
   values (
     current_date,
-    event_name,
-    left(page_path, 160),
-    left(referrer_host, 120),
+    p_event_name,
+    left(p_page_path, 160),
+    left(p_referrer_host, 120),
     1
   )
   on conflict (event_date, event_name, page_path, referrer_host)

@@ -20,7 +20,7 @@ export function EarlyAccessForm() {
     const form = event.currentTarget;
     const data = new FormData(form);
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
     try {
       if (!url || !key) {
