@@ -1,0 +1,44 @@
+export const analyticsEvents = [
+  "page_view",
+  "paye_calculated",
+  "pdf_exported",
+  "excel_exported",
+  "print_opened",
+] as const;
+
+export type AnalyticsEvent = (typeof analyticsEvents)[number];
+
+export function normalizeEmail(value: unknown) {
+  if (typeof value !== "string") return null;
+  const email = value.trim().toLowerCase();
+  if (
+    email.length < 5 ||
+    email.length > 254 ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  ) {
+    return null;
+  }
+  return email;
+}
+
+export function normalizePath(value: unknown) {
+  if (typeof value !== "string") return "/";
+  const path = value.trim();
+  return path.startsWith("/") && path.length <= 160 ? path : "/";
+}
+
+export function normalizeReferrerHost(value: unknown) {
+  if (typeof value !== "string" || !value) return "direct";
+  try {
+    return new URL(value).hostname.slice(0, 120) || "direct";
+  } catch {
+    return "direct";
+  }
+}
+
+export function isAnalyticsEvent(value: unknown): value is AnalyticsEvent {
+  return (
+    typeof value === "string" &&
+    (analyticsEvents as readonly string[]).includes(value)
+  );
+}
