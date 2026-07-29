@@ -46,30 +46,18 @@ export default function Home() {
 
       <section className="hero">
         <div className="hero-copy">
-          <div className="announcement">
-            <span>New</span>
-            Updated for the Nigeria Tax Act 2025
-          </div>
           <h1>
-            Know your PAYE.
-            <br />
-            <em>Keep more clarity.</em>
+            Check your Nigerian PAYE in a minute.
           </h1>
           <p>
-            A clear, free Nigerian PAYE calculator for 2026. Understand
-            your monthly tax, eligible deductions and exactly how every
-            tax band applies.
+            Enter your salary and see your estimated monthly tax under the
+            2026 rules.
           </p>
           <div className="trust-row">
-            <span>✓ No signup</span>
-            <span>✓ Free to use</span>
-            <span>✓ Based on JRB guidance</span>
+            <span>No signup</span>
+            <span>Free</span>
+            <span>Based on JRB guidance</span>
           </div>
-        </div>
-        <div className="hero-stamp" aria-hidden="true">
-          <span>Built for</span>
-          <strong>Nigeria</strong>
-          <small>2026</small>
         </div>
       </section>
 
@@ -86,7 +74,7 @@ export default function Home() {
         <p>
           We annualise your income, subtract only the eligible deductions
           you provide, then apply each statutory band in order. The result is
-          an estimate you can inspect—not a number from a black box.
+          an estimate you can inspect, not a number from a black box.
         </p>
       </section>
 

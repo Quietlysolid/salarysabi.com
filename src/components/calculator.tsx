@@ -2,7 +2,6 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { track } from "@/components/analytics";
-import { downloadExcel, downloadPdf } from "@/lib/exports";
 import { calculatePaye } from "@/lib/paye";
 
 type FieldName =
@@ -45,7 +44,7 @@ const commonDeductionFields: DeductionField[] = [
     name: "pension",
     label: "Pension",
     question: "Does your payslip show a pension deduction?",
-    help: "Enter the amount beside “Pension” on your payslip—not your pension account balance.",
+    help: "Enter the amount beside “Pension” on your payslip, not your pension account balance.",
     example: "For example, ₦40,000 monthly is ₦480,000 yearly.",
   },
   {
@@ -60,7 +59,7 @@ const commonDeductionFields: DeductionField[] = [
     label: "National health insurance",
     question: "Does your payslip show NHIS or NHIA?",
     help: "Enter the eligible health-insurance amount shown on your payslip.",
-    example: "A private HMO may not qualify—check with payroll if unsure.",
+    example: "A private HMO may not qualify. Check with payroll if unsure.",
   },
   {
     name: "rent",
@@ -76,7 +75,7 @@ const otherDeductionFields: DeductionField[] = [
     name: "mortgage",
     label: "Mortgage interest",
     question: "Do you pay interest on a mortgage for your main home?",
-    help: "Enter only the interest charged—not the full payment or loan repayment.",
+    help: "Enter only the interest charged, not the full payment or loan repayment.",
     example: "Use the interest amount on your lender’s statement.",
   },
   {
@@ -144,6 +143,7 @@ export function Calculator() {
   async function exportPdf() {
     setExporting("pdf");
     try {
+      const { downloadPdf } = await import("@/lib/exports");
       await downloadPdf(inputs, result);
       track("pdf_exported");
     } finally {
@@ -151,9 +151,10 @@ export function Calculator() {
     }
   }
 
-  function exportExcel() {
+  async function exportExcel() {
     setExporting("excel");
     try {
+      const { downloadExcel } = await import("@/lib/exports");
       downloadExcel(inputs, result);
       track("excel_exported");
     } finally {
@@ -207,16 +208,11 @@ export function Calculator() {
       <form className="calculator-card" onSubmit={submit}>
         <div className="card-heading">
           <div>
-            <span className="eyebrow">2026 rules</span>
             <h2>What do you earn?</h2>
             <small className="live-note">
-              Use your salary before any deductions
+              Enter your salary before tax and other deductions.
             </small>
           </div>
-          <span className="status-pill">
-            <span />
-            Updated
-          </span>
         </div>
 
         <div className="period-toggle" aria-label="Income period">
@@ -262,7 +258,7 @@ export function Calculator() {
         >
           <span>
             <strong>Add pension, rent or other deductions</strong>
-            <small>Optional—leave this closed if none apply to you</small>
+            <small>Optional. Skip this if none apply to you.</small>
           </span>
           <span className={showDeductions ? "chevron open" : "chevron"}>
             ⌄
@@ -335,9 +331,8 @@ export function Calculator() {
 
       <section className="results-card" id="results" aria-live="polite">
         <div className="result-top">
-          <span className="eyebrow light">Your estimate</span>
-          <p>You may pay this much PAYE</p>
-          <strong>{hasCalculated ? money.format(result.monthlyTax) : "—"}</strong>
+          <p>Your estimated monthly PAYE</p>
+          <strong>{hasCalculated ? money.format(result.monthlyTax) : "Not calculated"}</strong>
           <span className="per-month">per month</span>
           <small className="result-explainer">
             Based on a {money.format(parseMoney(values.gross))}{" "}
@@ -438,7 +433,7 @@ export function Calculator() {
             <p>
               <strong>Based on official 2026 JRB guidance</strong>
               <small>
-                Independently built · Estimate only · Verified 29 July 2026
+                Independent estimate. Rules checked 29 July 2026.
               </small>
             </p>
           </div>

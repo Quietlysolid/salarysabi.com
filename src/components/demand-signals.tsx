@@ -38,7 +38,7 @@ export function DemandSignals() {
       </div>
       {noted && (
         <p className="interest-confirmation" role="status">
-          Thanks—your interest was counted. Payslip verification is being
+          Thanks. Your interest was counted. Payslip verification is being
           considered for the next release.
         </p>
       )}

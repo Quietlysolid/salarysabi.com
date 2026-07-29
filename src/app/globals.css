@@ -8,6 +8,7 @@
   --lime: #c9f36b;
   --line: #d9ddd7;
   --sand: #ece8dc;
+  --font-display: var(--font-body);
 }
 
 * {
@@ -22,9 +23,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 92% 8%, rgba(201, 243, 107, 0.2), transparent 24rem),
-    var(--paper);
+  background: var(--paper);
   font-family: var(--font-body), sans-serif;
 }
 
@@ -57,7 +56,7 @@ footer {
 }
 
 .site-header {
-  height: 92px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -106,8 +105,8 @@ nav {
 }
 
 .hero {
-  min-height: 440px;
-  padding: 75px 0 52px;
+  min-height: auto;
+  padding: 46px 0 34px;
   display: grid;
   grid-template-columns: minmax(0, 740px) 1fr;
   position: relative;
@@ -138,11 +137,12 @@ nav {
 }
 
 .hero h1 {
-  margin: 27px 0 22px;
+  max-width: 760px;
+  margin: 0 0 13px;
   font-family: var(--font-display), sans-serif;
-  font-size: clamp(48px, 6.3vw, 82px);
-  line-height: 0.98;
-  letter-spacing: -5px;
+  font-size: clamp(35px, 4.6vw, 58px);
+  line-height: 1.04;
+  letter-spacing: -3.2px;
 }
 
 .hero h1 em {
@@ -154,21 +154,22 @@ nav {
   max-width: 620px;
   margin: 0;
   color: var(--muted);
-  font-size: 18px;
-  line-height: 1.65;
+  font-size: 16px;
+  line-height: 1.55;
 }
 
 .trust-row {
   display: flex;
-  gap: 24px;
-  margin-top: 27px;
+  gap: 10px 22px;
+  margin-top: 16px;
   color: #526059;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
 }
 
-.trust-row span::first-letter {
-  color: var(--green);
+.trust-row span + span::before {
+  content: "·";
+  margin-right: 22px;
+  color: #95a099;
 }
 
 .hero-stamp {
@@ -220,17 +221,17 @@ nav {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   border: 1px solid #ced5d0;
-  border-radius: 28px;
+  border-radius: 20px;
   background: var(--white);
-  box-shadow: 0 24px 80px rgba(25, 45, 36, 0.1);
+  box-shadow: 0 12px 36px rgba(25, 45, 36, 0.07);
   overflow: hidden;
 }
 
 .calculator-card,
 .results-card {
   min-width: 0;
-  min-height: 620px;
-  padding: 42px 46px;
+  min-height: 540px;
+  padding: 36px 40px;
 }
 
 .calculator-card {
@@ -269,14 +270,14 @@ nav {
 }
 
 .card-heading h2 {
-  font-size: 28px;
+  font-size: 26px;
 }
 
 .live-note {
   display: block;
-  margin-top: 5px;
+  margin-top: 7px;
   color: #7a847f;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .status-pill {
@@ -305,7 +306,7 @@ nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4px;
-  margin: 30px 0 25px;
+  margin: 24px 0 21px;
   padding: 4px;
   border-radius: 12px;
   background: #eff1ee;
@@ -386,7 +387,7 @@ nav {
   border: 1px solid var(--line);
   border-radius: 12px;
   color: var(--ink);
-  background: #fafbf9;
+  background: transparent;
   text-align: left;
   cursor: pointer;
 }
@@ -1539,13 +1540,13 @@ footer > span {
 
   .hero {
     min-height: auto;
-    padding: 51px 0 37px;
+    padding: 34px 0 28px;
   }
 
   .hero h1 {
-    margin-top: 22px;
-    font-size: 49px;
-    letter-spacing: -3.4px;
+    margin-top: 0;
+    font-size: 40px;
+    letter-spacing: -2.6px;
   }
 
   .hero-copy > p {
@@ -1564,8 +1565,12 @@ footer > span {
 
   .calculator-card,
   .results-card {
-    min-height: 600px;
+    min-height: auto;
     padding: 29px 22px;
+  }
+
+  .primary-button {
+    margin-top: 28px;
   }
 
   .currency-input input {

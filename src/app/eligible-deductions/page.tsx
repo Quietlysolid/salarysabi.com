@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const deductions = [
   {
     title: "Pension: money saved for your retirement",
-    text: "Look for “Pension” on your payslip or PFA statement. Enter the amount deducted from your salary—not the total balance in your retirement account. For example, ₦40,000 monthly equals ₦480,000 yearly.",
+    text: "Look for “Pension” on your payslip or PFA statement. Enter the amount deducted from your salary, not the total balance in your retirement account. For example, ₦40,000 monthly equals ₦480,000 yearly.",
   },
   {
     title: "NHF: a housing-fund deduction",
