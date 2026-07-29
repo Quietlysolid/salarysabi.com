@@ -1098,21 +1098,21 @@ nav {
   color: var(--ink);
 }
 
-.payroll-banner label {
+.payroll-banner .email-label {
   display: block;
   margin-bottom: 10px;
   font-size: 12px;
   font-weight: 800;
 }
 
-.payroll-banner form > div {
+.payroll-banner .email-row {
   display: flex;
   border: 1px solid #bdc6c0;
   border-radius: 10px;
   overflow: hidden;
 }
 
-.payroll-banner input {
+.payroll-banner .email-row input {
   min-width: 0;
   flex: 1;
   padding: 13px;
@@ -1146,22 +1146,38 @@ nav {
 }
 
 .payroll-banner .consent-row {
-  margin: 12px 0 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  color: #66736d;
-  font-size: 9px;
-  font-weight: 500;
-  line-height: 1.4;
+  margin: 14px 0 0;
+  display: grid;
+  grid-template-columns: 17px 1fr;
+  align-items: start;
+  gap: 10px;
+  color: #55635d;
+  cursor: pointer;
 }
 
 .payroll-banner .consent-row input {
-  min-width: 14px;
-  width: 14px;
-  height: 14px;
-  margin: 0;
+  width: 16px;
+  height: 16px;
+  margin: 1px 0 0;
   accent-color: var(--green);
+  cursor: pointer;
+}
+
+.payroll-banner .consent-copy {
+  display: block;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.payroll-banner .consent-copy > span {
+  display: block;
+  font-weight: 600;
+}
+
+.payroll-banner .consent-copy small {
+  margin-top: 2px;
+  color: #7b8781;
+  font-size: 9px;
 }
 
 .honeypot {
@@ -1173,8 +1189,12 @@ nav {
 }
 
 .payroll-banner .form-message {
-  min-height: 12px;
+  min-height: 0;
   color: var(--green);
+}
+
+.payroll-banner .form-message:empty {
+  display: none;
 }
 
 .payroll-banner .form-message.error {
@@ -1674,11 +1694,11 @@ footer > span {
     margin-top: 55px;
   }
 
-  .payroll-banner form > div {
+  .payroll-banner .email-row {
     flex-direction: column;
   }
 
-  .payroll-banner input {
+  .payroll-banner .email-row input {
     min-height: 48px;
   }
 

@@ -66,9 +66,11 @@ export function EarlyAccessForm() {
   }
 
   return (
-    <form onSubmit={submit}>
-      <label htmlFor="email">Get one email when the payroll beta opens</label>
-      <div>
+    <form className="early-access-form" onSubmit={submit}>
+      <label className="email-label" htmlFor="email">
+        Get one email when the payroll beta opens
+      </label>
+      <div className="email-row">
         <input
           id="email"
           name="email"
@@ -83,7 +85,10 @@ export function EarlyAccessForm() {
       </div>
       <label className="consent-row">
         <input name="consent" type="checkbox" required />
-        <span>I agree to receive this early-access email. Unsubscribe anytime.</span>
+        <span className="consent-copy">
+          <span>I agree to receive one early-access email.</span>
+          <small>No spam. Unsubscribe anytime.</small>
+        </span>
       </label>
       <label className="honeypot" aria-hidden="true">
         Website
@@ -93,7 +98,7 @@ export function EarlyAccessForm() {
         className={state === "error" ? "form-message error" : "form-message"}
         role="status"
       >
-        {message || "No spam. Your address is used only for this launch update."}
+        {message}
       </small>
     </form>
   );
