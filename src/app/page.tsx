@@ -34,7 +34,7 @@ export default function Home() {
       />
       <header className="site-header">
         <a className="brand" href="#">
-          <span className="brand-mark">₦</span>
+          <span className="brand-mark">§</span>
           <span>Salary<span className="brand-accent">Sabi</span></span>
         </a>
         <nav aria-label="Main navigation">
@@ -131,7 +131,7 @@ export default function Home() {
 
       <footer>
         <a className="brand footer-brand" href="#">
-          <span className="brand-mark">₦</span>
+          <span className="brand-mark">§</span>
           <span>Salary<span className="brand-accent">Sabi</span></span>
         </a>
         <div className="home-footer-links">

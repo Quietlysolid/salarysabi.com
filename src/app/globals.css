@@ -81,7 +81,9 @@ footer {
   border-radius: 10px;
   color: var(--lime);
   background: var(--green);
+  font-family: Georgia, serif;
   font-size: 18px;
+  line-height: 1;
 }
 
 .brand-accent {
@@ -164,6 +166,7 @@ nav {
   margin-top: 16px;
   color: #526059;
   font-size: 12px;
+  font-weight: 600;
 }
 
 .trust-row span + span::before {

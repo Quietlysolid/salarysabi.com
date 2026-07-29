@@ -6,7 +6,7 @@ export function InfoHeader() {
   return (
     <header className="site-header info-header">
       <Link className="brand" href="/">
-        <span className="brand-mark">₦</span>
+        <span className="brand-mark">§</span>
         <span>
           Salary<span className="brand-accent">Sabi</span>
         </span>
@@ -26,7 +26,7 @@ export function InfoFooter() {
   return (
     <footer className="info-footer">
       <Link className="brand footer-brand" href="/">
-        <span className="brand-mark">₦</span>
+        <span className="brand-mark">§</span>
         <span>
           Salary<span className="brand-accent">Sabi</span>
         </span>
