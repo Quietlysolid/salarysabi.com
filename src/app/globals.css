@@ -2688,19 +2688,6 @@ body {
   padding-bottom: clamp(46px, 7vw, 76px);
 }
 
-.jobs-hero::after {
-  position: absolute;
-  z-index: -1;
-  right: 2%;
-  bottom: 14%;
-  width: clamp(150px, 24vw, 300px);
-  aspect-ratio: 1;
-  border: 1px solid #d6e9dd;
-  border-radius: 50%;
-  background: radial-gradient(circle, #e9f7ee 0 34%, transparent 35% 52%, #f4faf6 53% 68%, transparent 69%);
-  content: "";
-}
-
 .jobs-hero::before {
   display: block;
   width: 42px;
@@ -2825,11 +2812,6 @@ body {
 }
 
 @media (max-width: 760px) {
-  .jobs-hero::after {
-    right: -76px;
-    opacity: .75;
-  }
-
   .job-submit {
     margin-top: 54px;
     padding: 26px 18px;
