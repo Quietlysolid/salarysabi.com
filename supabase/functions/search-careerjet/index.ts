@@ -9,8 +9,10 @@ Deno.serve(async (request) => {
   if (!apiKey) return Response.json({ error: "Careerjet publisher credentials are not configured" }, { status: 503 });
   if (!permittedOrigin) return new Response("Forbidden", { status: 403 });
   const input = await request.json().catch(() => ({})) as Record<string, unknown>;
+  const requestReferer = request.headers.get("referer") || `${origin}/jobs`;
+  const safeReferer = /^https:\/\/(www\.)?salarysabi\.com(\/|$)/.test(requestReferer) ? requestReferer : `${origin}/jobs`;
   const endpoint = new URL("https://search.api.careerjet.net/v4/query");
-  endpoint.searchParams.set("locale_code", "en_NG");
+  endpoint.searchParams.set("locale_code", Deno.env.get("CAREERJET_LOCALE_CODE") || "en_NG");
   endpoint.searchParams.set("keywords", String(input.keywords || ""));
   endpoint.searchParams.set("location", String(input.location || "Nigeria"));
   endpoint.searchParams.set("page_size", "50");
@@ -18,7 +20,7 @@ Deno.serve(async (request) => {
   endpoint.searchParams.set("user_ip", request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1");
   endpoint.searchParams.set("user_agent", request.headers.get("user-agent") || "SalarySabi job search");
   const authorization = btoa(`${apiKey}:`);
-  const response = await fetch(endpoint, { headers: { Authorization: `Basic ${authorization}`, Accept: "application/json" } });
+  const response = await fetch(endpoint, { headers: { Authorization: `Basic ${authorization}`, Accept: "application/json", Referer: safeReferer } });
   const responseText = await response.text();
   if (!response.ok) return Response.json({ error: `Careerjet returned ${response.status}`, detail: responseText.slice(0, 500) }, { status: 502 });
   const payload = JSON.parse(responseText) as { jobs?: Record<string, unknown>[] };
