@@ -33,11 +33,6 @@ export default function Home() {
             Calculate your PAYE, check your payslip, understand deductions and
             find jobs that show the salary.
           </p>
-          <div className="trust-row">
-            <span>No signup</span>
-            <span>Free</span>
-            <span>Built around official guidance</span>
-          </div>
         </div>
       </section>
 
