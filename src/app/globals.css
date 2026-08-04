@@ -608,24 +608,36 @@ footer {
 .external-arrow {
   position: relative;
   display: inline-block;
-  width: 9px;
-  height: 9px;
-  margin-left: 7px;
-  border-top: 1.5px solid currentColor;
-  border-right: 1.5px solid currentColor;
-  vertical-align: 1px;
+  width: 12px;
+  height: 12px;
+  margin-left: 6px;
+  vertical-align: -1px;
 }
 
+.external-arrow::before,
 .external-arrow::after {
   content: "";
   position: absolute;
-  width: 10px;
+}
+
+.external-arrow::before {
+  left: 1px;
+  bottom: 2px;
+  width: 12px;
   height: 1.5px;
-  top: 3px;
-  right: -1px;
+  border-radius: 2px;
   background: currentColor;
   transform: rotate(-45deg);
-  transform-origin: right center;
+  transform-origin: left center;
+}
+
+.external-arrow::after {
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 6px;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
 }
 
 .sr-only {

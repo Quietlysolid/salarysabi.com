@@ -48,15 +48,6 @@ export function InfoFooter() {
         <Link href="/post-a-job">Post a job</Link>
         <Link href="/privacy">Privacy</Link>
         <Link href="/disclaimer">Disclaimer</Link>
-        <a
-          href="https://www.jrb.gov.ng/assets/2026-pit-guidelines-TJG3n9-T.pdf"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Official JRB guidance
-          <span className="external-arrow" aria-hidden="true" />
-          <span className="sr-only"> (opens in a new tab)</span>
-        </a>
       </div>
     </footer>
   );
