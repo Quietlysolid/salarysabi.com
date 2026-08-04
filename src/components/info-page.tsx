@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand-mark";
 import { BrandWordmark } from "@/components/brand-wordmark";
-import { lastVerified } from "@/lib/site";
 
 export function InfoHeader() {
   return (
@@ -72,10 +71,6 @@ export function InfoPage({
           <span className="eyebrow">{eyebrow}</span>
           <h1>{title}</h1>
           <p>{intro}</p>
-          <div className="verified-note">
-            <span>Verified:</span>
-            Rules checked {lastVerified}
-          </div>
         </div>
         <div className="prose">{children}</div>
       </article>

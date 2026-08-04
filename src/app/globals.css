@@ -659,7 +659,7 @@
 .brand-i::after {
   content: "";
   position: absolute;
-  top: .1em;
+  top: .34em;
   left: 50%;
   width: .18em;
   height: .18em;
