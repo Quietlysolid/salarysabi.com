@@ -1,7 +1,7 @@
 import { calculatePaye } from "./paye";
 
 export type WorkMode = "onsite" | "hybrid" | "remote";
-export type SalaryType = "gross" | "net";
+export type SalaryType = "gross" | "net" | "not_stated";
 export type SalaryCurrency = "NGN" | "USD" | "GBP" | "EUR";
 
 export type Job = {
@@ -24,7 +24,11 @@ export function formatJobSalary(job: Pick<Job, "salary_period" | "salary_currenc
   const period = job.salary_period === "monthly" ? "month" : "year";
   const currency = job.salary_currency || "NGN";
   const formatter = new Intl.NumberFormat(currency === "NGN" ? "en-NG" : "en-US", { style: "currency", currency, maximumFractionDigits: 0 });
-  return `${formatter.format(job.salary_min)}–${formatter.format(job.salary_max)} ${job.salary_type} / ${period}`;
+  const amount = job.salary_min === job.salary_max
+    ? formatter.format(job.salary_min)
+    : `${formatter.format(job.salary_min)}–${formatter.format(job.salary_max)}`;
+  const basis = job.salary_type === "not_stated" ? "basis not stated" : job.salary_type;
+  return `${amount} ${basis} / ${period}`;
 }
 
 export function monthlyGrossRange(job: Job) {

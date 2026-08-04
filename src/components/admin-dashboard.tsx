@@ -397,6 +397,7 @@ export function AdminDashboard() {
               <select name="salary_type">
                 <option value="gross">Gross</option>
                 <option value="net">Net</option>
+                <option value="not_stated">Not stated by employer</option>
               </select>
             </label>
             <label>
@@ -604,6 +605,7 @@ export function AdminDashboard() {
                   <select name="salary_type" defaultValue={job.salary_type}>
                     <option value="gross">Gross</option>
                     <option value="net">Net</option>
+                    <option value="not_stated">Not stated by employer</option>
                   </select>
                 </label>
                 <label>

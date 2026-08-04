@@ -33,6 +33,11 @@ describe("job helpers", () => {
     expect(formatJobSalary(job)).toContain("gross / month");
   });
 
+  it("does not invent a range or salary basis when the employer states neither", () => {
+    expect(formatJobSalary({ ...job, salary_min: 25_357, salary_max: 25_357, salary_period: "annual", salary_currency: "USD", salary_type: "not_stated" }))
+      .toBe("$25,357 basis not stated / year");
+  });
+
   it("normalizes annual gross salary to a monthly range", () => {
     expect(
       monthlyGrossRange({ ...job, salary_period: "annual", salary_min: 4_800_000, salary_max: 7_200_000 }),
