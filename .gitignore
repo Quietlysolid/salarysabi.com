@@ -1,6 +1,8 @@
 node_modules
 .next
 .open-next
+.wrangler/
+supabase/.temp/
 out
 /dist
 coverage

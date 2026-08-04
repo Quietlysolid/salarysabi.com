@@ -1,17 +1,7 @@
-import { Calculator } from "@/components/calculator";
-import { EarlyAccessForm } from "@/components/early-access-form";
-import { DemandSignals } from "@/components/demand-signals";
 import Link from "next/link";
+import { Calculator } from "@/components/calculator";
+import { InfoFooter, InfoHeader } from "@/components/info-page";
 import { siteUrl } from "@/lib/site";
-
-const bands = [
-  ["First ₦800,000", "0%"],
-  ["Next ₦2.2m", "15%"],
-  ["Next ₦9m", "18%"],
-  ["Next ₦13m", "21%"],
-  ["Next ₦25m", "23%"],
-  ["Above ₦50m", "25%"],
-];
 
 export default function Home() {
   const structuredData = {
@@ -32,119 +22,56 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         type="application/ld+json"
       />
-      <header className="site-header">
-        <a className="brand" href="#">
-          <span className="brand-mark">§</span>
-          <span>Salary<span className="brand-accent">Sabi</span></span>
-        </a>
-        <nav aria-label="Main navigation">
-          <a href="#how-it-works">How it works</a>
-          <a href="#tax-bands">2026 tax bands</a>
-          <a className="nav-cta" href="#early-access">Payroll for teams</a>
-        </nav>
-      </header>
+      <InfoHeader />
 
       <section className="hero">
         <div className="hero-copy">
           <h1>
-            Check your Nigerian income tax in a minute.
+            Salary and job help for Nigerians.
           </h1>
           <p>
-            PAYE means Pay As You Earn: the income tax deducted from your
-            salary. Enter your salary to estimate it under the 2026 rules.
+            Calculate your PAYE, check your payslip, understand deductions and
+            find jobs that show the salary.
           </p>
-          <div className="trust-row">
-            <span>No signup</span>
-            <span>Free</span>
-            <span>Based on JRB guidance</span>
-          </div>
+        </div>
+      </section>
+
+      <section className="home-tools" aria-labelledby="home-tools-title">
+        <div>
+          <span className="eyebrow">Choose a tool</span>
+          <h2 id="home-tools-title">What do you need help with?</h2>
+        </div>
+        <div className="home-tool-grid">
+          <a href="#calculator"><span>01</span><strong>Calculate PAYE</strong><small>Estimate the tax on your salary</small></a>
+          <Link href="/payslip-checker"><span>02</span><strong>Check my payslip</strong><small>Compare your PAYE and deductions</small></Link>
+          <Link href="/jobs"><span>03</span><strong>Find jobs with salaries</strong><small>See the pay before you apply</small></Link>
+          <Link href="/eligible-deductions"><span>04</span><strong>Understand deductions</strong><small>Pension, NHF, rent relief and more</small></Link>
         </div>
       </section>
 
       <div id="calculator">
         <Calculator />
       </div>
-      <DemandSignals />
 
-      <section className="explanation" id="how-it-works">
+      <section className="home-more-help">
         <div>
-          <span className="eyebrow">Clear by design</span>
-          <h2>No tax jargon. No mystery number.</h2>
+          <span className="eyebrow">Understand your pay</span>
+          <h2>Clear answers when you need more detail.</h2>
+          <p>Read a short explanation instead of searching through tax documents.</p>
         </div>
-        <p>
-          We annualise your income, subtract only the eligible deductions
-          you provide, then apply each statutory band in order. The result is
-          an estimate you can inspect, not a number from a black box.
-        </p>
+        <nav aria-label="Salary guides">
+          <Link href="/how-paye-is-calculated">How PAYE is calculated</Link>
+          <Link href="/tax-bands">Nigeria’s 2026 tax bands</Link>
+          <Link href="/eligible-deductions">Deductions that can reduce PAYE</Link>
+        </nav>
       </section>
 
-      <section className="tax-band-section" id="tax-bands">
-        <div className="section-intro">
-          <span className="eyebrow">Nigeria’s 2026 bands</span>
-          <h2>The first ₦800,000 of chargeable income is tax-free.</h2>
-          <p>
-            Higher rates apply only to the portion of income inside each
-            band, not to your entire salary.
-          </p>
-        </div>
-        <div className="band-table">
-          {bands.map(([income, rate], index) => (
-            <div key={income}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <strong>{income}</strong>
-              <em>{rate}</em>
-            </div>
-          ))}
-        </div>
+      <section className="home-jobs-link">
+        <div><span className="eyebrow light">Looking for work?</span><h2>Find jobs that show what they pay.</h2></div>
+        <Link href="/jobs">Find jobs</Link>
       </section>
 
-      <section className="payroll-banner" id="early-access">
-        <div>
-          <span className="eyebrow light">For small teams</span>
-          <h2>Payroll should be this clear too.</h2>
-          <p>
-            We’re turning this calculator into simple Nigerian payroll:
-            saved employees, branded payslips and monthly payroll registers.
-          </p>
-        </div>
-        <EarlyAccessForm
-          source="employer_payroll"
-          idPrefix="payroll"
-          label="Get one email when the payroll beta opens"
-          placeholder="you@business.com"
-          successMessage="You are on the payroll early-access list."
-        />
-      </section>
-
-      <section className="source-note">
-        <div>
-          <h2>Based on official guidance</h2>
-          <p>
-            Uses the JRB Personal Income Tax Guidelines 2026 and the Nigeria
-            Tax Act 2025. This is an estimate, not tax advice.
-          </p>
-        </div>
-        <a
-          href="https://www.jrb.gov.ng/assets/2026-pit-guidelines-TJG3n9-T.pdf"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Read JRB guidelines ↗
-        </a>
-      </section>
-
-      <footer className="home-footer">
-        <a className="brand footer-brand" href="#">
-          <span className="brand-mark">§</span>
-          <span>Salary<span className="brand-accent">Sabi</span></span>
-        </a>
-        <div className="home-footer-links">
-          <Link href="/how-paye-is-calculated">How PAYE works</Link>
-          <Link href="/eligible-deductions">Deductions</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/disclaimer">Disclaimer</Link>
-        </div>
-      </footer>
+      <InfoFooter />
     </main>
   );
 }

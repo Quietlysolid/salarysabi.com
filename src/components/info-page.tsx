@@ -1,23 +1,36 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { lastVerified } from "@/lib/site";
+import { BrandMark } from "@/components/brand-mark";
+import { BrandWordmark } from "@/components/brand-wordmark";
 
 export function InfoHeader() {
   return (
     <header className="site-header info-header">
-      <Link className="brand" href="/">
-        <span className="brand-mark">§</span>
-        <span>
-          Salary<span className="brand-accent">Sabi</span>
-        </span>
+      <Link aria-label="SalarySabi home" className="brand" href="/">
+        <BrandMark />
+        <BrandWordmark />
       </Link>
       <nav aria-label="Information navigation">
-        <Link href="/how-paye-is-calculated">Methodology</Link>
-        <Link href="/eligible-deductions">Deductions</Link>
-        <Link className="nav-cta" href="/#calculator">
-          Open calculator
-        </Link>
+        <Link href="/">Calculate</Link>
+        <Link href="/payslip-checker">Check payslip</Link>
+        <Link className="nav-primary" href="/jobs">Find jobs</Link>
+        <Link href="/account">My jobs</Link>
+        <Link className="nav-cta" href="/how-paye-is-calculated">PAYE guide</Link>
       </nav>
+      <div className="mobile-nav">
+        <Link href="/">Calculate</Link>
+        <Link href="/jobs">Jobs</Link>
+        <details>
+          <summary>Menu</summary>
+          <div>
+            <Link href="/account">My jobs</Link>
+            <Link href="/payslip-checker">Check payslip</Link>
+            <Link href="/post-a-job">Post a job</Link>
+            <Link href="/suggest-a-job">Send us a job</Link>
+            <Link href="/how-paye-is-calculated">PAYE guide</Link>
+          </div>
+        </details>
+      </div>
     </header>
   );
 }
@@ -25,24 +38,16 @@ export function InfoHeader() {
 export function InfoFooter() {
   return (
     <footer className="info-footer">
-      <Link className="brand footer-brand" href="/">
-        <span className="brand-mark">§</span>
-        <span>
-          Salary<span className="brand-accent">Sabi</span>
-        </span>
+      <Link aria-label="SalarySabi home" className="brand footer-brand" href="/">
+        <BrandMark />
+        <BrandWordmark />
       </Link>
       <div className="footer-links">
+        <Link href="/account">My jobs</Link>
+        <Link href="/post-a-job">Post a job</Link>
         <Link href="/privacy">Privacy</Link>
         <Link href="/disclaimer">Disclaimer</Link>
-        <a
-          href="https://www.jrb.gov.ng/assets/2026-pit-guidelines-TJG3n9-T.pdf"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Official JRB guidance ↗
-        </a>
       </div>
-      <span>Calculation rules last verified {lastVerified}</span>
     </footer>
   );
 }
@@ -66,10 +71,6 @@ export function InfoPage({
           <span className="eyebrow">{eyebrow}</span>
           <h1>{title}</h1>
           <p>{intro}</p>
-          <div className="verified-note">
-            <span>✓</span>
-            Rules last verified {lastVerified}
-          </div>
         </div>
         <div className="prose">{children}</div>
       </article>

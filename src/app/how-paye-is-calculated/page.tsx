@@ -76,6 +76,16 @@ export default function MethodologyPage() {
         </p>
       </section>
 
+      <section className="info-panel">
+        <h2>Minimum-wage exemption</h2>
+        <p>
+          Employment income at or below the national minimum wage of ₦70,000
+          per month (₦840,000 per year) is exempt from income tax. The
+          calculator applies this exemption using annual gross employment
+          income before applying the graduated bands.
+        </p>
+      </section>
+
       <section>
         <h2>Sources and verification</h2>
         <p>

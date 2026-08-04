@@ -1,13 +1,7 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
 import { Analytics } from "@/components/analytics";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
-
-const bodyFont = DM_Sans({
-  variable: "--font-body",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -21,6 +15,7 @@ export const metadata: Metadata = {
     "PAYE tax calculator Nigeria",
   ],
   alternates: { canonical: "/" },
+  icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
     locale: "en_NG",
@@ -42,8 +37,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={bodyFont.variable}>
+    <html lang="en-NG">
+      <body>
         <Analytics />
         {children}
       </body>
