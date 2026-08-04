@@ -8,6 +8,8 @@ import {
   formatJobSalary,
   jobMatches,
   monthlyGrossRange,
+  salarySourceLabel,
+  verificationLabel,
   type Job,
   type WorkMode,
 } from "@/lib/jobs";
@@ -25,6 +27,7 @@ export function JobBoard() {
   const [location, setLocation] = useState("all");
   const [employmentType, setEmploymentType] = useState("all");
   const [minimumSalary, setMinimumSalary] = useState(0);
+  const [currency, setCurrency] = useState<"all" | "NGN" | "USD" | "GBP" | "EUR">("all");
   const [sort, setSort] = useState<"newest" | "salary">("newest");
   const [state, setState] = useState<"loading" | "ready" | "error">(
     configured ? "loading" : "error",
@@ -34,8 +37,7 @@ export function JobBoard() {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
     if (!url || !key) return;
-    const fields = "id,slug,title,company_name,location,work_mode,employment_type,description,salary_min,salary_max,salary_period,salary_type,application_url,source_url,employer_verified,source_verified_at,published_at,expires_at";
-    fetch(`${url.replace(/\/$/, "")}/rest/v1/jobs?select=${fields}&order=published_at.desc`, {
+    fetch(`${url.replace(/\/$/, "")}/rest/v1/jobs?select=*&order=published_at.desc`, {
       headers: { apikey: key, Authorization: `Bearer ${key}` },
     })
       .then((response) => {
@@ -55,14 +57,15 @@ export function JobBoard() {
       jobMatches(job, query, workMode) &&
       (location === "all" || job.location === location) &&
       (employmentType === "all" || job.employment_type === employmentType) &&
-      job.salary_max >= minimumSalary,
+      (currency === "all" || job.salary_currency === currency) &&
+      (minimumSalary === 0 || (job.salary_currency === "NGN" && job.salary_max >= minimumSalary)),
     );
     return rows.sort((a, b) =>
       sort === "salary"
         ? b.salary_max - a.salary_max
         : new Date(b.published_at).getTime() - new Date(a.published_at).getTime(),
     );
-  }, [employmentType, jobs, location, minimumSalary, query, sort, workMode]);
+  }, [currency, employmentType, jobs, location, minimumSalary, query, sort, workMode]);
 
   return (
     <>
@@ -71,6 +74,7 @@ export function JobBoard() {
         <label><span>Work arrangement</span><select value={workMode} onChange={(event) => setWorkMode(event.target.value as "all" | WorkMode)}><option value="all">All</option><option value="remote">Remote</option><option value="hybrid">Hybrid</option><option value="onsite">On-site</option></select></label>
         <label><span>Location</span><select value={location} onChange={(event) => setLocation(event.target.value)}><option value="all">All locations</option>{locations.map((item) => <option key={item}>{item}</option>)}</select></label>
         <label><span>Employment type</span><select value={employmentType} onChange={(event) => setEmploymentType(event.target.value)}><option value="all">All types</option><option>Full time</option><option>Part time</option><option>Contract</option><option>Internship</option></select></label>
+        <label><span>Salary currency</span><select value={currency} onChange={(event) => { setCurrency(event.target.value as typeof currency); setMinimumSalary(0); }}><option value="all">All currencies</option><option value="NGN">Nigerian naira</option><option value="USD">US dollar</option><option value="GBP">British pound</option><option value="EUR">Euro</option></select></label>
         <label><span>Minimum advertised salary</span><select value={minimumSalary} onChange={(event) => setMinimumSalary(Number(event.target.value))}><option value="0">Any salary</option><option value="100000">₦100,000+</option><option value="250000">₦250,000+</option><option value="500000">₦500,000+</option><option value="1000000">₦1,000,000+</option></select></label>
         <label><span>Sort</span><select value={sort} onChange={(event) => setSort(event.target.value as "newest" | "salary")}><option value="newest">Newest first</option><option value="salary">Highest salary</option></select></label>
       </div>
@@ -87,10 +91,11 @@ export function JobBoard() {
             <article className="job-card" key={job.id}>
               <div className="job-card-top">
                 <div><span className="job-company">{job.company_name}</span><h2><Link href={`/jobs/${job.slug}`}>{job.title}</Link></h2></div>
-                <span className={job.employer_verified ? "verification verified" : "verification"}>{job.employer_verified ? "Employer verified" : "Source checked"}</span>
+                <span className={job.employer_verified ? "verification verified" : "verification"}>{verificationLabel(job)}</span>
               </div>
               <div className="job-meta"><span>{job.location}</span><span>{job.work_mode === "onsite" ? "On-site" : job.work_mode}</span><span>{job.employment_type}</span></div>
               <strong className="job-salary">{formatJobSalary(job)}</strong>
+              <small>{salarySourceLabel(job)}</small>
               {gross && (
                 <div className="take-home-preview">
                   <span>Estimated income after PAYE only</span>

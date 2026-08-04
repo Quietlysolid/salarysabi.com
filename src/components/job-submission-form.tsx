@@ -41,6 +41,8 @@ export function JobSubmissionForm() {
       salary_max: Number(data.get("salary_max")),
       salary_period: data.get("salary_period"),
       salary_type: data.get("salary_type"),
+      salary_currency: data.get("salary_currency"),
+      engagement_type: data.get("engagement_type"),
       application_url: String(data.get("application_url") || "").trim(),
       expires_at: data.get("expires_at"),
       consented_at: new Date().toISOString(),
@@ -77,8 +79,10 @@ export function JobSubmissionForm() {
         <label>Work arrangement<select name="work_mode" required><option value="onsite">On-site</option><option value="hybrid">Hybrid</option><option value="remote">Remote</option></select></label>
         <label>Employment type<select name="employment_type" required><option>Full time</option><option>Part time</option><option>Contract</option><option>Internship</option></select></label>
         <label>Salary is<select name="salary_type" required><option value="gross">Gross, before deductions</option><option value="net">Net, after deductions</option></select></label>
-        <label>Minimum salary (₦)<input name="salary_min" type="number" min="1" step="1" required /></label>
-        <label>Maximum salary (₦)<input name="salary_max" type="number" min="1" step="1" required /></label>
+        <label>Salary currency<select name="salary_currency" required><option value="NGN">NGN, Nigerian naira</option><option value="USD">USD, US dollar</option><option value="GBP">GBP, British pound</option><option value="EUR">EUR, euro</option></select></label>
+        <label>Engagement<select name="engagement_type" required><option value="employee">Employee</option><option value="contractor">Independent contractor</option><option value="unknown">Not confirmed</option></select></label>
+        <label>Minimum salary<input name="salary_min" type="number" min="1" step="1" required /></label>
+        <label>Maximum salary<input name="salary_max" type="number" min="1" step="1" required /></label>
         <label>Salary period<select name="salary_period" required><option value="monthly">Monthly</option><option value="annual">Annual</option></select></label>
         <label>Application deadline<input name="expires_at" type="date" required /></label>
         <label className="wide">Application link<input name="application_url" type="url" required placeholder="https://company.com/careers/..." /></label>

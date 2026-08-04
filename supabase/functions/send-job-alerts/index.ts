@@ -23,7 +23,7 @@ Deno.serve(async (request) => {
 
   const { data: alerts, error: alertError } = await supabase.from("job_alerts").select("*").eq("active", true).not("user_id", "is", null);
   if (alertError) return Response.json({ error: alertError.message }, { status: 500 });
-  const { data: jobs, error: jobError } = await supabase.from("jobs").select("id,slug,title,company_name,location,work_mode,employment_type,salary_min,salary_max,salary_period,salary_type,published_at").eq("status", "published").gte("expires_at", new Date().toISOString().slice(0, 10));
+  const { data: jobs, error: jobError } = await supabase.from("jobs").select("id,slug,title,company_name,location,work_mode,employment_type,salary_min,salary_max,salary_period,salary_type,salary_currency,published_at").eq("status", "published").gte("expires_at", new Date().toISOString().slice(0, 10));
   if (jobError) return Response.json({ error: jobError.message }, { status: 500 });
 
   let sent = 0;
@@ -40,7 +40,7 @@ Deno.serve(async (request) => {
     });
     if (!matches.length) continue;
 
-    const items = matches.slice(0, 20).map((job) => `<li style="margin-bottom:16px"><a href="https://salarysabi.com/jobs/${encodeURIComponent(job.slug)}" style="font-weight:700;color:#075c46">${escapeHtml(job.title)}</a><br>${escapeHtml(job.company_name)} · ${escapeHtml(job.location)}<br>₦${Number(job.salary_min).toLocaleString()}–₦${Number(job.salary_max).toLocaleString()} ${escapeHtml(job.salary_type)} / ${escapeHtml(job.salary_period)}</li>`).join("");
+    const items = matches.slice(0, 20).map((job) => `<li style="margin-bottom:16px"><a href="https://salarysabi.com/jobs/${encodeURIComponent(job.slug)}" style="font-weight:700;color:#075c46">${escapeHtml(job.title)}</a><br>${escapeHtml(job.company_name)} · ${escapeHtml(job.location)}<br>${escapeHtml(job.salary_currency)} ${Number(job.salary_min).toLocaleString()}–${Number(job.salary_max).toLocaleString()} ${escapeHtml(job.salary_type)} / ${escapeHtml(job.salary_period)}</li>`).join("");
     const unsubscribeUrl = `${supabaseUrl}/functions/v1/send-job-alerts?unsubscribe=${alert.unsubscribe_token}`;
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",

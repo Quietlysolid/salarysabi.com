@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JobBoard } from "@/components/job-board";
 import { JobSubmissionForm } from "@/components/job-submission-form";
 import { JobAlertForm } from "@/components/job-alert-form";
+import { JobSuggestionForm } from "@/components/job-suggestion-form";
 import { InfoFooter, InfoHeader } from "@/components/info-page";
 
 export const metadata: Metadata = {
@@ -24,6 +25,10 @@ export default function JobsPage() {
       <section className="job-submit" id="post-a-job">
         <div className="job-submit-copy"><span className="eyebrow">For employers</span><h2>Post a salary-transparent job</h2><p>Submission is free during the beta. Every job is reviewed before it appears publicly.</p></div>
         <JobSubmissionForm />
+      </section>
+      <section className="job-submit" id="suggest-a-job">
+        <div className="job-submit-copy"><span className="eyebrow">Help us find good jobs</span><h2>Found a job with the salary shown?</h2><p>Send the official employer link. We verify it before it appears on SalarySabi.</p></div>
+        <JobSuggestionForm />
       </section>
       <InfoFooter />
     </main>
