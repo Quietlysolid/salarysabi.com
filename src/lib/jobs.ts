@@ -27,8 +27,16 @@ export function formatJobSalary(job: Pick<Job, "salary_period" | "salary_currenc
   const amount = job.salary_min === job.salary_max
     ? formatter.format(job.salary_min)
     : `${formatter.format(job.salary_min)}–${formatter.format(job.salary_max)}`;
-  const basis = job.salary_type === "not_stated" ? "basis not stated" : job.salary_type;
-  return `${amount} ${basis} / ${period}`;
+  const basis = job.salary_type === "not_stated" ? "" : ` ${job.salary_type}`;
+  return `${amount}${basis} per ${period}`;
+}
+
+export function formatJobDate(value: string) {
+  const [year, month, day] = value.slice(0, 10).split("-").map(Number);
+  if (!year || !month || !day) return value;
+  return new Intl.DateTimeFormat("en-NG", {
+    day: "numeric", month: "short", year: "numeric", timeZone: "Africa/Lagos",
+  }).format(new Date(Date.UTC(year, month - 1, day, 12)));
 }
 
 export function monthlyGrossRange(job: Job) {
@@ -49,6 +57,8 @@ export function verificationLabel(job: Job) {
 }
 
 export function salarySourceLabel(job: Job) {
+  if (job.salary_source === "employer_disclosed" && job.salary_type === "not_stated")
+    return "Salary shown in official listing";
   if (job.salary_source === "employer_disclosed") return "Salary disclosed by employer";
   if (job.salary_source === "third_party_estimate") return "Third-party salary estimate";
   return `Salary reported by ${job.source_name || "source"}`;

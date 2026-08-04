@@ -51,8 +51,11 @@ export function JobActions({ jobId }: { jobId: string }) {
   }
 
   return <section className="job-user-actions">
-    <h2>Keep track of this job</h2>
-    {userId ? <div className="job-account-actions"><button type="button" onClick={toggleSave}>{saved ? "Remove saved job" : "Save job"}</button><button type="button" onClick={markApplied}>{applied ? "Application recorded" : "I applied for this job"}</button><Link href="/account">Open my account</Link></div> : <p><Link href="/account">Sign in or create an account</Link> to save this job and track your application.</p>}
+    <div>
+      <h2>Save or track this job</h2>
+      <p>Keep it in one place and record when you apply.</p>
+    </div>
+    {userId ? <div className="job-account-actions"><button type="button" onClick={toggleSave}>{saved ? "Remove saved job" : "Save job"}</button><button type="button" onClick={markApplied}>{applied ? "Application recorded" : "Mark as applied"}</button><Link href="/account">My jobs</Link></div> : <p><Link href="/account">Sign in or create an account</Link> to save and track this job.</p>}
     <details className="job-report"><summary>Report a problem with this job</summary><form onSubmit={report}><label>Problem<select name="reason"><option value="expired">Job is filled or expired</option><option value="broken_link">Application link is broken</option><option value="misleading">Details are misleading</option><option value="fee_requested">Someone requested a fee</option><option value="other">Another problem</option></select></label><label>Details<textarea name="details" maxLength={1000} rows={4} /></label><label>Email, optional<input name="email" type="email" /></label><button type="submit">Send report</button></form></details>
     <p role="status">{message}</p>
   </section>;

@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { track } from "./analytics";
+import { ExternalLinkIcon } from "./external-link-icon";
 import {
   estimatedMonthlyAfterPaye,
+  formatJobDate,
   formatJobSalary,
   jobMatches,
   monthlyGrossRange,
@@ -270,11 +272,7 @@ export function JobBoard() {
                 </span>
                 <span>
                   Closes{" "}
-                  {new Date(job.expires_at).toLocaleDateString("en-NG", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                  {formatJobDate(job.expires_at)}
                 </span>
                 <Link href={`/jobs/${job.slug}`}>View job</Link>
                 <a
@@ -284,7 +282,7 @@ export function JobBoard() {
                   onClick={() => track("job_apply_clicked")}
                 >
                   Apply on company site
-                  <span className="external-arrow" aria-hidden="true" />
+                  <ExternalLinkIcon />
                   <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               </div>

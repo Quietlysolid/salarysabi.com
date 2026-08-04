@@ -85,7 +85,7 @@
 .job-source-panel {
   grid-template-columns: 1fr auto;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 38px;
 }
 
 .job-source-panel > div {
@@ -762,39 +762,13 @@ footer {
   line-height: 1;
 }
 
-.external-arrow {
-  position: relative;
+.external-link-icon {
   display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin-left: 6px;
-  vertical-align: -1px;
-}
-
-.external-arrow::before,
-.external-arrow::after {
-  content: "";
-  position: absolute;
-}
-
-.external-arrow::before {
-  left: 1px;
-  bottom: 2px;
-  width: 12px;
-  height: 1.5px;
-  border-radius: 2px;
-  background: currentColor;
-  transform: rotate(-45deg);
-  transform-origin: left center;
-}
-
-.external-arrow::after {
-  top: 0;
-  right: 0;
-  width: 6px;
-  height: 6px;
-  border-top: 1.5px solid currentColor;
-  border-right: 1.5px solid currentColor;
+  width: 14px;
+  height: 14px;
+  margin-left: 5px;
+  vertical-align: -2px;
+  flex: 0 0 auto;
 }
 
 .sr-only {
@@ -2721,10 +2695,39 @@ footer {
 .account-row { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
 .account-row:first-of-type { margin-top: 12px; }
 .job-user-actions { margin-top: 22px; }
-.job-account-actions { align-items: center; }
-.job-report { margin-top: 18px; }
-.job-report summary { cursor: pointer; }
+.job-user-actions {
+  display: grid;
+  grid-template-columns: minmax(180px, .75fr) minmax(300px, 1.25fr);
+  align-items: center;
+  gap: 24px;
+}
+.job-user-actions h2 { margin: 0 0 5px; font-size: 1.2rem; }
+.job-user-actions > div > p { margin: 0; color: var(--muted); font-size: .92rem; }
+.job-account-actions { align-items: center; justify-content: flex-end; }
+.job-account-actions button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+  padding: 10px 15px;
+}
+.job-account-actions button:hover { border-color: var(--green); color: var(--green-dark); }
+.job-account-actions a { min-height: 44px; display: inline-flex; align-items: center; font-weight: 750; }
+.job-report { grid-column: 1 / -1; margin-top: 0; padding-top: 16px; border-top: 1px solid var(--line); }
+.job-report summary { width: fit-content; list-style: none; cursor: pointer; color: var(--muted); font-size: .9rem; }
+.job-report summary::-webkit-details-marker { display: none; }
+.job-report summary:hover { color: var(--green-dark); text-decoration: underline; text-underline-offset: 3px; }
 .job-report form { margin-top: 16px; max-width: 520px; }
+
+@media (max-width: 680px) {
+  .job-user-actions { grid-template-columns: 1fr; gap: 18px; }
+  .job-account-actions { justify-content: flex-start; }
+  .job-source-panel .primary-button { width: 100%; justify-content: center; }
+}
 
 @media (max-width: 680px) {
   .account-auth { grid-template-columns: 1fr; gap: 28px; padding-top: 44px; }

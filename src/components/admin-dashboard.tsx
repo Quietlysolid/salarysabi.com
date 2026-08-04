@@ -4,6 +4,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { createBrowserSupabaseClient } from "@/lib/supabase";
 import { formatJobSalary, type Job } from "@/lib/jobs";
+import { ExternalLinkIcon } from "@/components/external-link-icon";
 
 type Submission = Omit<
   Job,
@@ -489,7 +490,7 @@ export function AdminDashboard() {
                 rel="noopener noreferrer"
               >
                 Check application link
-                <span className="external-arrow" aria-hidden="true" />
+                <ExternalLinkIcon />
                 <span className="sr-only"> (opens in a new tab)</span>
               </a>
               <div className="moderation-actions">
@@ -531,7 +532,7 @@ export function AdminDashboard() {
                 rel="noopener noreferrer"
               >
                 Check official listing
-                <span className="external-arrow" aria-hidden="true" />
+                <ExternalLinkIcon />
                 <span className="sr-only"> (opens in a new tab)</span>
               </a>
               <div className="moderation-actions">

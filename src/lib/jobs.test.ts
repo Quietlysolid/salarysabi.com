@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   estimatedMonthlyAfterPaye,
+  formatJobDate,
   formatJobSalary,
   jobMatches,
   monthlyGrossRange,
@@ -30,12 +31,16 @@ const job: Job = {
 
 describe("job helpers", () => {
   it("shows the salary basis and period", () => {
-    expect(formatJobSalary(job)).toContain("gross / month");
+    expect(formatJobSalary(job)).toContain("gross per month");
   });
 
   it("does not invent a range or salary basis when the employer states neither", () => {
     expect(formatJobSalary({ ...job, salary_min: 25_357, salary_max: 25_357, salary_period: "annual", salary_currency: "USD", salary_type: "not_stated" }))
-      .toBe("$25,357 basis not stated / year");
+      .toBe("$25,357 per year");
+  });
+
+  it("does not shift a date-only deadline into the previous day", () => {
+    expect(formatJobDate("2026-08-05")).toBe("5 Aug 2026");
   });
 
   it("normalizes annual gross salary to a monthly range", () => {

@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { InfoFooter, InfoHeader } from "@/components/info-page";
+import { ExternalLinkIcon } from "@/components/external-link-icon";
 import {
   estimatedMonthlyAfterPaye,
+  formatJobDate,
   formatJobSalary,
   monthlyGrossRange,
   salarySourceLabel,
@@ -19,6 +21,8 @@ const money = new Intl.NumberFormat("en-NG", {
   currency: "NGN",
   maximumFractionDigits: 0,
 });
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -140,10 +144,7 @@ export default async function JobPage({
           <div>
             <strong>{verificationLabel(job)}</strong>
             <span>
-              Checked{" "}
-              {new Date(job.source_verified_at).toLocaleDateString("en-NG")}.
-              Applications close{" "}
-              {new Date(job.expires_at).toLocaleDateString("en-NG")}.
+              Source checked {formatJobDate(job.source_verified_at)} · Closes {formatJobDate(job.expires_at)}
             </span>
             {job.source_url && (
               <a
@@ -151,8 +152,8 @@ export default async function JobPage({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Source: {job.source_name || job.company_name}
-                <span className="external-arrow" aria-hidden="true" />
+                View official listing
+                <ExternalLinkIcon />
                 <span className="sr-only"> (opens in a new tab)</span>
               </a>
             )}
@@ -163,8 +164,8 @@ export default async function JobPage({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Apply at original source
-            <span className="external-arrow" aria-hidden="true" />
+            Apply on official site
+            <ExternalLinkIcon />
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </section>
