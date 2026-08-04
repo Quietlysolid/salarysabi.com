@@ -19,8 +19,9 @@ Deno.serve(async (request) => {
   endpoint.searchParams.set("user_agent", request.headers.get("user-agent") || "SalarySabi job search");
   const authorization = btoa(`${apiKey}:`);
   const response = await fetch(endpoint, { headers: { Authorization: `Basic ${authorization}`, Accept: "application/json" } });
-  if (!response.ok) return Response.json({ error: `Careerjet returned ${response.status}` }, { status: 502 });
-  const payload = await response.json() as { jobs?: Record<string, unknown>[] };
+  const responseText = await response.text();
+  if (!response.ok) return Response.json({ error: `Careerjet returned ${response.status}`, detail: responseText.slice(0, 500) }, { status: 502 });
+  const payload = JSON.parse(responseText) as { jobs?: Record<string, unknown>[] };
   const jobs = (payload.jobs || []).flatMap((job) => {
     const currency = String(job.salary_currency_code || "").toUpperCase();
     const minimum = Number(job.salary_min); const maximum = Number(job.salary_max);
