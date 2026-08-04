@@ -13,6 +13,7 @@ export function InfoHeader() {
       </Link>
       <nav aria-label="Information navigation">
         <Link href="/">Calculate</Link>
+        <Link href="/payslip-checker">Check payslip</Link>
         <Link className="nav-primary" href="/jobs">Find jobs</Link>
         <Link href="/account">My jobs</Link>
         <Link className="nav-cta" href="/how-paye-is-calculated">PAYE guide</Link>
@@ -24,6 +25,7 @@ export function InfoHeader() {
           <summary>Menu</summary>
           <div>
             <Link href="/account">My jobs</Link>
+            <Link href="/payslip-checker">Check payslip</Link>
             <Link href="/post-a-job">Post a job</Link>
             <Link href="/suggest-a-job">Send us a job</Link>
             <Link href="/how-paye-is-calculated">PAYE guide</Link>
