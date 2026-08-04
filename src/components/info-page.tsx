@@ -44,7 +44,6 @@ export function InfoFooter() {
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
       </div>
-      <span>Rules checked {lastVerified}. Built to stay light on mobile data.</span>
     </footer>
   );
 }

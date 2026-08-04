@@ -23,12 +23,18 @@ export default function JobsPage() {
       <section className="jobs-alert-wrap"><JobAlertForm /></section>
       <section className="jobs-board" aria-label="Nigerian job listings"><JobBoard /></section>
       <section className="job-submit" id="post-a-job">
-        <div className="job-submit-copy"><span className="eyebrow">For employers and recruiters</span><h2>Post a salary-transparent job</h2><p>Authorized recruiters are welcome. Submission is free during the beta, and every job is reviewed before it appears publicly.</p></div>
-        <JobSubmissionForm />
+        <div className="job-submit-copy"><span className="eyebrow">For employers and recruiters</span><h2>Post a salary-transparent job</h2><p>Submission is free during the beta. We review the employer, salary and application link before publishing.</p></div>
+        <details className="job-form-disclosure">
+          <summary><span>Start a job submission</span><small>About 3 minutes</small></summary>
+          <JobSubmissionForm />
+        </details>
       </section>
       <section className="job-submit" id="suggest-a-job">
         <div className="job-submit-copy"><span className="eyebrow">Help us find good jobs</span><h2>Found a job with the salary shown?</h2><p>Send the official employer link. We verify it before it appears on SalarySabi.</p></div>
-        <JobSuggestionForm />
+        <details className="job-form-disclosure job-form-disclosure-short">
+          <summary><span>Share the official link</span><small>About 1 minute</small></summary>
+          <JobSuggestionForm />
+        </details>
       </section>
       <InfoFooter />
     </main>
