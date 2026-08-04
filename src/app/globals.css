@@ -545,6 +545,10 @@
   fill: #a8d83f;
 }
 
+.brand-mark-arrow {
+  fill: #006a42;
+}
+
 @media (max-width: 760px) {
   .brand .brand-mark {
     width: 50px;
