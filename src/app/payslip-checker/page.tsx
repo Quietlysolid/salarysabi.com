@@ -15,7 +15,7 @@ export default function PayslipCheckerPage() {
       <section className="form-page-hero payslip-hero">
         <span className="eyebrow">Payslip checker</span>
         <h1>Check the deductions on your payslip.</h1>
-        <p>Enter the figures yourself. We compare the PAYE shown with our estimate and do not upload your payslip.</p>
+        <p>Enter the monthly figures from your payslip and compare the PAYE shown with our estimate.</p>
       </section>
       <PayslipChecker />
       <InfoFooter />

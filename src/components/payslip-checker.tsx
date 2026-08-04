@@ -99,7 +99,7 @@ export function PayslipChecker() {
           <>
             <span className="eyebrow light">What you’ll see</span>
             <h2>A simple comparison of your PAYE and take-home pay.</h2>
-            <p>We’ll show the difference without storing your payslip figures.</p>
+            <p>Enter your figures to see the difference.</p>
           </>
         )}
       </section>
