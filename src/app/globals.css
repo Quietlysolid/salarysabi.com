@@ -2661,6 +2661,7 @@ summary:focus-visible {
 
 body {
   background: #ffffff;
+  overflow-x: clip;
 }
 
 .site-header {
@@ -2843,6 +2844,327 @@ body {
 
   .job-form-disclosure > form {
     padding: 0 16px 20px;
+  }
+}
+
+/* Job-seeker-first navigation and page structure. */
+.mobile-nav {
+  display: none;
+}
+
+.jobs-board .job-search {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #f8faf9;
+}
+
+.job-more-filters {
+  grid-column: 1 / -1;
+  padding-top: 2px;
+}
+
+.job-more-filters > summary {
+  width: max-content;
+  color: var(--green);
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+.job-more-filters > summary::-webkit-details-marker {
+  display: none;
+}
+
+.job-more-filters > summary::after {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0 0 3px 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.job-more-filters[open] > summary::after {
+  margin-bottom: -1px;
+  transform: rotate(225deg);
+}
+
+.job-more-filters > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding-top: 16px;
+}
+
+.jobs-state {
+  min-height: 0;
+  margin-top: 18px;
+  padding: 30px 20px;
+}
+
+.job-list:empty {
+  padding: 0;
+}
+
+.jobs-next-actions {
+  width: min(var(--content-width), calc(100% - (var(--page-gutter) * 2)));
+  margin: 28px auto clamp(70px, 9vw, 110px);
+}
+
+.jobs-alert-disclosure {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.jobs-alert-disclosure > summary {
+  display: flex;
+  align-items: center;
+  min-height: 74px;
+  padding: 18px 22px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.jobs-alert-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.jobs-alert-disclosure > summary span {
+  font-weight: 850;
+}
+
+.jobs-alert-disclosure > summary small {
+  margin-left: 14px;
+  color: var(--muted);
+}
+
+.jobs-alert-disclosure > summary::after {
+  width: 10px;
+  height: 10px;
+  margin-left: auto;
+  border-right: 2px solid var(--green);
+  border-bottom: 2px solid var(--green);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.jobs-alert-disclosure[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.jobs-alert-disclosure[open] > summary::after {
+  transform: rotate(225deg);
+}
+
+.jobs-alert-disclosure .job-alert {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.jobs-help-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 20px 4px 0;
+}
+
+.jobs-help-links p {
+  margin: 0 auto 0 0;
+  color: var(--muted);
+}
+
+.jobs-help-links a {
+  color: var(--green);
+  font-weight: 800;
+}
+
+.form-page-hero,
+.standalone-job-form {
+  width: min(850px, calc(100% - (var(--page-gutter) * 2)));
+  margin-inline: auto;
+}
+
+.form-page-hero {
+  padding: clamp(54px, 8vw, 92px) 0 34px;
+}
+
+.form-page-hero h1 {
+  max-width: 720px;
+  margin: 12px 0 14px;
+  font-size: clamp(42px, 6vw, 68px);
+  line-height: .98;
+  letter-spacing: -3px;
+}
+
+.form-page-hero p {
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.6;
+}
+
+.standalone-job-form {
+  margin-bottom: clamp(70px, 10vw, 120px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 18px 55px rgba(8, 45, 29, .07);
+}
+
+.standalone-job-form .job-submit-form {
+  margin: 0;
+  padding: clamp(22px, 4vw, 38px);
+  border: 0;
+  box-shadow: none;
+}
+
+.form-page-note {
+  padding: 22px clamp(22px, 4vw, 38px);
+  border-bottom: 1px solid var(--line);
+  background: #f5faf7;
+}
+
+.form-page-note p {
+  margin: 5px 0 0;
+  color: var(--muted);
+}
+
+.standalone-job-form-short {
+  max-width: 720px;
+}
+
+@media (max-width: 760px) {
+  .info-header > nav {
+    display: none;
+  }
+
+  .info-header .brand > span:last-child {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto;
+    font-size: .85rem;
+    font-weight: 750;
+  }
+
+  .jobs-hero,
+  .jobs-board,
+  .jobs-next-actions {
+    min-width: 0;
+  }
+
+  .jobs-hero h1,
+  .jobs-hero p {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-nav > a,
+  .mobile-nav summary {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .mobile-nav details {
+    position: relative;
+  }
+
+  .mobile-nav summary {
+    padding: 10px 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .mobile-nav summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-nav summary::after {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin: 0 0 3px 7px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    content: "";
+    transform: rotate(45deg);
+  }
+
+  .mobile-nav details > div {
+    position: absolute;
+    z-index: 20;
+    top: 44px;
+    right: 0;
+    display: grid;
+    width: 190px;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 14px 40px rgba(8, 45, 29, .14);
+  }
+
+  .mobile-nav details > div a {
+    padding: 12px;
+    border-radius: 9px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .mobile-nav details > div a:active {
+    background: #eef7f1;
+  }
+
+  .job-more-filters > div {
+    grid-template-columns: 1fr;
+  }
+
+  .jobs-alert-disclosure > summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .jobs-alert-disclosure > summary small {
+    margin: 4px 28px 0 0;
+  }
+
+  .jobs-alert-disclosure > summary::after {
+    position: absolute;
+    align-self: flex-end;
+    margin-top: 8px;
+  }
+
+  .jobs-help-links {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+  }
+
+  .jobs-help-links p {
+    flex-basis: 100%;
+  }
+
+  .form-page-hero h1 {
+    letter-spacing: -2px;
+  }
+}
+
+@media (max-width: 430px) {
+  .mobile-nav {
+    gap: 11px;
+    font-size: .78rem;
+  }
+
+  .footer-brand > span:last-child {
+    display: inline;
   }
 }
 

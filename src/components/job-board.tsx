@@ -103,7 +103,7 @@ export function JobBoard() {
           />
         </label>
         <label>
-          <span>Work arrangement</span>
+          <span>Where you’ll work</span>
           <select
             value={workMode}
             onChange={(event) =>
@@ -128,8 +128,11 @@ export function JobBoard() {
             ))}
           </select>
         </label>
+        <details className="job-more-filters">
+          <summary>More filters</summary>
+          <div>
         <label>
-          <span>Employment type</span>
+          <span>Job type</span>
           <select
             value={employmentType}
             onChange={(event) => setEmploymentType(event.target.value)}
@@ -142,7 +145,7 @@ export function JobBoard() {
           </select>
         </label>
         <label>
-          <span>Salary currency</span>
+          <span>Paid in</span>
           <select
             value={currency}
             onChange={(event) => {
@@ -158,7 +161,7 @@ export function JobBoard() {
           </select>
         </label>
         <label>
-          <span>Minimum advertised salary</span>
+          <span>Minimum salary</span>
           <select
             value={minimumSalary}
             onChange={(event) => setMinimumSalary(Number(event.target.value))}
@@ -182,10 +185,12 @@ export function JobBoard() {
             <option value="salary">Highest salary</option>
           </select>
         </label>
+          </div>
+        </details>
       </div>
 
       {state === "loading" && (
-        <div className="jobs-state">Checking current verified jobs…</div>
+        <div className="jobs-state">Loading jobs…</div>
       )}
       {state === "error" && (
         <div className="jobs-state error">
@@ -194,11 +199,8 @@ export function JobBoard() {
       )}
       {state === "ready" && visible.length === 0 && (
         <div className="jobs-state">
-          <strong>No matching verified jobs yet.</strong>
-          <span>
-            Change the search or ask an employer to submit a salary-transparent
-            role.
-          </span>
+          <strong>No matching jobs yet.</strong>
+          <span>Try another search or check again soon.</span>
         </div>
       )}
       {state === "ready" && visible.length > 0 && (
@@ -242,7 +244,7 @@ export function JobBoard() {
               <small>{salarySourceLabel(job)}</small>
               {gross && (
                 <div className="take-home-preview">
-                  <span>Estimated income after PAYE only</span>
+                  <span>Estimated pay after PAYE</span>
                   <strong>
                     {money.format(estimatedMonthlyAfterPaye(gross.minimum))}–
                     {money.format(estimatedMonthlyAfterPaye(gross.maximum))} /
@@ -274,14 +276,14 @@ export function JobBoard() {
                     year: "numeric",
                   })}
                 </span>
-                <Link href={`/jobs/${job.slug}`}>Read full details</Link>
+                <Link href={`/jobs/${job.slug}`}>View job</Link>
                 <a
                   href={job.application_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => track("job_apply_clicked")}
                 >
-                  Apply at original source
+                  Apply on company site
                   <span className="external-arrow" aria-hidden="true" />
                   <span className="sr-only"> (opens in a new tab)</span>
                 </a>

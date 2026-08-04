@@ -254,7 +254,7 @@ export function JobSubmissionForm() {
       </div>
       <p className="job-form-note">
         Salary disclosure is required. Recruitment fees, referral schemes and
-        jobs without a working application route are not accepted.
+        jobs without a working application link are not accepted.
       </p>
       <button
         className="primary-button"

@@ -12,11 +12,24 @@ export function InfoHeader() {
         </span>
       </Link>
       <nav aria-label="Information navigation">
-        <Link href="/">Calculator</Link>
-        <Link className="nav-primary" href="/jobs">Jobs</Link>
+        <Link href="/">Calculate</Link>
+        <Link className="nav-primary" href="/jobs">Find jobs</Link>
         <Link href="/account">My jobs</Link>
         <Link className="nav-cta" href="/how-paye-is-calculated">PAYE guide</Link>
       </nav>
+      <div className="mobile-nav">
+        <Link href="/">Calculate</Link>
+        <Link href="/jobs">Jobs</Link>
+        <details>
+          <summary>Menu</summary>
+          <div>
+            <Link href="/account">My jobs</Link>
+            <Link href="/post-a-job">Post a job</Link>
+            <Link href="/suggest-a-job">Send us a job</Link>
+            <Link href="/how-paye-is-calculated">PAYE guide</Link>
+          </div>
+        </details>
+      </div>
     </header>
   );
 }
@@ -32,6 +45,7 @@ export function InfoFooter() {
       </Link>
       <div className="footer-links">
         <Link href="/account">My jobs</Link>
+        <Link href="/post-a-job">Post a job</Link>
         <Link href="/privacy">Privacy</Link>
         <Link href="/disclaimer">Disclaimer</Link>
         <a

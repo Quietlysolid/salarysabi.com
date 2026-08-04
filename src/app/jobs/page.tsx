@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { JobBoard } from "@/components/job-board";
-import { JobSubmissionForm } from "@/components/job-submission-form";
 import { JobAlertForm } from "@/components/job-alert-form";
-import { JobSuggestionForm } from "@/components/job-suggestion-form";
 import { InfoFooter, InfoHeader } from "@/components/info-page";
 
 export const metadata: Metadata = {
   title: "Jobs in Nigeria With Salary Information | SalarySabi",
-  description: "Search verified Nigerian jobs that disclose salary, distinguish gross from net pay and show an estimated PAYE preview.",
+  description: "Find Nigerian jobs that show the salary before you apply.",
   alternates: { canonical: "/jobs" },
 };
 
@@ -16,25 +15,21 @@ export default function JobsPage() {
     <main>
       <InfoHeader />
       <section className="jobs-hero">
-        <span className="eyebrow">Salary-transparent jobs</span>
-        <h1>Know the pay before you apply.</h1>
-        <p>Every published role must disclose a salary range, say whether it is gross or net, and provide a working application link.</p>
+        <span className="eyebrow">Jobs that show the salary</span>
+        <h1>See the pay before you apply.</h1>
+        <p>Every job here shows what it pays and links to the original application page.</p>
       </section>
-      <section className="jobs-alert-wrap"><JobAlertForm /></section>
       <section className="jobs-board" aria-label="Nigerian job listings"><JobBoard /></section>
-      <section className="job-submit" id="post-a-job">
-        <div className="job-submit-copy"><span className="eyebrow">For employers and recruiters</span><h2>Post a salary-transparent job</h2><p>Submission is free during the beta. We review the employer, salary and application link before publishing.</p></div>
-        <details className="job-form-disclosure">
-          <summary><span>Start a job submission</span><small>About 3 minutes</small></summary>
-          <JobSubmissionForm />
+      <section className="jobs-next-actions" aria-label="More job options">
+        <details className="jobs-alert-disclosure">
+          <summary><span>Get new jobs by email</span><small>Choose the jobs you want to hear about</small></summary>
+          <JobAlertForm />
         </details>
-      </section>
-      <section className="job-submit" id="suggest-a-job">
-        <div className="job-submit-copy"><span className="eyebrow">Help us find good jobs</span><h2>Found a job with the salary shown?</h2><p>Send the official employer link. We verify it before it appears on SalarySabi.</p></div>
-        <details className="job-form-disclosure job-form-disclosure-short">
-          <summary><span>Share the official link</span><small>About 1 minute</small></summary>
-          <JobSuggestionForm />
-        </details>
+        <div className="jobs-help-links">
+          <p>Seen a job that shows the salary?</p>
+          <Link href="/suggest-a-job">Send us the job</Link>
+          <Link href="/post-a-job">Post a job</Link>
+        </div>
       </section>
       <InfoFooter />
     </main>

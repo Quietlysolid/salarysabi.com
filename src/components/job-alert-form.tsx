@@ -49,13 +49,13 @@ export function JobAlertForm() {
 
   return (
     <form className="job-alert" onSubmit={submit}>
-      <div><strong>Get matching jobs by email</strong><span>Only roles matching your choices.</span></div>
-      <input name="keywords" aria-label="Job alert keywords" placeholder="e.g. frontend developer" maxLength={100} required />
-      <input name="location" aria-label="Job alert location" placeholder="e.g. Lagos" maxLength={100} />
-      <select name="work_mode" aria-label="Job alert work arrangement"><option value="all">Any arrangement</option><option value="remote">Remote</option><option value="hybrid">Hybrid</option><option value="onsite">On-site</option></select>
-      <label className="alert-consent"><input type="checkbox" required /><span>I agree to receive matching job emails.</span></label>
-      <button type="submit" disabled={submitting}>{submitting ? "Saving..." : "Create alert"}</button>
-      <small>Alerts require a verified account. <Link href="/account">Sign in or create one</Link>.</small>
+      <div><strong>What job do you want?</strong><span>We’ll email you when there is a match.</span></div>
+      <input name="keywords" aria-label="Job title or skill" placeholder="Job title or skill" maxLength={100} required />
+      <input name="location" aria-label="Location" placeholder="Location, e.g. Lagos" maxLength={100} />
+      <select name="work_mode" aria-label="Where you want to work"><option value="all">Anywhere</option><option value="remote">Remote</option><option value="hybrid">Hybrid</option><option value="onsite">On-site</option></select>
+      <label className="alert-consent"><input type="checkbox" required /><span>Send matching jobs to my email.</span></label>
+      <button type="submit" disabled={submitting}>{submitting ? "Saving..." : "Send me jobs"}</button>
+      <small>You need an account for job alerts. <Link href="/account">Sign in or create one</Link>.</small>
       <small role="status">{message}</small>
     </form>
   );
