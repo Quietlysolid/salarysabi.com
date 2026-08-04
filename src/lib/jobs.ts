@@ -38,7 +38,7 @@ export function estimatedMonthlyAfterPaye(monthlyGross: number) {
 }
 
 export function verificationLabel(job: Job) {
-  if (job.employer_verified) return "Employer submitted";
+  if (job.source_kind === "employer_submission") return "Employer submitted";
   if (job.source_kind === "licensed_feed") return "Licensed feed";
   if (job.source_kind === "official_page" || job.source_kind === "community_tip") return "Official source checked";
   return "Application link checked";
@@ -46,6 +46,7 @@ export function verificationLabel(job: Job) {
 
 export function salarySourceLabel(job: Job) {
   if (job.salary_source === "employer_disclosed") return "Salary disclosed by employer";
+  if (job.salary_source === "third_party_estimate" && job.source_name === "Adzuna") return "Adzuna Jobsworth salary estimate";
   if (job.salary_source === "third_party_estimate") return "Third-party salary estimate";
   return `Salary reported by ${job.source_name || "source"}`;
 }

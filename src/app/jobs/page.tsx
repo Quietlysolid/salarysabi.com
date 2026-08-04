@@ -23,7 +23,7 @@ export default function JobsPage() {
       <section className="jobs-alert-wrap"><JobAlertForm /></section>
       <section className="jobs-board" aria-label="Nigerian job listings"><JobBoard /></section>
       <section className="job-submit" id="post-a-job">
-        <div className="job-submit-copy"><span className="eyebrow">For employers</span><h2>Post a salary-transparent job</h2><p>Submission is free during the beta. Every job is reviewed before it appears publicly.</p></div>
+        <div className="job-submit-copy"><span className="eyebrow">For employers and recruiters</span><h2>Post a salary-transparent job</h2><p>Authorized recruiters are welcome. Submission is free during the beta, and every job is reviewed before it appears publicly.</p></div>
         <JobSubmissionForm />
       </section>
       <section className="job-submit" id="suggest-a-job">
