@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { BrandMark } from "@/components/brand-mark";
 import { lastVerified } from "@/lib/site";
 
 export function InfoHeader() {
   return (
     <header className="site-header info-header">
       <Link className="brand" href="/">
-        <span className="brand-mark">§</span>
+        <BrandMark />
         <span>
           Salary<span className="brand-accent">Sabi</span>
         </span>
@@ -40,7 +41,7 @@ export function InfoFooter() {
   return (
     <footer className="info-footer">
       <Link className="brand footer-brand" href="/">
-        <span className="brand-mark">§</span>
+        <BrandMark />
         <span>
           Salary<span className="brand-accent">Sabi</span>
         </span>

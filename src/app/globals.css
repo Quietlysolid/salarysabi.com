@@ -523,6 +523,40 @@
   }
 }
 
+/* Final interlocking SS vector mark. */
+.brand .brand-mark {
+  display: block;
+  width: 58px;
+  height: 48px;
+  flex: 0 0 58px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  -webkit-text-stroke: 0;
+}
+
+.brand-mark-first {
+  fill: #006a42;
+}
+
+.brand-mark-second {
+  fill: #101c17;
+}
+
+.brand-mark-equals {
+  fill: #b8e84a;
+}
+
+@media (max-width: 760px) {
+  .brand .brand-mark {
+    width: 50px;
+    height: 42px;
+    flex-basis: 50px;
+  }
+}
+
 * {
   box-sizing: border-box;
 }

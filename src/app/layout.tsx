@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     "PAYE tax calculator Nigeria",
   ],
   alternates: { canonical: "/" },
+  icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
     locale: "en_NG",
