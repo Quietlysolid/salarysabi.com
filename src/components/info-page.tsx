@@ -12,6 +12,8 @@ export function InfoHeader() {
         </span>
       </Link>
       <nav aria-label="Information navigation">
+        <Link className="nav-primary" href="/jobs">Jobs</Link>
+        <Link href="/account">My jobs</Link>
         <Link href="/how-paye-is-calculated">Methodology</Link>
         <Link href="/eligible-deductions">Deductions</Link>
         <Link className="nav-cta" href="/#calculator">
@@ -32,6 +34,7 @@ export function InfoFooter() {
         </span>
       </Link>
       <div className="footer-links">
+        <Link href="/account">My jobs</Link>
         <Link href="/privacy">Privacy</Link>
         <Link href="/disclaimer">Disclaimer</Link>
         <a
@@ -39,7 +42,9 @@ export function InfoFooter() {
           rel="noreferrer"
           target="_blank"
         >
-          Official JRB guidance ↗
+          Official JRB guidance
+          <span className="external-arrow" aria-hidden="true" />
+          <span className="sr-only"> (opens in a new tab)</span>
         </a>
       </div>
       <span>Calculation rules last verified {lastVerified}</span>
@@ -67,8 +72,8 @@ export function InfoPage({
           <h1>{title}</h1>
           <p>{intro}</p>
           <div className="verified-note">
-            <span>✓</span>
-            Rules last verified {lastVerified}
+            <span>Verified:</span>
+            Rules checked {lastVerified}
           </div>
         </div>
         <div className="prose">{children}</div>

@@ -64,10 +64,13 @@ Implemented:
 - Server-only Supabase waitlist persistence with consent and deduplication
 - Cookieless, aggregate first-party analytics that respects Do Not Track
 - Spam honeypot and minimum-completion-time protection
+- Salary-transparent job search with permanent, indexable job pages
+- Moderated employer submissions, reports, editing and expiration controls
+- Job-seeker accounts with saved jobs and application tracking
+- Verified account alerts with scheduled matching and unsubscribe links
 
 Not implemented yet:
 
-- Authentication
 - Saved employees
 - Payslip generation
 - Employer payroll registers
@@ -95,14 +98,25 @@ analytics but cannot read either table. Never use a service-role key here.
 Without the Supabase values, calculations remain functional, analytics fail
 silently, and the early-access form returns a temporary-unavailable message.
 
-Because these `NEXT_PUBLIC_` values are compiled into the static browser bundle,
-the production artifact must be built in an environment where they are present.
+The production artifact must be built in an environment where the public
+Supabase values are present. Configure the Supabase Auth site URL as
+`https://salarysabi.com` and allow `https://salarysabi.com/account` as a redirect.
+
+Job alert delivery also requires a verified sending domain with Resend and two
+Supabase Edge Function secrets:
+
+```text
+RESEND_API_KEY=re_...
+JOB_ALERT_FROM=SalarySabi Jobs <jobs@YOUR_VERIFIED_DOMAIN>
+```
+
+The database schedules the `send-job-alerts` Edge Function daily at 07:00 UTC.
+Without those Resend settings, alerts can be saved but no email is sent.
 
 ## Cloudflare production deployment
 
-The repository is configured for Cloudflare Workers Static Assets in
-`wrangler.jsonc`. Cloudflare serves the generated `out` directory directly; no
-Worker script or server runtime is required.
+The repository uses OpenNext on Cloudflare Workers. The Worker renders dynamic
+job detail pages and serves the static application assets.
 
 For a one-off deployment from an authenticated development machine:
 
@@ -116,7 +130,7 @@ Pages → Create application → Import a repository** and use:
 ```text
 Worker name: salarysabi
 Production branch: main
-Build command: npm run build
+Build command: npx opennextjs-cloudflare build
 Deploy command: npx wrangler deploy
 ```
 

@@ -37,6 +37,11 @@ const TAX_BANDS = [
   { label: "Above ₦50,000,000", width: Number.POSITIVE_INFINITY, rate: 0.25 },
 ] as const;
 
+// National Minimum Wage (Amendment) Act 2024: ₦70,000 per month.
+// Nigeria Tax Act 2025, s. 163(1)(t), exempts employment income where gross
+// income is no more than the national minimum wage.
+export const ANNUAL_NATIONAL_MINIMUM_WAGE = 70_000 * 12;
+
 const asMoney = (value: number | undefined) =>
   Number.isFinite(value) && (value ?? 0) > 0 ? value ?? 0 : 0;
 
@@ -62,7 +67,10 @@ export function calculatePaye(inputs: PayeInputs): PayeResult {
     remaining = Math.max(0, remaining - taxableAmount);
     return { ...band, taxableAmount, tax };
   });
-  const annualTax = bands.reduce((total, band) => total + band.tax, 0);
+  const annualTax =
+    annualGrossIncome <= ANNUAL_NATIONAL_MINIMUM_WAGE
+      ? 0
+      : bands.reduce((total, band) => total + band.tax, 0);
 
   return {
     annualGrossIncome,

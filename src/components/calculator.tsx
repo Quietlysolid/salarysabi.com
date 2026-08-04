@@ -267,7 +267,7 @@ export function Calculator() {
             <small>Optional. Skip this if none apply to you.</small>
           </span>
           <span className={showDeductions ? "chevron open" : "chevron"}>
-            ⌄
+            {showDeductions ? "Hide" : "Show"}
           </span>
         </button>
 
@@ -314,7 +314,7 @@ export function Calculator() {
                 <small>Mortgage interest and life assurance</small>
               </span>
               <span className={showOtherDeductions ? "chevron open" : "chevron"}>
-                ⌄
+                {showOtherDeductions ? "Hide" : "Show"}
               </span>
             </button>
 
@@ -328,7 +328,6 @@ export function Calculator() {
 
         <button className="primary-button" type="submit">
           Show my PAYE estimate
-          <span aria-hidden="true">→</span>
         </button>
         <p className="privacy-note">
           No signup. Your salary figures stay in this browser.
@@ -349,14 +348,14 @@ export function Calculator() {
 
         <div className="result-summary">
           <div>
-            <span>Salary left after PAYE</span>
+            <span>Income after PAYE only</span>
             <strong>{money.format(result.monthlyIncomeAfterTax)}</strong>
             <small>Before pension, NHF and other payroll deductions</small>
           </div>
           <div>
             <span>Share of salary paid as PAYE</span>
             <strong>{(result.effectiveTaxRate * 100).toFixed(1)}%</strong>
-            <small>Your effective tax rate</small>
+            <small>Excludes pension, NHF, NHIS and other payroll deductions</small>
           </div>
         </div>
 
@@ -436,7 +435,6 @@ export function Calculator() {
 
         <div className="result-footer">
           <div>
-            <span className="mini-icon">✓</span>
             <p>
               <strong>Based on official 2026 JRB guidance</strong>
               <small>

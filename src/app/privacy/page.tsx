@@ -50,6 +50,23 @@ export default function PrivacyPage() {
         </p>
       </section>
       <section>
+        <h2>Job submissions</h2>
+        <p>
+          Employers who submit a job provide a contact email and job details.
+          We keep the contact email private and use it to review the listing or
+          ask questions about it. Approved job details, excluding the contact
+          email, may be published on SalarySabi.
+        </p>
+      </section>
+      <section>
+        <h2>Job alerts</h2>
+        <p>
+          A job alert stores your email address and the job filters you select.
+          We use them only to send matching job notifications. You may ask us
+          to deactivate and remove the alert.
+        </p>
+      </section>
+      <section>
         <h2>Early-access email</h2>
         <p>
           If you join an early-access list, we store your email address,

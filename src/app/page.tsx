@@ -38,9 +38,12 @@ export default function Home() {
           <span>Salary<span className="brand-accent">Sabi</span></span>
         </a>
         <nav aria-label="Main navigation">
+          <Link className="nav-primary" href="/jobs">Jobs</Link>
+          <Link href="/account">My jobs</Link>
           <a href="#how-it-works">How it works</a>
           <a href="#tax-bands">2026 tax bands</a>
-          <a className="nav-cta" href="#early-access">Payroll for teams</a>
+          <a href="#early-access">Payroll for teams</a>
+          <a className="nav-cta" href="#calculator">Calculate PAYE</a>
         </nav>
       </header>
 
@@ -129,7 +132,9 @@ export default function Home() {
           target="_blank"
           rel="noreferrer"
         >
-          Read JRB guidelines ↗
+          Read JRB guidelines
+          <span className="external-arrow" aria-hidden="true" />
+          <span className="sr-only"> (opens in a new tab)</span>
         </a>
       </section>
 
@@ -139,6 +144,8 @@ export default function Home() {
           <span>Salary<span className="brand-accent">Sabi</span></span>
         </a>
         <div className="home-footer-links">
+          <Link href="/jobs">Jobs with salary</Link>
+          <Link href="/account">My jobs</Link>
           <Link href="/how-paye-is-calculated">How PAYE works</Link>
           <Link href="/eligible-deductions">Deductions</Link>
           <Link href="/privacy">Privacy</Link>
