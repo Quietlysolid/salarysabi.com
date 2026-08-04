@@ -523,12 +523,98 @@
   }
 }
 
+.logo-lab-intro,
+.logo-review-card {
+  width: min(900px, calc(100% - (var(--page-gutter) * 2)));
+  margin-inline: auto;
+}
+
+.logo-lab-intro {
+  padding: 56px 0 28px;
+}
+
+.logo-lab-intro h1 {
+  margin: 10px 0;
+  font-size: 48px;
+  letter-spacing: -2px;
+}
+
+.logo-review-card {
+  margin-bottom: 28px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.logo-review-card h2 {
+  margin: 0 0 20px;
+}
+
+.logo-reference-crop {
+  width: 100%;
+  aspect-ratio: 3.25 / 1;
+  background: #fff url('/logo-reference-sheet.png') center top / 100% auto no-repeat;
+}
+
+.logo-lockup-preview {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-height: 150px;
+  padding: 30px;
+  background: #fff;
+}
+
+.logo-lockup-preview .brand-mark {
+  width: 120px;
+  height: 100px;
+}
+
+.logo-lockup-preview .brand-mark,
+.logo-size-tests .brand-mark {
+  display: block;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  -webkit-text-stroke: 0;
+}
+
+.logo-lockup-preview strong {
+  font-size: 48px;
+  letter-spacing: -2.5px;
+}
+
+.logo-lockup-preview strong span {
+  color: var(--green);
+}
+
+.logo-size-tests {
+  display: flex;
+  align-items: end;
+  gap: 36px;
+  padding: 24px 30px;
+  background: #f7faf8;
+}
+
+.logo-size-tests > div {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.logo-size-tests .brand-mark { width: 58px; height: 48px; }
+.logo-size-tests .small .brand-mark { width: 48px; height: 40px; }
+.logo-size-tests .tiny .brand-mark { width: 24px; height: 20px; }
+.logo-size-tests span { color: var(--muted); font-size: 12px; }
+
 /* Final interlocking SS vector mark. */
 .brand .brand-mark {
   display: block;
-  width: 58px;
+  width: 57px;
   height: 48px;
-  flex: 0 0 58px;
+  flex: 0 0 57px;
   overflow: visible;
   border: 0;
   border-radius: 0;
@@ -543,6 +629,43 @@
 
 .brand-mark-second {
   fill: #a8d83f;
+  stroke: #fff;
+  stroke-width: 5px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+
+.brand-mark-upper-curve,
+.brand-mark-lower-curve {
+  fill: none;
+  stroke-width: 20px;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.brand-mark-upper-curve { stroke: #006a42; }
+.brand-mark-lower-curve { stroke: #a8d83f; }
+
+.brand-i {
+  position: relative;
+  display: inline-block;
+}
+
+.brand-wordmark > .brand-accent {
+  display: inline-block;
+  margin-left: .06em;
+}
+
+.brand-i::after {
+  content: "";
+  position: absolute;
+  top: .1em;
+  left: 50%;
+  width: .18em;
+  height: .18em;
+  border-radius: 50%;
+  background: #a8d83f;
+  transform: translateX(-50%);
 }
 
 .brand-mark-arrow {
@@ -551,9 +674,9 @@
 
 @media (max-width: 760px) {
   .brand .brand-mark {
-    width: 50px;
+    width: 49.875px;
     height: 42px;
-    flex-basis: 50px;
+    flex-basis: 49.875px;
   }
 }
 
@@ -1999,7 +2122,7 @@ footer {
   font-family: var(--font-display), sans-serif;
   font-size: clamp(46px, 6vw, 72px);
   line-height: 1.02;
-  letter-spacing: -4px;
+  letter-spacing: -2px;
 }
 
 .info-hero > p {
@@ -3775,4 +3898,65 @@ body {
   .moderation-actions button { width: 100%; }
   .job-card-footer { align-items: stretch; }
   .job-card-footer a { width: 100%; justify-content: center; text-align: center; }
+}
+
+/* Isolate the private logo review from every legacy badge rule. */
+svg.brand-mark-preview {
+  display: block !important;
+  overflow: visible !important;
+  flex: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-text-stroke: 0 !important;
+}
+
+.logo-lockup-preview svg.brand-mark-preview {
+  width: 118.75px !important;
+  height: 100px !important;
+}
+
+.logo-size-tests > div svg.brand-mark-preview { width: 57px !important; height: 48px !important; }
+.logo-size-tests > .small svg.brand-mark-preview { width: 47.5px !important; height: 40px !important; }
+.logo-size-tests > .tiny svg.brand-mark-preview { width: 23.75px !important; height: 20px !important; }
+
+/* The white keyline creates the intentional breaks in the interlocking SS. */
+.brand-mark-middle {
+  fill: #006a42;
+  stroke: #fff;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+
+.brand-mark-upper,
+.brand-mark-lower {
+  fill: none;
+  stroke-width: 10px;
+  stroke-linecap: square;
+  stroke-linejoin: round;
+}
+
+.brand-mark-upper { stroke: #006a42; }
+.brand-mark-lower { stroke: #a8d83f; }
+
+/* Match the reference lockup: the name is nearly as tall as the SS mark. */
+.logo-lockup-preview {
+  gap: 28px;
+}
+
+.logo-lockup-preview strong {
+  font-size: 68px;
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: .9;
+}
+
+.logo-lockup-preview strong .brand-wordmark {
+  color: #0b1f18;
+}
+
+.logo-lockup-preview strong .brand-wordmark .brand-accent {
+  color: #006a42;
 }

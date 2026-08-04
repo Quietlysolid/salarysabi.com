@@ -1,16 +1,15 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand-mark";
+import { BrandWordmark } from "@/components/brand-wordmark";
 import { lastVerified } from "@/lib/site";
 
 export function InfoHeader() {
   return (
     <header className="site-header info-header">
-      <Link className="brand" href="/">
+      <Link aria-label="SalarySabi home" className="brand" href="/">
         <BrandMark />
-        <span>
-          Salary<span className="brand-accent">Sabi</span>
-        </span>
+        <BrandWordmark />
       </Link>
       <nav aria-label="Information navigation">
         <Link href="/">Calculate</Link>
@@ -40,11 +39,9 @@ export function InfoHeader() {
 export function InfoFooter() {
   return (
     <footer className="info-footer">
-      <Link className="brand footer-brand" href="/">
+      <Link aria-label="SalarySabi home" className="brand footer-brand" href="/">
         <BrandMark />
-        <span>
-          Salary<span className="brand-accent">Sabi</span>
-        </span>
+        <BrandWordmark />
       </Link>
       <div className="footer-links">
         <Link href="/account">My jobs</Link>
