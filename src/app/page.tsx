@@ -1,7 +1,7 @@
 import { Calculator } from "@/components/calculator";
 import { EarlyAccessForm } from "@/components/early-access-form";
 import { DemandSignals } from "@/components/demand-signals";
-import Link from "next/link";
+import { InfoFooter, InfoHeader } from "@/components/info-page";
 import { siteUrl } from "@/lib/site";
 
 const bands = [
@@ -32,20 +32,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         type="application/ld+json"
       />
-      <header className="site-header">
-        <a className="brand" href="#">
-          <span className="brand-mark">§</span>
-          <span>Salary<span className="brand-accent">Sabi</span></span>
-        </a>
-        <nav aria-label="Main navigation">
-          <Link className="nav-primary" href="/jobs">Jobs</Link>
-          <Link href="/account">My jobs</Link>
-          <a href="#how-it-works">How it works</a>
-          <a href="#tax-bands">2026 tax bands</a>
-          <a href="#early-access">Payroll for teams</a>
-          <a className="nav-cta" href="#calculator">Calculate PAYE</a>
-        </nav>
-      </header>
+      <InfoHeader />
 
       <section className="hero">
         <div className="hero-copy">
@@ -138,20 +125,7 @@ export default function Home() {
         </a>
       </section>
 
-      <footer className="home-footer">
-        <a className="brand footer-brand" href="#">
-          <span className="brand-mark">§</span>
-          <span>Salary<span className="brand-accent">Sabi</span></span>
-        </a>
-        <div className="home-footer-links">
-          <Link href="/jobs">Jobs with salary</Link>
-          <Link href="/account">My jobs</Link>
-          <Link href="/how-paye-is-calculated">How PAYE works</Link>
-          <Link href="/eligible-deductions">Deductions</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/disclaimer">Disclaimer</Link>
-        </div>
-      </footer>
+      <InfoFooter />
     </main>
   );
 }

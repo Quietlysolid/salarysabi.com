@@ -291,6 +291,10 @@
   box-shadow: var(--shadow-soft);
 }
 
+.job-alert {
+  grid-template-columns: minmax(190px, .9fr) repeat(3, minmax(140px, 1fr)) auto;
+}
+
 .job-search label,
 .job-submit-form label {
   display: grid;
@@ -582,12 +586,12 @@ footer {
 }
 
 .brand-mark {
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
-  flex: 0 0 38px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  flex: 0 0 42px;
+  border: 2px solid var(--green-dark);
   border-radius: 50%;
   color: var(--lime);
   background: var(--green-dark);
@@ -595,8 +599,8 @@ footer {
     inset 0 0 0 3px rgba(201, 243, 107, 0.08),
     0 2px 7px rgba(8, 76, 56, 0.13);
   font-family: Georgia, serif;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 900;
   letter-spacing: normal;
   line-height: 1;
 }
@@ -2469,7 +2473,59 @@ footer {
 
 .admin-metrics strong { font-size: 1.6rem; }
 .admin-metrics span, .account-row span { color: var(--muted); margin-top: 4px; }
-.admin-job-editor { max-width: none; }
+.admin-job-editor {
+  max-width: none;
+  padding: 24px;
+}
+
+.admin-job-editor .job-form-grid {
+  align-items: start;
+}
+
+.admin-job-editor label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.admin-job-editor input,
+.admin-job-editor select,
+.admin-job-editor textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: .96rem;
+  padding: 13px 14px;
+}
+
+.admin-job-editor textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.admin-job-editor input:focus,
+.admin-job-editor select:focus,
+.admin-job-editor textarea:focus {
+  border-color: var(--accent);
+  outline: 3px solid color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.admin-job-editor .admin-check {
+  display: flex;
+  align-items: center;
+}
+
+.admin-job-editor .admin-check input {
+  width: auto;
+}
 .admin-check { display: flex; align-items: center; gap: 9px; }
 .admin-check input { width: auto; }
 
@@ -2533,4 +2589,263 @@ footer {
     min-height: auto;
     print-color-adjust: exact;
   }
+}
+
+/* Simple, low-data interface */
+:root {
+  --font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-body);
+  --paper-deep: #eeece4;
+  --content-width: 1120px;
+  --page-gutter: clamp(16px, 4vw, 32px);
+}
+
+body {
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  min-height: 44px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--green) 32%, transparent);
+  outline-offset: 3px;
+}
+
+.site-header,
+.hero,
+.calculator-shell,
+.explanation,
+.tax-band-section,
+.payroll-banner,
+.demand-signals,
+.source-note,
+.info-footer,
+.jobs-hero,
+.jobs-board,
+.jobs-alert-wrap,
+.job-submit,
+.job-detail,
+.admin-shell,
+.account-shell,
+.account-auth {
+  width: min(var(--content-width), calc(100% - (var(--page-gutter) * 2)));
+}
+
+.site-header {
+  height: auto;
+  min-height: 68px;
+  gap: 24px;
+}
+
+.site-header nav {
+  gap: clamp(12px, 2.5vw, 28px);
+}
+
+.site-header nav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-header nav a[href="/account"] {
+  display: inline-flex;
+}
+
+.hero {
+  display: block;
+  padding: clamp(36px, 7vw, 72px) 0 32px;
+}
+
+.hero h1,
+.jobs-hero h1,
+.info-hero h1,
+.job-detail-heading h1,
+.admin-shell h1,
+.admin-login h1 {
+  text-wrap: balance;
+}
+
+.hero-copy > p,
+.jobs-hero p,
+.info-hero > p,
+.prose p,
+.job-card-summary {
+  text-wrap: pretty;
+}
+
+.calculator-shell,
+.job-search,
+.job-card,
+.job-submit-form,
+.moderation-card,
+.admin-metrics div,
+.account-shell > section,
+.job-user-actions {
+  box-shadow: none;
+}
+
+.calculator-shell,
+.job-submit-form,
+.job-card,
+.moderation-card {
+  border-radius: 16px;
+}
+
+.job-search {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-radius: 16px;
+}
+
+.job-card-footer a,
+.footer-links a,
+.home-footer-links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.admin-shell {
+  padding: 40px 0 80px;
+}
+
+.admin-shell h1 {
+  font-size: clamp(2.35rem, 6vw, 4.5rem);
+}
+
+.admin-section {
+  margin-top: 48px;
+}
+
+.admin-section > h2 {
+  margin-bottom: 8px;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.admin-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.admin-job-editor .job-form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.account-auth input,
+.account-shell input,
+.account-shell select,
+.account-shell textarea,
+.job-report input,
+.job-report select,
+.job-report textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  padding: 12px 14px;
+}
+
+.account-auth form {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.account-auth button,
+.account-shell button,
+.job-report button {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+  padding: 10px 15px;
+}
+
+.account-auth .primary-button,
+.account-shell .primary-button,
+.job-report .primary-button {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+
+.info-page,
+.job-submit,
+.tax-band-section,
+.payroll-banner,
+.source-note {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .brand { flex: 0 0 auto; }
+  .brand-mark { width: 38px; height: 38px; flex-basis: 38px; font-size: 22px; }
+  .site-header { gap: 12px; }
+  .site-header nav { gap: 6px; margin-left: auto; }
+  .site-header nav a { padding: 8px 7px; font-size: 12px; }
+  .site-header nav a:first-child,
+  .site-header nav .nav-cta { display: none; }
+  .site-header nav a[href="/account"] { display: inline-flex; }
+  .site-header nav .nav-primary { padding-inline: 7px; }
+
+  .hero h1,
+  .jobs-hero h1,
+  .info-hero h1 {
+    font-size: clamp(2.25rem, 11vw, 3.2rem);
+    letter-spacing: -.045em;
+  }
+
+  .job-search,
+  .job-alert,
+  .job-form-grid,
+  .admin-job-editor .job-form-grid,
+  .admin-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-metrics div { padding: 16px; }
+  .admin-shell > header { align-items: center; }
+  .admin-shell h1 { font-size: 2.35rem; }
+  .admin-job-editor,
+  .job-submit-form,
+  .moderation-card { padding: 18px; }
+
+  .moderation-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .moderation-actions button { width: 100%; }
+  .job-card-footer { align-items: stretch; }
+  .job-card-footer a { width: 100%; justify-content: center; text-align: center; }
 }

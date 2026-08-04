@@ -12,13 +12,10 @@ export function InfoHeader() {
         </span>
       </Link>
       <nav aria-label="Information navigation">
+        <Link href="/">Calculator</Link>
         <Link className="nav-primary" href="/jobs">Jobs</Link>
         <Link href="/account">My jobs</Link>
-        <Link href="/how-paye-is-calculated">Methodology</Link>
-        <Link href="/eligible-deductions">Deductions</Link>
-        <Link className="nav-cta" href="/#calculator">
-          Open calculator
-        </Link>
+        <Link className="nav-cta" href="/how-paye-is-calculated">PAYE guide</Link>
       </nav>
     </header>
   );
@@ -47,7 +44,7 @@ export function InfoFooter() {
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
       </div>
-      <span>Calculation rules last verified {lastVerified}</span>
+      <span>Rules checked {lastVerified}. Built to stay light on mobile data.</span>
     </footer>
   );
 }

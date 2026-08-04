@@ -5,6 +5,8 @@ import type { AnalyticsEvent } from "@/lib/launch";
 
 export function track(event: AnalyticsEvent) {
   if (typeof window === "undefined" || navigator.doNotTrack === "1") return;
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  if (connection?.saveData) return;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return;
