@@ -15,7 +15,6 @@ export function BrandMark({ className = "" }: { className?: string }) {
         className="brand-mark-second"
         d="M16 24h25c11.5 0 18 6.8 18 16.5S52.5 57 41 57H16V45h25c4.1 0 6-1.6 6-4.5S45.1 36 41 36H16V24Z"
       />
-      <path className="brand-mark-equals" d="M25 29h14v3H25zm0 6h14v3H25z" />
     </svg>
   );
 }
