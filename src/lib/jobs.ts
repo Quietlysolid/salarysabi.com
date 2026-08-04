@@ -46,7 +46,6 @@ export function verificationLabel(job: Job) {
 
 export function salarySourceLabel(job: Job) {
   if (job.salary_source === "employer_disclosed") return "Salary disclosed by employer";
-  if (job.salary_source === "third_party_estimate" && job.source_name === "Adzuna") return "Adzuna Jobsworth salary estimate";
   if (job.salary_source === "third_party_estimate") return "Third-party salary estimate";
   return `Salary reported by ${job.source_name || "source"}`;
 }
