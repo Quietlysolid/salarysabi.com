@@ -1,12 +1,11 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { buildJobAlertEmail } from "../_shared/job-alert-email.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const resendApiKey = Deno.env.get("RESEND_API_KEY");
 const fromAddress = Deno.env.get("JOB_ALERT_FROM") || "SalarySabi Jobs <jobs@updates.salarysabi.com>";
 const supabase = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
-
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character]!);
 
 Deno.serve(async (request) => {
   const requestUrl = new URL(request.url);
@@ -40,16 +39,16 @@ Deno.serve(async (request) => {
     });
     if (!matches.length) continue;
 
-    const items = matches.slice(0, 20).map((job) => `<li style="margin-bottom:16px"><a href="https://salarysabi.com/jobs/${encodeURIComponent(job.slug)}" style="font-weight:700;color:#075c46">${escapeHtml(job.title)}</a><br>${escapeHtml(job.company_name)} · ${escapeHtml(job.location)}<br>${escapeHtml(job.salary_currency)} ${Number(job.salary_min).toLocaleString()}–${Number(job.salary_max).toLocaleString()} ${escapeHtml(job.salary_type)} / ${escapeHtml(job.salary_period)}</li>`).join("");
     const unsubscribeUrl = `${supabaseUrl}/functions/v1/send-job-alerts?unsubscribe=${alert.unsubscribe_token}`;
+    const email = buildJobAlertEmail({ alertId: alert.id, recipient: user.email, keywords: alert.keywords, jobs: matches, unsubscribeUrl, date: new Date().toISOString().slice(0, 10) });
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json", "Idempotency-Key": `alert-${alert.id}-${new Date().toISOString().slice(0, 10)}` },
+      headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json", "Idempotency-Key": email.idempotencyKey },
       body: JSON.stringify({
         from: fromAddress,
-        to: [user.email],
-        subject: `${matches.length} new SalarySabi ${matches.length === 1 ? "job" : "jobs"} matching “${alert.keywords}”`,
-        html: `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto"><h1 style="color:#12352b">New jobs matching your alert</h1><p>You asked SalarySabi to watch for <strong>${escapeHtml(alert.keywords)}</strong>.</p><ul style="padding-left:20px">${items}</ul><p><a href="https://salarysabi.com/jobs">Search all jobs</a></p><hr><p style="font-size:12px;color:#66736e">You received this because you created a job alert. <a href="${unsubscribeUrl}">Unsubscribe from this alert</a>.</p></div>`,
+        to: email.to,
+        subject: email.subject,
+        html: email.html,
       }),
     });
     if (!response.ok) continue;

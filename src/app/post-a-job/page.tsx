@@ -1,30 +1,26 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { JobSubmissionForm } from "@/components/job-submission-form";
-import { InfoFooter, InfoHeader } from "@/components/info-page";
+import { PublicPageShell } from "@/components/info-page";
 
 export const metadata: Metadata = {
-  title: "Post a Job | SalarySabi",
-  description: "Post a Nigerian job that includes the salary.",
+  title: "Post a Salary-Transparent Job in Nigeria | SalarySabi",
+  description: "Submit a Nigerian job with an advertised salary for SalarySabi to review and publish for job seekers.",
   alternates: { canonical: "/post-a-job" },
 };
 
 export default function PostAJobPage() {
   return (
-    <main>
-      <InfoHeader />
-      <section className="form-page-hero">
+    <PublicPageShell>
+      <section className="job-wizard-hero">
         <span className="eyebrow">For employers and recruiters</span>
-        <h1>Post a job</h1>
-        <p>It is free during the beta. The salary and a working application link are required.</p>
+        <h1>Post your own salary-transparent job</h1>
+        <p>Create a listing for a role your organisation or client is hiring for.</p>
+        <aside className="submission-path-note"><strong>Not the employer or recruiter?</strong><span>If you found an existing public listing, <Link href="/suggest-a-job">share its official link instead</Link>.</span></aside>
       </section>
-      <section className="standalone-job-form">
-        <div className="form-page-note">
-          <strong>Before you start</strong>
-          <p>Have the salary, closing date and application link ready. We check every job before it goes live.</p>
-        </div>
+      <section className="job-wizard-shell">
         <JobSubmissionForm />
       </section>
-      <InfoFooter />
-    </main>
+    </PublicPageShell>
   );
 }

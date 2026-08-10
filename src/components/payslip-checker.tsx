@@ -1,7 +1,11 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { checkPayslip } from "@/lib/payslip";
+import { readPayContext } from "@/lib/pay-context";
+import { rulesVerifiedDate } from "@/lib/site";
+import { track } from "./analytics";
 
 type Field = "gross" | "paye" | "pension" | "nhf" | "nhis" | "other";
 type Values = Record<Field, string>;
@@ -34,6 +38,9 @@ function formatInput(value: string) {
 export function PayslipChecker() {
   const [values, setValues] = useState(initialValues);
   const [checked, setChecked] = useState(false);
+  const [showOptional, setShowOptional] = useState(false);
+  const [carriedSalary, setCarriedSalary] = useState(false);
+  const resultRef = useRef<HTMLElement>(null);
   const result = useMemo(
     () =>
       checkPayslip({
@@ -47,6 +54,20 @@ export function PayslipChecker() {
     [values],
   );
 
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("from") !== "calculator") return;
+    const context = readPayContext(window.localStorage);
+    if (!context || parseMoney(context.values.gross) <= 0) return;
+    const monthlyGross = context.period === "annual"
+      ? Math.round(parseMoney(context.values.gross) / 12)
+      : parseMoney(context.values.gross);
+    const restoreTimer = window.setTimeout(() => {
+      setValues((current) => ({ ...current, gross: formatInput(String(monthlyGross)) }));
+      setCarriedSalary(true);
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
+  }, []);
+
   function update(field: Field, value: string) {
     setValues((current) => ({ ...current, [field]: formatInput(value) }));
     setChecked(false);
@@ -55,6 +76,11 @@ export function PayslipChecker() {
   function submit(event: FormEvent) {
     event.preventDefault();
     setChecked(true);
+    track("payslip_checked");
+    requestAnimationFrame(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      resultRef.current?.focus({ preventScroll: true });
+    });
   }
 
   const comparisonText =
@@ -66,23 +92,54 @@ export function PayslipChecker() {
 
   return (
     <div className="payslip-checker">
+      <section className="payslip-hero">
+        <span className="eyebrow">Payslip checker</span>
+        <h1>Understand every figure on your payslip.</h1>
+        <p>Enter two figures. We will compare the PAYE with our estimate.</p>
+      </section>
       <form onSubmit={submit}>
         <div className="payslip-form-heading">
-          <h2>Enter the monthly figures</h2>
-          <p>Use the amounts printed on your payslip.</p>
+          <span className="eyebrow">Monthly payslip</span>
+          <h2>Bring these two numbers</h2>
+          <p>You can add deductions afterward for a closer take-home estimate.</p>
         </div>
-        <div className="payslip-fields">
-          <MoneyField label="Gross salary" field="gross" value={values.gross} update={update} required />
-          <MoneyField label="PAYE deducted" field="paye" value={values.paye} update={update} required />
-          <MoneyField label="Pension" field="pension" value={values.pension} update={update} />
-          <MoneyField label="NHF" field="nhf" value={values.nhf} update={update} />
-          <MoneyField label="NHIS or NHIA" field="nhis" value={values.nhis} update={update} />
-          <MoneyField label="Other deductions" field="other" value={values.other} update={update} />
+        {carriedSalary && (
+          <div className="payslip-carried-context" role="status">
+            <span>Carried from your PAYE estimate</span>
+            <strong>{money.format(parseMoney(values.gross))} monthly gross pay</strong>
+            <button type="button" onClick={() => { setValues((current) => ({ ...current, gross: "" })); setCarriedSalary(false); }}>
+              Clear
+            </button>
+          </div>
+        )}
+        <div className="payslip-fields payslip-required-fields">
+          <MoneyField label="Gross pay this month" help="Look for Gross salary, Gross pay or Total earnings." field="gross" value={values.gross} update={update} placeholder="Example: 500,000" required />
+          <MoneyField label="PAYE deducted this month" help="Look for PAYE, Income tax or Tax deducted." field="paye" value={values.paye} update={update} placeholder="Example: 45,000" required />
         </div>
-        <button className="primary-button" type="submit">Check my payslip</button>
-        <small>Your figures stay in this browser and are not uploaded.</small>
+        <button className="primary-button" type="submit">Check my PAYE</button>
+        <button className="payslip-optional-toggle" type="button" aria-expanded={showOptional} onClick={() => setShowOptional((current) => !current)}>
+          <span><strong>Add deductions for a closer take-home estimate</strong><small>Optional</small></span>
+          <span>{showOptional ? "Hide" : "Add"}</span>
+        </button>
+        {showOptional && (
+          <div className="payslip-fields payslip-optional-fields">
+            <MoneyField label="Pension" help="Use the employee pension deduction for this month." field="pension" value={values.pension} update={update} placeholder="Example: 25,000" />
+            <MoneyField label="NHF" help="Use the National Housing Fund deduction shown." field="nhf" value={values.nhf} update={update} placeholder="Example: 10,000" />
+            <MoneyField label="NHIS or NHIA" help="Use the health insurance deduction shown." field="nhis" value={values.nhis} update={update} placeholder="Example: 5,000" />
+            <MoneyField label="Other deductions" help="Loans and voluntary deductions affect take-home pay, not PAYE." field="other" value={values.other} update={update} placeholder="Example: 12,000" />
+          </div>
+        )}
+        <div className="payslip-trust-row">
+          <span><strong>Private</strong>Your figures stay in this browser.</span>
+          <span><strong>Current rules</strong>Verified {rulesVerifiedDate}.</span>
+        </div>
       </form>
-      <section className={checked ? "payslip-result ready" : "payslip-result"} aria-live="polite">
+      <section
+        className={checked ? "payslip-result ready" : "payslip-result"}
+        aria-live="polite"
+        ref={resultRef}
+        tabIndex={-1}
+      >
         {checked ? (
           <>
             <span className="eyebrow light">Your check</span>
@@ -97,9 +154,18 @@ export function PayslipChecker() {
           </>
         ) : (
           <>
-            <span className="eyebrow light">What you’ll see</span>
-            <h2>A simple comparison of your PAYE and take-home pay.</h2>
-            <p>Enter your figures to see the difference.</p>
+            <span className="eyebrow light">Your comparison</span>
+            <h2>See whether your payslip PAYE is close to our estimate.</h2>
+            <dl className="payslip-preview-list">
+              <div><dt>Payslip PAYE</dt><dd>Not entered</dd></div>
+              <div><dt>SalarySabi estimate</dt><dd>Not calculated</dd></div>
+              <div><dt>Difference</dt><dd>Not calculated</dd></div>
+            </dl>
+            <p className="payslip-caution"><strong>A difference does not automatically mean payroll is wrong.</strong> Benefits, reliefs, arrears or other items may change the result.</p>
+            <nav className="payslip-next-links" aria-label="Payslip checker help">
+              <Link href="/how-paye-is-calculated">How PAYE is calculated</Link>
+              <Link href="/eligible-deductions">Deductions that can reduce PAYE</Link>
+            </nav>
           </>
         )}
       </section>
@@ -107,17 +173,20 @@ export function PayslipChecker() {
   );
 }
 
-function MoneyField({ label, field, value, update, required = false }: {
+function MoneyField({ label, help, field, value, update, placeholder, required = false }: {
   label: string;
+  help: string;
   field: Field;
   value: string;
   update: (field: Field, value: string) => void;
+  placeholder: string;
   required?: boolean;
 }) {
   return (
     <label>
-      <span>{label}</span>
-      <div><span>₦</span><input inputMode="numeric" value={value} onChange={(event) => update(field, event.target.value)} placeholder="0" required={required} /></div>
+      <span>{label}{required ? " (required)" : ""}</span>
+      <small>{help}</small>
+      <div><span>₦</span><input inputMode="numeric" value={value} onChange={(event) => update(field, event.target.value)} placeholder={placeholder} required={required} /></div>
     </label>
   );
 }

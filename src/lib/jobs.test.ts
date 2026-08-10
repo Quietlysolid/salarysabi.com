@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  calculateTransparencyScore,
   estimatedMonthlyAfterPaye,
   formatJobDate,
   formatJobSalary,
+  jobDeadlineLabel,
   jobMatches,
   monthlyGrossRange,
   type Job,
@@ -41,6 +43,15 @@ describe("job helpers", () => {
 
   it("does not shift a date-only deadline into the previous day", () => {
     expect(formatJobDate("2026-08-05")).toBe("5 Aug 2026");
+  });
+
+  it("does not present an internal review date as an employer deadline", () => {
+    expect(jobDeadlineLabel({ expires_at: "2026-08-24", deadline_status: "unknown" }))
+      .toBe("No deadline provided");
+  });
+
+  it("scores transparent evidence and applies risk penalties", () => {
+    expect(calculateTransparencyScore({ salaryDisclosed: true, deadlineKnown: false, employerNamed: true, workArrangementClear: true, roleSpecific: true, companyApplication: false, recentlyChecked: true, contradictoryOrTemplated: true, identityUnverifiable: false })).toBe(50);
   });
 
   it("normalizes annual gross salary to a monthly range", () => {

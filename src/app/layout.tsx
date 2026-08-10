@@ -36,11 +36,39 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const siteIdentity = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`,
+        name: "SalarySabi",
+        url: siteUrl,
+        logo: `${siteUrl}/favicon.svg`,
+        founder: { "@type": "Person", name: "Ozichi Nwosu" },
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        url: siteUrl,
+        name: "SalarySabi",
+        alternateName: "Salary Sabi",
+        publisher: { "@id": `${siteUrl}/#organization` },
+        inLanguage: "en-NG",
+      },
+    ],
+  };
+
   return (
-    <html lang="en-NG">
+    <html lang="en-NG" data-scroll-behavior="smooth">
       <body>
+        <a className="skip-link" href="#main-content">Skip to main content</a>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteIdentity) }}
+        />
         <Analytics />
-        {children}
+        <div id="main-content" tabIndex={-1}>{children}</div>
       </body>
     </html>
   );

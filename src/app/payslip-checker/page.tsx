@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { InfoFooter, InfoHeader } from "@/components/info-page";
+import { PublicPageShell } from "@/components/info-page";
 import { PayslipChecker } from "@/components/payslip-checker";
 
 export const metadata: Metadata = {
@@ -10,15 +10,8 @@ export const metadata: Metadata = {
 
 export default function PayslipCheckerPage() {
   return (
-    <main>
-      <InfoHeader />
-      <section className="form-page-hero payslip-hero">
-        <span className="eyebrow">Payslip checker</span>
-        <h1>Check the deductions on your payslip.</h1>
-        <p>Enter the monthly figures from your payslip and compare the PAYE shown with our estimate.</p>
-      </section>
+    <PublicPageShell>
       <PayslipChecker />
-      <InfoFooter />
-    </main>
+    </PublicPageShell>
   );
 }

@@ -1,8 +1,11 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { track } from "@/components/analytics";
 import { calculatePaye } from "@/lib/paye";
+import { readPayContext, writePayContext } from "@/lib/pay-context";
+import { rulesVerifiedDate, rulesetName, rulesetVersion } from "@/lib/site";
 
 type FieldName =
   | "gross"
@@ -21,10 +24,11 @@ type DeductionField = {
   question: string;
   help: string;
   example: string;
+  guideAnchor: string;
 };
 
 const initialValues: FormValues = {
-  gross: "500,000",
+  gross: "",
   pension: "",
   nhf: "",
   nhis: "",
@@ -42,6 +46,7 @@ const money = new Intl.NumberFormat("en-NG", {
 const commonDeductionFields: DeductionField[] = [
   {
     name: "pension",
+    guideAnchor: "pension",
     label: "Pension",
     question: "Does your payslip show a pension deduction?",
     help: "Enter the amount beside “Pension” on your payslip, not your pension account balance.",
@@ -49,6 +54,7 @@ const commonDeductionFields: DeductionField[] = [
   },
   {
     name: "nhf",
+    guideAnchor: "nhf",
     label: "National Housing Fund (NHF)",
     question: "Does your payslip show an NHF deduction?",
     help: "Enter the amount beside “NHF” on your payslip. If it is not listed, leave this at ₦0.",
@@ -56,6 +62,7 @@ const commonDeductionFields: DeductionField[] = [
   },
   {
     name: "nhis",
+    guideAnchor: "nhis",
     label: "National health insurance",
     question: "Does your payslip show NHIS or NHIA?",
     help: "Enter the eligible health-insurance amount shown on your payslip.",
@@ -63,6 +70,7 @@ const commonDeductionFields: DeductionField[] = [
   },
   {
     name: "rent",
+    guideAnchor: "rent-relief",
     label: "Rent for your home",
     question: "How much rent do you pay for your home?",
     help: "Enter your rent and we will calculate the relief automatically.",
@@ -73,6 +81,7 @@ const commonDeductionFields: DeductionField[] = [
 const otherDeductionFields: DeductionField[] = [
   {
     name: "mortgage",
+    guideAnchor: "mortgage-interest",
     label: "Mortgage interest",
     question: "Do you pay interest on a mortgage for your main home?",
     help: "Enter only the interest charged, not the full payment or loan repayment.",
@@ -80,6 +89,7 @@ const otherDeductionFields: DeductionField[] = [
   },
   {
     name: "insurance",
+    guideAnchor: "life-assurance",
     label: "Life assurance",
     question: "Do you pay life-assurance premiums for yourself or your spouse?",
     help: "Enter qualifying life-assurance premiums, not car, travel or ordinary health insurance.",
@@ -97,7 +107,7 @@ function formatInput(value: string) {
   return raw ? Number(raw).toLocaleString("en-NG") : "";
 }
 
-export function Calculator() {
+export function Calculator({ guided = false }: { guided?: boolean }) {
   const [values, setValues] = useState(initialValues);
   const [period, setPeriod] = useState<"monthly" | "annual">("monthly");
   const [deductionPeriod, setDeductionPeriod] = useState<"monthly" | "annual">(
@@ -105,9 +115,46 @@ export function Calculator() {
   );
   const [showDeductions, setShowDeductions] = useState(false);
   const [showOtherDeductions, setShowOtherDeductions] = useState(false);
-  const [isExampleSalary, setIsExampleSalary] = useState(true);
-  const [hasCalculated, setHasCalculated] = useState(true);
+  const [isExampleSalary, setIsExampleSalary] = useState(false);
+  const [hasCalculated, setHasCalculated] = useState(false);
   const [exporting, setExporting] = useState<"pdf" | "excel" | null>(null);
+  const [contextReady, setContextReady] = useState(false);
+  const resultsRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const saved = readPayContext(window.localStorage);
+    const returningFromGuide = new URLSearchParams(window.location.search).get("restore") === "deduction";
+    const restoreTimer = window.setTimeout(() => {
+      if (saved) {
+        setValues({ ...initialValues, ...saved.values });
+        setPeriod(saved.period);
+        setDeductionPeriod(saved.deductionPeriod);
+        if (returningFromGuide) {
+          setShowDeductions(true);
+          if (saved.returnField === "mortgage" || saved.returnField === "insurance") setShowOtherDeductions(true);
+          window.setTimeout(() => {
+            const target = document.getElementById(`calculator-${saved.returnField ?? "gross"}`);
+            target?.scrollIntoView({ behavior: "smooth", block: "center" });
+            target?.focus({ preventScroll: true });
+          }, 80);
+        }
+      }
+      setContextReady(true);
+    }, 0);
+    return () => window.clearTimeout(restoreTimer);
+  }, []);
+
+  useEffect(() => {
+    if (!contextReady) return;
+    const previous = readPayContext(window.localStorage);
+    writePayContext(window.localStorage, {
+      values,
+      period,
+      deductionPeriod,
+      returnField: previous?.returnField,
+      updatedAt: Date.now(),
+    });
+  }, [contextReady, deductionPeriod, period, values]);
 
   const inputs = useMemo(() => {
     const gross = parseMoney(values.gross);
@@ -133,12 +180,10 @@ export function Calculator() {
     event.preventDefault();
     setHasCalculated(true);
     track("paye_calculated");
-    requestAnimationFrame(() =>
-      document.getElementById("results")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      }),
-    );
+    requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      resultsRef.current?.focus({ preventScroll: true });
+    });
   }
 
   async function exportPdf() {
@@ -180,6 +225,7 @@ export function Calculator() {
         <div className="small-currency-input">
           <span>₦</span>
           <input
+            id={`calculator-${field.name}`}
             inputMode="numeric"
             value={values[field.name]}
             onChange={(event) => update(field.name, event.target.value)}
@@ -189,6 +235,21 @@ export function Calculator() {
           <em>{periodLabel}</em>
         </div>
         <small className="field-example">{field.example}</small>
+        <Link
+          className="deduction-guide-link"
+          href={`/eligible-deductions?from=calculator#${field.guideAnchor}`}
+          onClick={() => {
+            writePayContext(window.localStorage, {
+              values,
+              period,
+              deductionPeriod,
+              returnField: field.name,
+              updatedAt: Date.now(),
+            });
+          }}
+        >
+          Check what belongs in this field
+        </Link>
         {field.name === "rent" && parseMoney(values.rent) > 0 && (
           <span className="rent-feedback" role="status">
             <span>Your calculated rent relief</span>
@@ -209,7 +270,7 @@ export function Calculator() {
       <form className="calculator-card" onSubmit={submit}>
         <div className="card-heading">
           <div>
-            <h2>What do you earn?</h2>
+            <h2>How much do you earn?</h2>
             <small className="live-note">
               Enter your salary before tax and other deductions.
             </small>
@@ -244,6 +305,7 @@ export function Calculator() {
           <div className="currency-input">
             <span>₦</span>
             <input
+              id="calculator-gross"
               inputMode="numeric"
               value={values.gross}
               onChange={(event) => {
@@ -274,7 +336,7 @@ export function Calculator() {
         {showDeductions && (
           <div className="deduction-flow">
             <div className="deduction-intro">
-              <strong>Use amounts you can confirm</strong>
+              <strong>Enter only what you can confirm</strong>
               <p>
                 Check your payslip, PFA statement or receipt. If you do not
                 recognise an item, leave it at ₦0.
@@ -327,26 +389,43 @@ export function Calculator() {
         )}
 
         <button className="primary-button" type="submit">
-          Show my PAYE estimate
+          Calculate my PAYE
         </button>
         <p className="privacy-note">
           No signup. Your salary figures stay in this browser.
         </p>
       </form>
 
-      <section className="results-card" id="results" aria-live="polite">
+      {(!guided || hasCalculated) && <section
+        className="results-card"
+        id="results"
+        aria-live="polite"
+        ref={resultsRef}
+        tabIndex={-1}
+      >
         <div className="result-top">
-          <p>Your estimated monthly PAYE</p>
-          <strong>{hasCalculated ? money.format(result.monthlyTax) : "Not calculated"}</strong>
-          <span className="per-month">per month</span>
-          <small className="result-explainer">
-            {isExampleSalary ? "Example based on a" : "Based on a"}{" "}
-            {money.format(parseMoney(values.gross))}{" "}
-            {period === "monthly" ? "monthly" : "yearly"} salary
-          </small>
+          {isExampleSalary && (
+            <span className="result-state-label">Example preview</span>
+          )}
+          <p>Your PAYE estimate</p>
+          {hasCalculated ? (
+            <>
+              <strong>{money.format(result.monthlyTax)}</strong>
+              <span className="per-month">per month</span>
+              <small className="result-explainer">
+                Based on a {money.format(parseMoney(values.gross))}{" "}
+                {period === "monthly" ? "monthly" : "yearly"} salary
+              </small>
+            </>
+          ) : (
+            <div className="result-empty">
+              <h2>No estimate yet</h2>
+              <p>Enter your salary and select Calculate my PAYE to see the breakdown.</p>
+            </div>
+          )}
         </div>
 
-        <div className="result-summary">
+        {hasCalculated && <div className="result-summary">
           <div>
             <span>Income after PAYE only</span>
             <strong>{money.format(result.monthlyIncomeAfterTax)}</strong>
@@ -357,12 +436,12 @@ export function Calculator() {
             <strong>{(result.effectiveTaxRate * 100).toFixed(1)}%</strong>
             <small>Excludes pension, NHF, NHIS and other payroll deductions</small>
           </div>
-        </div>
+        </div>}
 
-        <details className="calculation-details">
+        {hasCalculated && <details className="calculation-details">
           <summary>
             <span>
-              <strong>See exactly how we calculated this</strong>
+              <strong>See how we got this number</strong>
               <small>Yearly figures and every 2026 tax band</small>
             </span>
             <span className="details-plus" aria-hidden="true">
@@ -431,14 +510,14 @@ export function Calculator() {
               </div>
             ))}
           </div>
-        </details>
+        </details>}
 
-        <div className="result-footer">
+        {hasCalculated && <div className="result-footer">
           <div>
             <p>
               <strong>Based on official 2026 JRB guidance</strong>
               <small>
-                Independent estimate. Rules checked 29 July 2026.
+                Independent estimate. Rules checked {rulesVerifiedDate}.
               </small>
             </p>
           </div>
@@ -463,8 +542,25 @@ export function Calculator() {
               Print
             </button>
           </div>
-        </div>
-      </section>
+        </div>}
+        {hasCalculated && <aside className="calculation-trust" aria-label="Calculation source and freshness">
+          <div>
+            <span>Rules verified</span>
+            <strong>{rulesVerifiedDate}</strong>
+          </div>
+          <p><strong>Ruleset {rulesetVersion}</strong><br />Based on the {rulesetName}.</p>
+          <Link href="/how-paye-is-calculated">See the calculation</Link>
+        </aside>}
+        {hasCalculated && (
+          <Link className="payslip-context-action" href="/payslip-checker?from=calculator">
+            <span>
+              <strong>Have this month’s payslip?</strong>
+              <small>Carry this salary into the payslip checker.</small>
+            </span>
+            <span aria-hidden="true">→</span>
+          </Link>
+        )}
+      </section>}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Calculator } from "@/components/calculator";
-import { InfoFooter, InfoHeader } from "@/components/info-page";
-import { siteUrl } from "@/lib/site";
+import { PublicPageShell } from "@/components/info-page";
+import { rulesVerifiedDate, siteUrl } from "@/lib/site";
 
 export default function Home() {
   const structuredData = {
@@ -12,66 +12,61 @@ export default function Home() {
     operatingSystem: "Web",
     url: siteUrl,
     offers: { "@type": "Offer", price: "0", priceCurrency: "NGN" },
-    description:
-      "A free Nigerian PAYE calculator using the Nigeria Tax Act 2025 and JRB Personal Income Tax Guidelines 2026.",
+    description: "A free Nigerian PAYE calculator using the Nigeria Tax Act 2025 and JRB Personal Income Tax Guidelines 2026.",
   };
 
   return (
-    <main>
-      <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        type="application/ld+json"
-      />
-      <InfoHeader />
+    <PublicPageShell>
+      <script dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} type="application/ld+json" />
 
-      <section className="hero">
-        <div className="hero-copy">
-          <h1>
-            Salary and job help for Nigerians.
-          </h1>
-          <p>
-            Calculate your PAYE, check your payslip, understand deductions and
-            find jobs that show the salary.
-          </p>
-        </div>
-      </section>
+      <article className="guided-home">
+        <header className="guided-home-hero">
+          <span className="eyebrow">Nigeria PAYE calculator</span>
+          <h1>Know your PAYE. No guesswork.</h1>
+          <p>Calculate your 2026 PAYE and see how every tax band and deduction affects the result.</p>
+          <div className="guided-home-actions">
+            <a className="primary-button" href="#calculator">Calculate my PAYE</a>
+            <Link className="guided-method-link" href="/how-paye-is-calculated">See how PAYE works <span aria-hidden="true">→</span></Link>
+          </div>
+        </header>
 
-      <section className="home-tools" aria-labelledby="home-tools-title">
-        <div>
-          <span className="eyebrow">Choose a tool</span>
-          <h2 id="home-tools-title">What do you need help with?</h2>
-        </div>
-        <div className="home-tool-grid">
-          <a href="#calculator"><span>01</span><strong>Calculate PAYE</strong><small>Estimate the tax on your salary</small></a>
-          <Link href="/payslip-checker"><span>02</span><strong>Check my payslip</strong><small>Compare your PAYE and deductions</small></Link>
-          <Link href="/jobs"><span>03</span><strong>Find jobs with salaries</strong><small>See the pay before you apply</small></Link>
-          <Link href="/eligible-deductions"><span>04</span><strong>Understand deductions</strong><small>Pension, NHF, rent relief and more</small></Link>
-        </div>
-      </section>
-
-      <div id="calculator">
-        <Calculator />
-      </div>
-
-      <section className="home-more-help">
-        <div>
-          <span className="eyebrow">Understand your pay</span>
-          <h2>Clear answers when you need more detail.</h2>
-          <p>Read a short explanation instead of searching through tax documents.</p>
-        </div>
-        <nav aria-label="Salary guides">
-          <Link href="/how-paye-is-calculated">How PAYE is calculated</Link>
-          <Link href="/tax-bands">Nigeria’s 2026 tax bands</Link>
-          <Link href="/eligible-deductions">Deductions that can reduce PAYE</Link>
+        <nav className="guided-stages" aria-label="SalarySabi pay tools">
+          <a className="active" aria-current="step" href="#calculator"><span>01</span><strong>Calculate PAYE</strong><small>Estimate the tax on your salary</small></a>
+          <Link href="/payslip-checker"><span>02</span><strong>Check the payslip</strong><small>Compare your PAYE and deductions</small></Link>
+          <Link href="/how-paye-is-calculated"><span>03</span><strong>Understand the result</strong><small>See how your PAYE is calculated</small></Link>
         </nav>
-      </section>
 
-      <section className="home-jobs-link">
-        <div><span className="eyebrow light">Looking for work?</span><h2>Find jobs that show what they pay.</h2></div>
-        <Link href="/jobs">Find jobs</Link>
-      </section>
+        <section className="guided-workspace" id="calculator" aria-label="PAYE calculator and guidance">
+          <div className="guided-calculator"><Calculator guided /></div>
+          <aside className="guided-explainer">
+            <span className="eyebrow">Know the numbers</span>
+            <h2>No guesswork. See how it adds up.</h2>
+            <p>Check any figure. Read the rule behind it.</p>
+            <nav aria-label="PAYE calculation guides">
+              <Link href="/how-paye-is-calculated#worked-example"><span>01</span><div><strong>Worked example</strong><small>See the calculation from start to finish.</small></div><b>See example</b></Link>
+              <Link href="/how-paye-is-calculated#calculation-ledger"><span>02</span><div><strong>Full calculation</strong><small>Follow the numbers through to monthly PAYE.</small></div><b>See calculation</b></Link>
+              <Link href="/tax-bands"><span>03</span><div><strong>Key rules and tax bands</strong><small>See the graduated rates and minimum-wage rule.</small></div><b>View tax bands</b></Link>
+              <Link href="/eligible-deductions"><span>04</span><div><strong>Eligible deductions</strong><small>Know what to enter and what to leave out.</small></div><b>View deductions</b></Link>
+            </nav>
+          </aside>
+        </section>
 
-      <InfoFooter />
-    </main>
+        <aside className="guided-assurance" aria-label="Calculator assurance">
+          <strong>Your figures are private. The tax rules are current.</strong>
+          <span>Your figures stay in this browser. Rules checked {rulesVerifiedDate}.</span>
+          <Link href="/how-paye-is-calculated">See how we calculate</Link>
+        </aside>
+
+        <aside className="guided-builder-note" aria-label="About the builder">
+          <span>Built independently by <Link href="/about">Ozichi Nwosu</Link>, a Nigerian software engineer who wanted PAYE to make sense.</span>
+        </aside>
+
+        <aside className="guided-secondary-product" aria-label="Salary-listed jobs">
+          <div><span className="eyebrow">Also on SalarySabi</span><h2>Looking for work? See jobs that publish pay.</h2></div>
+          <Link href="/jobs">Browse jobs with salaries</Link>
+        </aside>
+      </article>
+
+    </PublicPageShell>
   );
 }

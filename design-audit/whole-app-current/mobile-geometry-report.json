@@ -1,0 +1,1112 @@
+[
+  {
+    "path": "/",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 322,
+        "h": 20,
+        "text": "Review the method"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [
+      {
+        "el": "small",
+        "size": 11.6667,
+        "text": "Estimate the tax on your salary"
+      },
+      {
+        "el": "small",
+        "size": 11.6667,
+        "text": "Compare your PAYE and deductions"
+      },
+      {
+        "el": "small",
+        "size": 11.6667,
+        "text": "See how your PAYE is calculated"
+      },
+      {
+        "el": "p.privacy-note",
+        "size": 11,
+        "text": "No signup. Your salary figures stay in this browser."
+      },
+      {
+        "el": "small",
+        "size": 11.6667,
+        "text": "See how the result is built step by step."
+      },
+      {
+        "el": "small",
+        "size": 11.6667,
+        "text": "Follow each stage through to monthly PAYE."
+      },
+      {
+        "el": "small",
+        "size": 11.6667,
+        "text": "See the graduated rates and minimum-wage rule."
+      },
+      {
+        "el": "small",
+        "size": 11.6667,
+        "text": "Know what to enter and what to leave out."
+      }
+    ],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/account",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "input",
+        "w": 17,
+        "h": 44,
+        "text": ""
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/admin",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 147,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 262,
+        "h": 21,
+        "text": "Return to salary-transparent jobs"
+      }
+    ],
+    "tiny": [],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/disclaimer",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/eligible-deductions",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a.secondary-button",
+        "w": 292,
+        "h": 21,
+        "text": "See how the calculation works"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [
+      {
+        "el": "span",
+        "size": 10,
+        "text": "01"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "02"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "03"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "01"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "02"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "03"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "04"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "05"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "06"
+      }
+    ],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/how-paye-is-calculated",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 174,
+        "h": 17,
+        "text": "Worked example"
+      },
+      {
+        "el": "a",
+        "w": 174,
+        "h": 17,
+        "text": "Calculation ledger"
+      },
+      {
+        "el": "a",
+        "w": 174,
+        "h": 17,
+        "text": "Special rules"
+      },
+      {
+        "el": "a",
+        "w": 174,
+        "h": 17,
+        "text": "Sources"
+      },
+      {
+        "el": "a",
+        "w": 200,
+        "h": 17,
+        "text": "Understand eligible deductions"
+      },
+      {
+        "el": "a",
+        "w": 196,
+        "h": 17,
+        "text": "View complete 2026 tax bands"
+      },
+      {
+        "el": "a",
+        "w": 185,
+        "h": 17,
+        "text": "What amount should I enter?"
+      },
+      {
+        "el": "a.secondary-button",
+        "w": 282,
+        "h": 21,
+        "text": "Understand eligible deductions"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [
+      {
+        "el": "span",
+        "size": 10,
+        "text": "01"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "02"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "03"
+      }
+    ],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/jobs",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 337,
+        "h": 21,
+        "text": "Accounts Payable Technician/Alternate Cashier"
+      },
+      {
+        "el": "a",
+        "w": 358,
+        "h": 32,
+        "text": "View job"
+      },
+      {
+        "el": "a",
+        "w": 358,
+        "h": 32,
+        "text": "Official application  (opens in a new tab)"
+      },
+      {
+        "el": "a",
+        "w": 246,
+        "h": 21,
+        "text": "Economic & Commercial Assistant"
+      },
+      {
+        "el": "a",
+        "w": 358,
+        "h": 32,
+        "text": "View job"
+      },
+      {
+        "el": "a",
+        "w": 358,
+        "h": 32,
+        "text": "Official application  (opens in a new tab)"
+      },
+      {
+        "el": "a",
+        "w": 130,
+        "h": 21,
+        "text": "Protocol Assistant"
+      },
+      {
+        "el": "a",
+        "w": 358,
+        "h": 32,
+        "text": "View job"
+      },
+      {
+        "el": "a",
+        "w": 358,
+        "h": 32,
+        "text": "Official application  (opens in a new tab)"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [
+      {
+        "el": "small",
+        "size": 11.2,
+        "text": "For job seekers"
+      },
+      {
+        "el": "small",
+        "size": 11.2,
+        "text": "For employers and recruiters"
+      }
+    ],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/paye-guide",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [
+      {
+        "el": "span",
+        "size": 11,
+        "text": "01"
+      },
+      {
+        "el": "span",
+        "size": 11,
+        "text": "02"
+      },
+      {
+        "el": "span",
+        "size": 11,
+        "text": "03"
+      }
+    ],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/payslip-checker",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 276,
+        "h": 43,
+        "text": "How PAYE is calculated"
+      },
+      {
+        "el": "a",
+        "w": 276,
+        "h": 43,
+        "text": "Deductions that can reduce PAYE"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/post-a-job",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 311,
+        "h": 42,
+        "text": "share its official link instead"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [
+      {
+        "el": "small",
+        "size": 11.52,
+        "text": "Where the employee will normally work."
+      },
+      {
+        "el": "small",
+        "size": 11.52,
+        "text": "The candidate’s working commitment."
+      }
+    ],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/privacy",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [
+      {
+        "el": "span",
+        "size": 11.2,
+        "text": "01"
+      },
+      {
+        "el": "span",
+        "size": 11.2,
+        "text": "02"
+      },
+      {
+        "el": "span",
+        "size": 11.2,
+        "text": "03"
+      },
+      {
+        "el": "span",
+        "size": 11.2,
+        "text": "04"
+      }
+    ],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/suggest-a-job",
+    "outside": [
+      {
+        "el": "label.honeypot",
+        "left": -10000,
+        "right": -9999,
+        "width": 1,
+        "text": "Website"
+      },
+      {
+        "el": "input",
+        "left": -10000,
+        "right": -9949,
+        "width": 51,
+        "text": ""
+      }
+    ],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 183,
+        "h": 21,
+        "text": "employer posting form"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/tax-bands",
+    "outside": [],
+    "controls": [
+      {
+        "el": "a.brand",
+        "w": 50,
+        "h": 42,
+        "text": "SalarySabi home"
+      },
+      {
+        "el": "a",
+        "w": 26,
+        "h": 44,
+        "text": "Jobs"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job workspace"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Check payslip"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Employers: Post a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "Job seekers: Share a job"
+      },
+      {
+        "el": "a",
+        "w": 172,
+        "h": 40,
+        "text": "PAYE guide"
+      },
+      {
+        "el": "a",
+        "w": 196,
+        "h": 39,
+        "text": "01How the bands combine"
+      },
+      {
+        "el": "a",
+        "w": 196,
+        "h": 39,
+        "text": "022026 rate table"
+      },
+      {
+        "el": "a",
+        "w": 196,
+        "h": 39,
+        "text": "03Chargeable income"
+      },
+      {
+        "el": "a",
+        "w": 140,
+        "h": 20,
+        "text": "free PAYE calculator"
+      },
+      {
+        "el": "a",
+        "w": 41,
+        "h": 44,
+        "text": "Privacy"
+      }
+    ],
+    "tiny": [
+      {
+        "el": "span",
+        "size": 10,
+        "text": "01"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "02"
+      },
+      {
+        "el": "span",
+        "size": 10,
+        "text": "03"
+      },
+      {
+        "el": "span",
+        "size": 11.2,
+        "text": "01"
+      },
+      {
+        "el": "span",
+        "size": 11.2,
+        "text": "02"
+      },
+      {
+        "el": "span",
+        "size": 11.2,
+        "text": "03"
+      }
+    ],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  },
+  {
+    "path": "/e2e-fixtures/workspace",
+    "outside": [
+      {
+        "el": "button",
+        "left": 381,
+        "right": 446,
+        "width": 65,
+        "text": "Sign out"
+      }
+    ],
+    "controls": [
+      {
+        "el": "a",
+        "w": 122,
+        "h": 21,
+        "text": "Product Designer"
+      },
+      {
+        "el": "a",
+        "w": 109,
+        "h": 21,
+        "text": "Finance Analyst"
+      }
+    ],
+    "tiny": [],
+    "scrollWidth": 390,
+    "clientWidth": 390
+  }
+]

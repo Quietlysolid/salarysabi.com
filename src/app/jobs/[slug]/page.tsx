@@ -7,6 +7,7 @@ import {
   estimatedMonthlyAfterPaye,
   formatJobDate,
   formatJobSalary,
+  jobDeadlineLabel,
   monthlyGrossRange,
   salarySourceLabel,
   verificationLabel,
@@ -39,7 +40,7 @@ export async function generateMetadata({
   return {
     title: `${job.title} at ${job.company_name} | SalarySabi Jobs`,
     description: `${formatJobSalary(job)}. ${job.location}. View the role and apply through the employer's application page.`,
-    alternates: { canonical: job.canonical_url || `/jobs/${job.slug}` },
+    alternates: { canonical: `/jobs/${job.slug}` },
     openGraph: {
       title: `${job.title} at ${job.company_name}`,
       description: formatJobSalary(job),
@@ -64,7 +65,7 @@ export default async function JobPage({
     title: job.title,
     description: job.description,
     datePosted: job.published_at,
-    validThrough: `${job.expires_at}T23:59:59+01:00`,
+    validThrough: job.deadline_status === "unknown" || job.deadline_status === "rolling" ? undefined : `${job.expires_at}T23:59:59+01:00`,
     employmentType: job.employment_type.toUpperCase().replaceAll(" ", "_"),
     hiringOrganization: { "@type": "Organization", name: job.company_name },
     jobLocationType: job.work_mode === "remote" ? "TELECOMMUTE" : undefined,
@@ -140,11 +141,18 @@ export default async function JobPage({
           <h2>About this job</h2>
           <p>{job.description}</p>
         </section>
+        {(job.transparency_score != null || job.transparency_notes?.length) && (
+          <section className="job-detail-description">
+            <h2>Transparency check</h2>
+            {job.transparency_score != null && <p><strong>{job.transparency_score}/100 transparency score</strong></p>}
+            {job.transparency_notes?.map((note) => <p key={note}>{note}</p>)}
+          </section>
+        )}
         <section className="job-source-panel">
           <div>
             <strong>{verificationLabel(job)}</strong>
             <span>
-              Source checked {formatJobDate(job.source_verified_at)} · Closes {formatJobDate(job.expires_at)}
+              Last checked {formatJobDate(job.source_verified_at)} · {jobDeadlineLabel(job)}
             </span>
             {job.source_url && (
               <a

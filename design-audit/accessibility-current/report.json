@@ -1,0 +1,970 @@
+[
+  {
+    "name": "home",
+    "path": "/",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "SalarySabi | Nigeria PAYE Calculator 2026",
+      "landmarks": {
+        "main": 1,
+        "nav": 3,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "a:01Calculate PAYEEstimate the tax on your salary",
+      "a:02Check the payslipCompare your PAYE and deductions",
+      "a:03Understand the resultSee how your PAYE is calculated",
+      "button:Monthly salary",
+      "button:Yearly salary",
+      "input:Salary before deductions",
+      "button:Add pension, rent or other deductionsOptional. Skip this if none apply",
+      "button:Show my PAYE estimate"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "payslip",
+    "path": "/payslip-checker",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "Check Your Nigerian Payslip | SalarySabi",
+      "landmarks": {
+        "main": 1,
+        "nav": 2,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "input:",
+      "input:",
+      "button:Compare my PAYE",
+      "button:Add deductions for a closer take-home estimateOptionalAdd",
+      "a:How PAYE is calculated",
+      "a:Deductions that can reduce PAYE",
+      "a:SalarySabi home",
+      "a:My jobs"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "none 0px rgb(19, 35, 29)",
+      "none 0px rgb(19, 35, 29)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "jobs",
+    "path": "/jobs",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "Jobs in Nigeria With Salary Information | SalarySabi",
+      "landmarks": {
+        "main": 1,
+        "nav": 1,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [
+        {
+          "label": "Economic & Commercial Assistant",
+          "width": 246,
+          "height": 21
+        },
+        {
+          "label": "Protocol Assistant",
+          "width": 130,
+          "height": 21
+        }
+      ],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "input:",
+      "select:All locationsAbujaLagos",
+      "select:All arrangementsRemoteHybridOn-site",
+      "select:All currenciesNGNUSDGBPEUR",
+      "button:Clear all",
+      "select:Closing date, earliest firstNewest firstHighest salary",
+      "a:Accounts Payable Technician/Alternate Cashier",
+      "a:View job"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.18)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.18)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.18)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.18)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "post-job",
+    "path": "/post-a-job",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "Post a Job | SalarySabi",
+      "landmarks": {
+        "main": 1,
+        "nav": 2,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "button:11. RoleIn progress",
+      "button:22. PayNext",
+      "button:33. ApplicationNext",
+      "select:Direct employerRecruiter or agency",
+      "input:title",
+      "input:company_name",
+      "input:location",
+      "select:On-siteHybridRemote"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "account",
+    "path": "/account",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "My Job Search | SalarySabi",
+      "landmarks": {
+        "main": 1,
+        "nav": 1,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [
+        {
+          "label": "INPUT",
+          "width": 17,
+          "height": 44
+        }
+      ],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "button:Sign in",
+      "button:Create account",
+      "input:email",
+      "input:password",
+      "input:",
+      "button:Forgot password?",
+      "button:Sign in",
+      "a:Browse all jobs"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "methodology",
+    "path": "/how-paye-is-calculated",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "How Nigerian PAYE Is Calculated in 2026",
+      "landmarks": {
+        "main": 1,
+        "nav": 2,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [
+        {
+          "label": "Worked example",
+          "width": 251,
+          "height": 17
+        },
+        {
+          "label": "Calculation ledger",
+          "width": 258,
+          "height": 17
+        },
+        {
+          "label": "Special rules",
+          "width": 223,
+          "height": 17
+        },
+        {
+          "label": "Sources",
+          "width": 194,
+          "height": 17
+        },
+        {
+          "label": "Understand eligible deductions",
+          "width": 200,
+          "height": 17
+        },
+        {
+          "label": "View complete 2026 tax bands",
+          "width": 196,
+          "height": 17
+        },
+        {
+          "label": "What amount should I enter?",
+          "width": 185,
+          "height": 17
+        }
+      ],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "a:Calculate my PAYE",
+      "a:Worked example",
+      "a:Calculation ledger",
+      "a:Special rules",
+      "a:Sources",
+      "a:Understand eligible deductions",
+      "a:View complete 2026 tax bands",
+      "a:What amount should I enter?"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "deductions",
+    "path": "/eligible-deductions",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "Nigeria PAYE Eligible Deductions 2026",
+      "landmarks": {
+        "main": 1,
+        "nav": 2,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "a:01Pension",
+      "a:02National Housing Fund (NHF)",
+      "a:03NHIS or NHIA",
+      "a:04Mortgage interest",
+      "a:05Life assurance",
+      "a:06Rent for your home",
+      "a:Return to the PAYE calculation",
+      "a:See how the calculation works"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "tax-bands",
+    "path": "/tax-bands",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "Nigeria PAYE Tax Bands 2026",
+      "landmarks": {
+        "main": 1,
+        "nav": 2,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [
+        {
+          "label": "our methodology",
+          "width": 124,
+          "height": 20
+        },
+        {
+          "label": "free calculator",
+          "width": 101,
+          "height": 20
+        }
+      ],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "a:01Income-tax rates",
+      "a:02Chargeable income",
+      "a:our methodology",
+      "a:free calculator",
+      "a:SalarySabi home",
+      "a:My jobs",
+      "a:Post a job",
+      "a:Privacy"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "privacy",
+    "path": "/privacy",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "Privacy",
+      "landmarks": {
+        "main": 1,
+        "nav": 1,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "a:Request data deletion",
+      "a:Return to calculator",
+      "a:SalarySabi home",
+      "a:My jobs",
+      "a:Post a job",
+      "a:Privacy",
+      "a:Disclaimer",
+      "body:Skip to main contentSalarySabıCalculateCheck payslipFind jobsMy jobsPA"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "none 3px rgb(19, 35, 29)"
+    ]
+  },
+  {
+    "name": "disclaimer",
+    "path": "/disclaimer",
+    "viewport": {
+      "width": 1440,
+      "height": 1100
+    },
+    "findings": {
+      "title": "Tax Calculator Disclaimer",
+      "landmarks": {
+        "main": 1,
+        "nav": 2,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 1440,
+      "viewportWidth": 1440
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Check payslip",
+      "a:Find jobs",
+      "a:My jobs",
+      "a:PAYE guide",
+      "a:Review methodology",
+      "a:Calculate again",
+      "a:Privacy",
+      "a:SalarySabi home",
+      "a:My jobs",
+      "a:Post a job",
+      "a:Privacy",
+      "a:Disclaimer"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "home-mobile",
+    "path": "/",
+    "viewport": {
+      "width": 500,
+      "height": 900
+    },
+    "findings": {
+      "title": "SalarySabi | Nigeria PAYE Calculator 2026",
+      "landmarks": {
+        "main": 1,
+        "nav": 3,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 500,
+      "viewportWidth": 500
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Jobs",
+      "summary:Menu",
+      "a:01Calculate PAYEEstimate the tax on your salary",
+      "a:02Check the payslipCompare your PAYE and deductions",
+      "a:03Understand the resultSee how your PAYE is calculated",
+      "button:Monthly salary",
+      "button:Yearly salary",
+      "input:Salary before deductions",
+      "button:Add pension, rent or other deductionsOptional. Skip this if none apply",
+      "button:Show my PAYE estimate",
+      "a:01Worked exampleSee how the result is built step by step.View example",
+      "a:02Calculation ledgerFollow each stage through to monthly PAYE.View led"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "jobs-mobile",
+    "path": "/jobs",
+    "viewport": {
+      "width": 500,
+      "height": 900
+    },
+    "findings": {
+      "title": "Jobs in Nigeria With Salary Information | SalarySabi",
+      "landmarks": {
+        "main": 1,
+        "nav": 1,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [
+        {
+          "label": "Accounts Payable Technician/Alternate Cashier",
+          "width": 337,
+          "height": 21
+        },
+        {
+          "label": "Economic & Commercial Assistant",
+          "width": 246,
+          "height": 21
+        },
+        {
+          "label": "Protocol Assistant",
+          "width": 130,
+          "height": 21
+        }
+      ],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 500,
+      "viewportWidth": 500
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Jobs",
+      "summary:Menu",
+      "button:Filter jobs+",
+      "select:Closing date, earliest firstNewest firstHighest salary",
+      "a:Accounts Payable Technician/Alternate Cashier",
+      "a:View job",
+      "a:Official application (opens in a new tab)",
+      "a:Economic & Commercial Assistant",
+      "a:View job",
+      "a:Official application (opens in a new tab)",
+      "a:Protocol Assistant",
+      "a:View job"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "post-job-mobile",
+    "path": "/post-a-job",
+    "viewport": {
+      "width": 500,
+      "height": 900
+    },
+    "findings": {
+      "title": "Post a Job | SalarySabi",
+      "landmarks": {
+        "main": 1,
+        "nav": 2,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 500,
+      "viewportWidth": 500
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Jobs",
+      "summary:Menu",
+      "button:11. RoleIn progress",
+      "button:22. PayNext",
+      "button:33. ApplicationNext",
+      "select:Direct employerRecruiter or agency",
+      "input:title",
+      "input:company_name",
+      "input:location",
+      "select:On-siteHybridRemote",
+      "select:Full timePart timeContractInternship",
+      "button:Continue to pay"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "privacy-mobile",
+    "path": "/privacy",
+    "viewport": {
+      "width": 500,
+      "height": 900
+    },
+    "findings": {
+      "title": "Privacy",
+      "landmarks": {
+        "main": 1,
+        "nav": 1,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 500,
+      "viewportWidth": 500
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Jobs",
+      "summary:Menu",
+      "a:Request data deletion",
+      "a:Return to calculator",
+      "a:SalarySabi home",
+      "a:My jobs",
+      "a:Post a job",
+      "a:Privacy",
+      "a:Disclaimer",
+      "body:Skip to main contentSalarySabıCalculateCheck payslipFind jobsMy jobsPA",
+      "a:Skip to main content",
+      "a:SalarySabi home"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "none 3px rgb(19, 35, 29)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "name": "disclaimer-mobile",
+    "path": "/disclaimer",
+    "viewport": {
+      "width": 500,
+      "height": 900
+    },
+    "findings": {
+      "title": "Tax Calculator Disclaimer",
+      "landmarks": {
+        "main": 1,
+        "nav": 2,
+        "h1": 1
+      },
+      "unlabeled": [],
+      "duplicateIds": [],
+      "headingSkips": [],
+      "smallTargets": [],
+      "imagesWithoutAlt": [],
+      "contrastIssues": [],
+      "horizontalOverflow": false,
+      "documentWidth": 500,
+      "viewportWidth": 500
+    },
+    "focusOrder": [
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Jobs",
+      "summary:Menu",
+      "a:SalarySabi home",
+      "a:My jobs",
+      "a:Post a job",
+      "a:Privacy",
+      "a:Disclaimer",
+      "body:Skip to main contentSalarySabıCalculateCheck payslipFind jobsMy jobsPA",
+      "a:Skip to main content",
+      "a:SalarySabi home",
+      "a:Calculate",
+      "a:Jobs"
+    ],
+    "focusStyles": [
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "none 3px rgb(19, 35, 29)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)",
+      "solid 3px color(srgb 0.0509804 0.407843 0.286275 / 0.32)"
+    ]
+  },
+  {
+    "interactions": {
+      "calculatorLiveRegion": {
+        "text": "Your PAYE estimate₦117,500per monthBased on a ₦750,000 monthly salaryIncome after PAYE only₦632,500Before pension, NHF and other payroll deductionsShare of salary paid as PAYE15.7%Excludes pension, NHF, NHIS and other payroll deductionsSee ",
+        "hidden": false
+      },
+      "postJobValidation": {
+        "activeName": "title",
+        "invalidNames": [
+          "title",
+          "company_name",
+          "location",
+          "salary_min",
+          "salary_max",
+          "expires_at",
+          "application_url",
+          "contact_email",
+          "description",
+          "no_candidate_fees_confirmed"
+        ]
+      },
+      "mobileMenuKeyboard": {
+        "open": true,
+        "links": [
+          "My jobs",
+          "Check payslip",
+          "Post a job",
+          "Send us a job",
+          "PAYE guide"
+        ]
+      }
+    }
+  }
+]

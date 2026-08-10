@@ -1,69 +1,36 @@
 import type { Metadata } from "next";
-import { InfoPage } from "@/components/info-page";
+import Link from "next/link";
+import { PublicPageShell } from "@/components/info-page";
+import { PayeGuideTrail } from "@/components/paye-guide-trail";
 
 export const metadata: Metadata = {
   title: "Nigeria PAYE Eligible Deductions 2026",
-  description:
-    "Understand pension, NHF, NHIS, mortgage interest, life assurance and rent relief when estimating Nigerian PAYE in 2026.",
+  description: "Find the pension, NHF, NHIS, mortgage interest, life assurance and rent figures to enter in your Nigerian PAYE estimate.",
   alternates: { canonical: "/eligible-deductions" },
 };
 
 const deductions = [
-  {
-    title: "Pension: money saved for your retirement",
-    text: "Look for “Pension” on your payslip or PFA statement. Enter the amount deducted from your salary, not the total balance in your retirement account. For example, ₦40,000 monthly equals ₦480,000 yearly.",
-  },
-  {
-    title: "NHF: a housing-fund deduction",
-    text: "Look for “NHF” on your payslip. Enter the amount actually deducted. If your payslip does not show NHF, leave it at ₦0.",
-  },
-  {
-    title: "NHIS or NHIA: national health insurance",
-    text: "Enter the eligible health-insurance contribution shown on your payslip. An ordinary private HMO payment may not qualify, so check with payroll if you are unsure.",
-  },
-  {
-    title: "Mortgage interest: interest on your main home",
-    text: "Enter only the interest charged on a qualifying mortgage for the home you live in. Do not enter the full mortgage payment, the amount repaid on the loan, rent or a mortgage for an investment property.",
-  },
-  {
-    title: "Life assurance: cover for you or your spouse",
-    text: "Enter qualifying premiums shown on your insurer’s receipt or statement. Do not include car, travel or ordinary health insurance.",
-  },
-  {
-    title: "Rent relief: part of your home rent",
-    text: "Enter the rent paid for your home and SalarySabi calculates 20%, up to ₦500,000 yearly. For example, ₦1,200,000 annual rent gives ₦240,000 relief. This reduces taxable income; it is not a cash refund.",
-  },
+  { id: "pension", name: "Pension", source: "Payslip or PFA statement", enter: "The amount deducted from your salary", avoid: "Your total retirement-account balance", example: "₦40,000 monthly equals ₦480,000 yearly." },
+  { id: "nhf", name: "National Housing Fund (NHF)", source: "Payslip", enter: "The NHF amount actually deducted", avoid: "An assumed amount when NHF is not shown", example: "If it is not listed, leave the field at ₦0." },
+  { id: "nhis", name: "NHIS or NHIA", source: "Payslip or payroll record", enter: "The eligible health-insurance contribution", avoid: "An ordinary private HMO payment unless confirmed", example: "Check with payroll when eligibility is unclear." },
+  { id: "mortgage-interest", name: "Mortgage interest", source: "Lender statement", enter: "Interest on a qualifying mortgage for your main home", avoid: "The full payment, loan principal, rent or investment property", example: "Use only the interest amount shown by your lender." },
+  { id: "life-assurance", name: "Life assurance", source: "Insurer receipt or statement", enter: "Qualifying premiums for you or your spouse", avoid: "Car, travel or ordinary health insurance", example: "Use the premium amount you can document." },
+  { id: "rent-relief", name: "Rent for your home", source: "Tenancy record or rent receipt", enter: "The rent you actually pay for your home", avoid: "The calculated relief amount", example: "SalarySabi calculates the relief automatically." },
 ];
 
 export default function DeductionsPage() {
-  return (
-    <InfoPage
-      eyebrow="Before tax bands"
-      title="Eligible PAYE deductions explained"
-      intro="You do not need to know tax language. Use amounts shown on your payslip, PFA statement, lender statement or receipt. If an item does not apply to you, leave it at ₦0."
-    >
-      <section>
-        <h2>What you can enter</h2>
-        <div className="deduction-list">
-          {deductions.map((deduction, index) => (
-            <article key={deduction.title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <h3>{deduction.title}</h3>
-                <p>{deduction.text}</p>
-              </div>
-            </article>
-          ))}
-        </div>
+  return <PublicPageShell>
+    <PayeGuideTrail current="deductions" />
+    <article className="deductions-guide-page">
+      <header className="deductions-guide-hero"><span className="eyebrow">What can reduce your PAYE?</span><h1>Know which deductions count.</h1><p>See where to find each figure, what to enter, and what to leave out.</p></header>
+      <nav className="deductions-jump-list" aria-label="Jump to a deduction"><strong>Jump to</strong>{deductions.map((item, index) => <a href={`#${item.id}`} key={item.id}><span>{String(index + 1).padStart(2, "0")}</span>{item.name}</a>)}</nav>
+      <section className="deductions-reference" aria-labelledby="reference-title">
+        <div className="deductions-reference-heading"><div><span className="eyebrow">Check before you enter</span><h2 id="reference-title">What belongs in the calculator</h2></div><p>If an item does not apply to you, leave it at ₦0.</p></div>
+        <div className="deductions-table-heading" aria-hidden="true"><span>Deduction and source</span><span>Enter this</span><span>Do not enter this</span></div>
+        {deductions.map((item, index) => <article className="deduction-reference-row" id={item.id} key={item.id}><div className="deduction-reference-name"><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{item.name}</h3><small>{item.source}</small></div></div><div data-label="Enter this"><p>{item.enter}</p><small>{item.example}</small></div><div data-label="Do not enter this"><p>{item.avoid}</p></div></article>)}
       </section>
-      <aside className="callout">
-        <strong>Use amounts you can confirm.</strong>
-        <p>
-          Keep the payslip, statement or receipt supporting each amount.
-          SalarySabi provides an estimate; your employer or tax adviser can
-          confirm whether a deduction applies to your situation.
-        </p>
-      </aside>
-    </InfoPage>
-  );
+      <section className="deductions-records"><div><span className="eyebrow">Records to keep</span><h2>Use amounts you can confirm</h2></div><p>Keep the payslip, statement or receipt supporting every figure. SalarySabi provides an estimate; your employer or tax adviser can confirm whether a deduction applies to your circumstances.</p></section>
+      <section className="deductions-next-step"><div><span className="eyebrow">Ready?</span><h2>Go back and calculate your PAYE</h2><p>Your figures stay in this browser. SalarySabi will return you to the field you were checking.</p></div><div><Link className="primary-button" href="/?restore=deduction#calculator">Back to my calculation</Link><Link className="secondary-button" href="/how-paye-is-calculated">See how PAYE is calculated</Link></div></section>
+    </article>
+  </PublicPageShell>;
 }
