@@ -1,7 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Job } from "@/lib/jobs";
 
 const jobsQuery = "select=*&order=published_at.desc";
+let browserClient: SupabaseClient | null = null;
 
 const publicJobFields = [
   "id", "slug", "title", "company_name", "location", "work_mode", "employment_type",
@@ -70,7 +72,8 @@ export function createBrowserSupabaseClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) throw new Error("Supabase is not configured");
-  return createClient(url, key);
+  if (!browserClient) browserClient = createClient(url, key);
+  return browserClient;
 }
 
 export async function getPublishedJobBySlug(slug: string) {

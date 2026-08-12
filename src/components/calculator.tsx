@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { track } from "@/components/analytics";
-import { calculatePaye } from "@/lib/paye";
+import { calculateLegacyPaye, calculatePaye } from "@/lib/paye";
 import { readPayContext, writePayContext } from "@/lib/pay-context";
 import { rulesVerifiedDate, rulesetName, rulesetVersion } from "@/lib/site";
 
@@ -171,6 +171,8 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
   }, [deductionPeriod, period, values]);
 
   const result = useMemo(() => calculatePaye(inputs), [inputs]);
+  const legacyResult = useMemo(() => calculateLegacyPaye(inputs), [inputs]);
+  const showResult = hasCalculated || inputs.annualGrossIncome > 0;
 
   function update(name: FieldName, value: string) {
     setValues((current) => ({ ...current, [name]: formatInput(value) }));
@@ -396,7 +398,7 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
         </p>
       </form>
 
-      {(!guided || hasCalculated) && <section
+      {(!guided || showResult) && <section
         className="results-card"
         id="results"
         aria-live="polite"
@@ -408,7 +410,7 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
             <span className="result-state-label">Example preview</span>
           )}
           <p>Your PAYE estimate</p>
-          {hasCalculated ? (
+          {showResult ? (
             <>
               <strong>{money.format(result.monthlyTax)}</strong>
               <span className="per-month">per month</span>
@@ -425,7 +427,7 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
           )}
         </div>
 
-        {hasCalculated && <div className="result-summary">
+        {showResult && <div className="result-summary">
           <div>
             <span>Income after PAYE only</span>
             <strong>{money.format(result.monthlyIncomeAfterTax)}</strong>
@@ -436,9 +438,14 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
             <strong>{(result.effectiveTaxRate * 100).toFixed(1)}%</strong>
             <small>Excludes pension, NHF, NHIS and other payroll deductions</small>
           </div>
+          <div>
+            <span>Compared with the pre-2026 estimate</span>
+            <strong>{legacyResult.differenceFrom2026 >= 0 ? `${money.format(legacyResult.differenceFrom2026)} less yearly` : `${money.format(Math.abs(legacyResult.differenceFrom2026))} more yearly`}</strong>
+            <small>Planning comparison using the former CRA, bands and minimum tax</small>
+          </div>
         </div>}
 
-        {hasCalculated && <details className="calculation-details">
+        {showResult && <details className="calculation-details">
           <summary>
             <span>
               <strong>See how we got this number</strong>

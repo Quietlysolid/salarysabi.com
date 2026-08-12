@@ -4,20 +4,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { href: "/", label: "Calculate PAYE", className: "nav-primary" },
-  { href: "/payslip-checker", label: "Check payslip" },
-  { href: "/paye-guide", label: "PAYE guide" },
-  { href: "/tax-updates", label: "Tax updates" },
-  { href: "/payroll", label: "For employers" },
-  { href: "/jobs", label: "Jobs with salaries" },
+  { href: "/tax-tools", label: "Calculate", className: "nav-primary" },
+  { href: "/salaries-and-jobs", label: "Salaries & jobs" },
+  { href: "/business", label: "For businesses" },
+  { href: "/paye-guide", label: "Learn" },
+  { href: "/contributors", label: "Contribute" },
+  { href: "/payslip-checker", label: "Check my payslip", className: "nav-cta" },
 ];
 
 function isCurrent(pathname: string, href: string) {
+  if (href === "/tax-tools") return ["/", "/tax-tools", "/freelancer-tax", "/creator-tax", "/foreign-income-tax", "/investment-tax"].some((path) => pathname === path);
+  if (href === "/salaries-and-jobs") return ["/salaries-and-jobs", "/salaries", "/jobs", "/account", "/suggest-a-job"].some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  if (href === "/business") return ["/business", "/payroll", "/company-tax", "/post-a-job"].some((path) => pathname === path || pathname.startsWith(`${path}/`));
   if (href === "/paye-guide") {
-    return ["/paye-guide", "/how-paye-is-calculated", "/eligible-deductions", "/tax-bands"].some(
+    return ["/paye-guide", "/how-paye-is-calculated", "/eligible-deductions", "/tax-bands", "/tax-updates", "/tax-news"].some(
       (guidePath) => pathname === guidePath || pathname.startsWith(`${guidePath}/`),
     );
   }
+  if (href === "/contributors") return pathname.startsWith("/contributors");
   return href === "/" ? pathname === href : pathname.startsWith(href);
 }
 

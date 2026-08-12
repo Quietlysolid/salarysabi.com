@@ -1,7 +1,21 @@
 import type { Metadata } from "next";
+import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 import { Analytics } from "@/components/analytics";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
+
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
+  subsets: ["latin"],
+  display: "swap",
+  axes: ["opsz"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -14,7 +28,6 @@ export const metadata: Metadata = {
     "gross to net salary Nigeria",
     "PAYE tax calculator Nigeria",
   ],
-  alternates: { canonical: "/" },
   icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
@@ -60,7 +73,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en-NG" data-scroll-behavior="smooth">
+    <html className={`${sourceSans.variable} ${sourceSerif.variable}`} lang="en-NG" data-scroll-behavior="smooth">
       <body>
         <a className="skip-link" href="#main-content">Skip to main content</a>
         <script

@@ -20,6 +20,9 @@ export const analyticsEvents = [
   "account_signup_started",
   "account_signup_succeeded",
   "account_signin_succeeded",
+  "contributor_interest_viewed",
+  "contributor_interest_submitted",
+  "contributor_interest_succeeded",
 ] as const;
 
 export type AnalyticsEvent = (typeof analyticsEvents)[number];

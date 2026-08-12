@@ -1,72 +1,80 @@
 import Link from "next/link";
+import { BriefcaseBusiness, CalculatorIcon, ChartNoAxesColumnIncreasing, Users } from "lucide-react";
 import { Calculator } from "@/components/calculator";
 import { PublicPageShell } from "@/components/info-page";
 import { rulesVerifiedDate, siteUrl } from "@/lib/site";
 
+export const metadata = { alternates: { canonical: "/" } };
+
+const platformOutcomes = [
+  [CalculatorIcon, "Understand your pay", "Calculate PAYE, check your payslip and know what to take home."],
+  [ChartNoAxesColumnIncreasing, "Compare salaries", "See anonymous benchmarks across roles, industries and locations."],
+  [BriefcaseBusiness, "Find transparent jobs", "Discover opportunities that publish salary before you apply."],
+  [Users, "Manage payroll", "Prepare payroll, PAYE records and payslips for a small team."],
+] as const;
+
+const paths = [
+  {
+    number: "01", title: "Understand my pay", description: "Calculate PAYE, check your payslip and know what to take home.",
+    links: [["Calculate my PAYE", "#calculator"], ["Check my payslip", "/payslip-checker"], ["Understand my result", "/how-paye-is-calculated"]],
+  },
+  {
+    number: "02", title: "Know my market value", description: "Compare salaries and discover jobs from companies that publish pay.",
+    links: [["Compare salaries", "/salaries"], ["Find salary-transparent jobs", "/jobs"], ["Open my job workspace", "/account"]],
+  },
+  {
+    number: "03", title: "Manage a small team", description: "Run payroll, plan company tax and find talent with confidence.",
+    links: [["Run payroll", "/payroll"], ["Plan company tax", "/company-tax"], ["Post a transparent job", "/post-a-job"]],
+  },
+] as const;
+
 export default function Home() {
   const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "SalarySabi Nigeria PAYE Calculator 2026",
-    applicationCategory: "FinanceApplication",
-    operatingSystem: "Web",
-    url: siteUrl,
+    "@context": "https://schema.org", "@type": "WebApplication", name: "SalarySabi Nigerian Work and Pay Platform",
+    applicationCategory: "FinanceApplication", operatingSystem: "Web", url: siteUrl,
     offers: { "@type": "Offer", price: "0", priceCurrency: "NGN" },
-    description: "A free Nigerian PAYE calculator using the Nigeria Tax Act 2025 and JRB Personal Income Tax Guidelines 2026.",
+    description: "Understand Nigerian PAYE and payslips, compare salaries, find salary-transparent jobs and run small-team payroll.",
   };
 
-  return (
-    <PublicPageShell>
-      <script dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} type="application/ld+json" />
-
-      <article className="guided-home">
-        <header className="guided-home-hero">
-          <span className="eyebrow">Nigeria PAYE calculator</span>
-          <h1>Know your PAYE. No guesswork.</h1>
-          <p>Calculate your 2026 PAYE and see how every tax band and deduction affects the result.</p>
-          <div className="guided-home-actions">
+  return <PublicPageShell>
+    <script dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} type="application/ld+json" />
+    <article className="platform-home">
+      <section className="platform-hero">
+        <div className="platform-hero-copy">
+          <span className="eyebrow">Nigeria&apos;s work &amp; pay platform</span>
+          <h1>Understand your pay.<br />Know your worth.<br />Make better work decisions.</h1>
+          <p>Get clarity on Nigerian PAYE, compare anonymous salaries, discover jobs that publish pay and run payroll for your team.</p>
+          <div className="platform-hero-actions">
             <a className="primary-button" href="#calculator">Calculate my PAYE</a>
-            <Link className="guided-method-link" href="/how-paye-is-calculated">See how PAYE works <span aria-hidden="true">→</span></Link>
+            <Link href="/salaries">Compare salaries</Link>
+            <Link href="/jobs">Find jobs with salaries</Link>
           </div>
-        </header>
-
-        <nav className="guided-stages" aria-label="SalarySabi pay tools">
-          <a className="active" aria-current="step" href="#calculator"><span>01</span><strong>Calculate PAYE</strong><small>Estimate the tax on your salary</small></a>
-          <Link href="/payslip-checker"><span>02</span><strong>Check the payslip</strong><small>Compare your PAYE and deductions</small></Link>
-          <Link href="/how-paye-is-calculated"><span>03</span><strong>Understand the result</strong><small>See how your PAYE is calculated</small></Link>
-        </nav>
-
-        <section className="guided-workspace" id="calculator" aria-label="PAYE calculator and guidance">
-          <div className="guided-calculator"><Calculator guided /></div>
-          <aside className="guided-explainer">
-            <span className="eyebrow">Know the numbers</span>
-            <h2>No guesswork. See how it adds up.</h2>
-            <p>Check any figure. Read the rule behind it.</p>
-            <nav aria-label="PAYE calculation guides">
-              <Link href="/how-paye-is-calculated#worked-example"><span>01</span><div><strong>Worked example</strong><small>See the calculation from start to finish.</small></div><b>See example</b></Link>
-              <Link href="/how-paye-is-calculated#calculation-ledger"><span>02</span><div><strong>Full calculation</strong><small>Follow the numbers through to monthly PAYE.</small></div><b>See calculation</b></Link>
-              <Link href="/tax-bands"><span>03</span><div><strong>Key rules and tax bands</strong><small>See the graduated rates and minimum-wage rule.</small></div><b>View tax bands</b></Link>
-              <Link href="/eligible-deductions"><span>04</span><div><strong>Eligible deductions</strong><small>Know what to enter and what to leave out.</small></div><b>View deductions</b></Link>
-            </nav>
-          </aside>
-        </section>
-
-        <aside className="guided-assurance" aria-label="Calculator assurance">
-          <strong>Your figures are private. The tax rules are current.</strong>
-          <span>Your figures stay in this browser. Rules checked {rulesVerifiedDate}.</span>
-          <Link href="/how-paye-is-calculated">See how we calculate</Link>
+          <small>Tax rules checked {rulesVerifiedDate}. Your calculator figures stay in this browser.</small>
+        </div>
+        <aside className="platform-outcomes" aria-label="What SalarySabi helps you do">
+          <strong>Everything you need to understand work and pay</strong>
+          {platformOutcomes.map(([Icon, title, description]) => <div key={title}>
+            <span aria-hidden="true"><Icon /></span><p><b>{title}</b><small>{description}</small></p>
+          </div>)}
         </aside>
+      </section>
 
-        <aside className="guided-builder-note" aria-label="About the builder">
-          <span>Built independently by <Link href="/about">Ozichi Nwosu</Link>, a Nigerian software engineer who wanted PAYE to make sense.</span>
-        </aside>
+      <section className="platform-paths" aria-labelledby="choose-path-title">
+        <h2 className="sr-only" id="choose-path-title">Choose what you need</h2>
+        {paths.map((path) => <article key={path.number}>
+          <span>{path.number}</span><h2>{path.title}</h2><p>{path.description}</p>
+          <nav aria-label={path.title}>{path.links.map(([label, href], index) => href.startsWith("#")
+            ? <a className={index === 0 ? "featured" : ""} href={href} key={href}><b>{label}</b><span aria-hidden="true">→</span></a>
+            : <Link className={index === 0 && path.number === "01" ? "featured" : ""} href={href} key={href}><b>{label}</b><span aria-hidden="true">→</span></Link>)}</nav>
+        </article>)}
+      </section>
 
-        <aside className="guided-secondary-product" aria-label="Salary-listed jobs">
-          <div><span className="eyebrow">Also on SalarySabi</span><h2>Looking for work? See jobs that publish pay.</h2></div>
-          <Link href="/jobs">Browse jobs with salaries</Link>
-        </aside>
-      </article>
+      <section className="platform-calculator" id="calculator" aria-label="PAYE calculator">
+        <header><span className="eyebrow">Calculate your pay</span><h2>See your 2026 PAYE and take-home pay.</h2><p>Enter your salary to estimate your tax, deductions and monthly take-home pay.</p></header>
+        <div className="guided-workspace"><div className="guided-calculator"><Calculator guided /></div><aside className="guided-explainer"><span className="eyebrow">You will see</span><h2>More than one tax number.</h2><p>Understand your estimated net pay, PAYE breakdown, deductions and the rules behind the result.</p><nav aria-label="Calculation guides"><Link href="/how-paye-is-calculated"><span>01</span><div><strong>Full calculation</strong><small>Follow every step through to monthly PAYE.</small></div><b>View</b></Link><Link href="/eligible-deductions"><span>02</span><div><strong>Eligible deductions</strong><small>Know what belongs in the calculator.</small></div><b>View</b></Link><Link href="/tax-bands"><span>03</span><div><strong>Current tax bands</strong><small>See the rates and thresholds used.</small></div><b>View</b></Link></nav></aside></div>
+      </section>
 
-    </PublicPageShell>
-  );
+      <aside className="platform-trust" aria-label="Why you can trust SalarySabi"><div><strong>Your privacy matters</strong><span>Calculator figures stay on your device.</span></div><div><strong>Current 2026 rules</strong><span>Rules checked {rulesVerifiedDate}.</span></div><div><strong>Built by a Nigerian, for Nigerians</strong><span>Independent tools for how Nigerians work and earn.</span></div></aside>
+    </article>
+  </PublicPageShell>;
 }

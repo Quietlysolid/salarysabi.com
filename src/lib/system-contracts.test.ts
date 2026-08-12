@@ -22,7 +22,7 @@ describe("shared product contracts", () => {
   });
 
   it("uses the public shell on core public routes", () => {
-    for (const route of ["src/app/page.tsx", "src/app/jobs/page.tsx", "src/app/payslip-checker/page.tsx", "src/app/account/page.tsx", "src/app/post-a-job/page.tsx", "src/app/suggest-a-job/page.tsx", "src/app/paye-guide/page.tsx", "src/app/disclaimer/page.tsx", "src/app/privacy/page.tsx", "src/app/eligible-deductions/page.tsx", "src/app/how-paye-is-calculated/page.tsx"]) {
+    for (const route of ["src/app/page.tsx", "src/app/jobs/page.tsx", "src/app/payslip-checker/page.tsx", "src/app/account/page.tsx", "src/app/post-a-job/page.tsx", "src/app/suggest-a-job/page.tsx", "src/app/paye-guide/page.tsx", "src/app/disclaimer/page.tsx", "src/app/privacy/page.tsx", "src/app/eligible-deductions/page.tsx", "src/app/how-paye-is-calculated/page.tsx", "src/app/salaries-and-jobs/page.tsx", "src/app/business/page.tsx"]) {
       expect(read(route)).toContain("PublicPageShell");
     }
   });
@@ -37,6 +37,8 @@ describe("shared product contracts", () => {
     expect(analytics).toContain('autocapture: false');
     expect(analytics).toContain('disable_session_recording: true');
     expect(analytics).toContain('persistence: "memory"');
+    expect(analytics).toContain("analyticsOptOutKey");
+    expect(analytics).toContain('process.env.NODE_ENV !== "production"');
     expect(analytics).not.toMatch(/salary|deduction|password|payslip_value|email/i);
   });
 
@@ -64,6 +66,31 @@ describe("shared product contracts", () => {
     const wordmark = read("src/components/brand-wordmark.tsx");
     expect(wordmark).toContain('<span className="brand-i">i</span>');
     expect(wordmark).not.toContain("ı");
+  });
+
+  it("caps contributor liabilities in the database before accepting reward claims", () => {
+    const migration = read("supabase/migrations/202608110002_contributor_program.sql");
+    expect(migration).toContain("committed_kobo+c.reward_kobo>c.budget_kobo");
+    expect(migration).toContain("Campaign budget exhausted");
+    expect(migration).toContain("Contributor campaign limit reached");
+    expect(migration).toContain("status text not null default 'draft'");
+    expect(migration).toContain("admin_review_contribution_claim");
+    expect(migration).toContain("contributor_ledger_one_reward_per_claim");
+    expect(migration).toContain("request_contributor_payout");
+    expect(migration).toContain("Payout exceeds available balance");
+    expect(migration).toContain("admin_complete_contributor_payout");
+    expect(migration).toContain("-request.amount_kobo");
+  });
+
+  it("keeps contributor validation non-payable and independently measurable", () => {
+    const page = read("src/components/contributor-program.tsx");
+    const migration = read("supabase/migrations/202608120001_contributor_interest_validation.sql");
+    expect(page).toContain("not active offers");
+    expect(page).toContain('source="contributor_program"');
+    expect(page).not.toContain("ensure_contributor_profile");
+    expect(migration).toContain("contributor_interest_viewed");
+    expect(migration).toContain("contributor_interest_submitted");
+    expect(migration).toContain("contributor_interest_succeeded");
   });
 });
 

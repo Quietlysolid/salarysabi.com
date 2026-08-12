@@ -1,112 +1,187 @@
-# Design QA: August whole-app responsive corrections
+# SalarySabi work-and-pay redesign QA
 
-## Source visual
+**Source visual truth**
 
-- Accepted whole-app audit captures in `design-audit/whole-app-current/`.
-- User-reported tax-band and guide-action screenshots from the current review cycle.
+- `C:\Users\z-Nwosu.Ozichi.G\.codex\generated_images\019ff206-4273-7a02-b9ec-627bf3a0b2ea\exec-9c0c514a-1b7b-464d-bd50-f36ebd81e149.png`
+- Source pixels: 1536 × 1024.
 
-## Implementation screenshots
+**Rendered implementation evidence**
 
-- `design-audit/whole-app-current/fixes-home-result-desktop.png`.
-- `design-audit/whole-app-current/fixes-disclaimer-mobile.png`.
-- `design-audit/whole-app-current/fixes-workspace-mobile.png`.
-- `design-audit/whole-app-current/fixes-tax-bands-mobile.png`.
-- `design-audit/whole-app-current/fixes-deductions-mobile.png`.
+- Desktop: `C:\Users\z-Nwosu.Ozichi.G\microSaas\design-audit\positioning-20260811\12-home-final-1536.png`
+- Mobile: `C:\Users\z-Nwosu.Ozichi.G\microSaas\design-audit\positioning-20260811\13-home-final-mobile.png`
+- Desktop pixels: 1536 × 2853; CSS viewport: 1536 × 1024; device scale factor: 1.
+- Mobile pixels: 390 × 5114; CSS viewport: 390 × 844; device scale factor: 1.
+- State: anonymous visitor, default light theme, empty salary-benchmark launch state.
 
-## Comparison
+**Full-view comparison evidence**
 
-- The calculated desktop homepage now places the form and result side by side and removes the disconnected empty column.
-- All three mobile disclaimer actions are visible as 56px rectangular controls.
-- The mobile workspace email wraps safely and the 44px sign-out control remains fully inside the 390px viewport.
-- Mobile tax bands render as one card per band with a full-width band heading and labeled range, rate and maximum-tax details.
-- Deduction and methodology action pairs retain equal rectangular treatment and measure at least 48px on mobile.
-- The footer lockup remains on one line, job actions meet the 44px target floor, and meaningful mobile supporting labels use at least 12px.
+- The source and implementation were inspected together at the same 1536px desktop width. The implementation preserves the source hierarchy: large editorial promise on the left, concise four-outcome panel on the right, three task-led paths beneath, then the PAYE entry experience and trust strip.
+- The implementation intentionally extends beyond the source's 1024px concept frame to preserve the complete working calculator and site footer.
+- The source phrase “Built in Nigeria” was intentionally replaced with the user-approved, factually accurate “Built by a Nigerian, for Nigerians.”
 
-## Findings and resolution
+**Focused comparison evidence**
 
-### P1: global navigation selector hid non-header actions
+- Hero: heading weight, line-height, green/lime palette, CTA order, right-hand outcome panel, square geometry and fine dividers match the selected direction. The implementation uses the existing brand font stack and responsive line wrapping rather than rasterized mock typography.
+- Task gateway: the same three decision paths and active PAYE treatment are present. Supporting descriptions were tightened to avoid duplicating the hero panel.
+- Calculator: the source's compact preview becomes the real existing calculator with working salary period, deductions and result guidance. This is an intentional functional expansion.
+- Trust strip: same three-part rhythm; founder/location language corrected for accuracy.
 
-- Root cause: an unscoped mobile `nav a` selector applied header behavior to every navigation landmark.
-- Resolution: scoped the rule to the desktop site-header navigation and added mobile visibility assertions.
-- Status: fixed.
+**Required fidelity surfaces**
 
-### P1: workspace identity row exceeded the mobile viewport
+- Fonts and typography: passed. Existing display/body families, heavy editorial hierarchy, compact UI weights and readable line lengths remain consistent. No clipping or truncation at desktop or 390px mobile.
+- Spacing and layout rhythm: passed. Desktop two-column hero, three-column gateway and calculator grid preserve the target proportions. Mobile becomes one clear reading column with no horizontal overflow.
+- Colors and visual tokens: passed. Existing green, dark green, lime, white, muted copy and border tokens map cleanly to the concept; contrast remains strong on primary controls and dark panels.
+- Image quality and asset fidelity: passed. The target contains no photographic/raster imagery. The existing logo asset is preserved and UI icons use the installed Lucide icon library rather than CSS or handcrafted SVG substitutes.
+- Copy and content: passed. The whole platform is named above the fold, CTAs lead to real routes, claims are honest, and no fake salary data, testimonials or activity numbers were introduced.
+- Accessibility and behavior: passed for tested states. Semantic headings, labelled navigation, labelled fields, native validation, visible focus behavior, mobile reflow and practical tap targets are present. This is not a full WCAG conformance claim.
 
-- Resolution: the identity and action stack below 760px, the email can wrap anywhere, and sign-out becomes a full-width 44px control.
-- Status: fixed.
+**Comparison history**
 
-### P2: disconnected calculator result and inconsistent responsive actions
+1. P1 behavior finding: the salary form's Continue control advanced to Step 2 with empty context fields because the validator selected the wrong container.
+2. Fix: changed validation to inspect the currently active step and call native `reportValidity()` on the first invalid field.
+3. Post-fix evidence: six Playwright checks passed across desktop and mobile. They cover platform positioning, CTA-to-calculator navigation, empty-field focus, valid Step 1 progression, Step 2 visibility, horizontal overflow and console errors.
 
-- Resolution: the populated guided calculator becomes a full-width two-column workspace on desktop and one column on mobile. Guide actions now share one rectangular contract, mobile job actions meet 44px, the footer lockup cannot wrap, and tax bands use labeled cards.
-- Status: fixed.
+**Residual P3 polish**
 
-## Verification
+- The rendered calculator is taller than the compact concept preview; this is accepted because it keeps the existing functional product rather than replacing it with decorative chrome.
+- The Next.js development indicator appears in local screenshots only and is not part of the production build.
 
-- Targeted 390px and 1440px geometry checks passed for the affected states.
-- Targeted ESLint passed.
-- 45 unit tests passed.
-- CSS selector audit passed.
-- The full Playwright suite could not complete while the existing Next.js development server held the project lock; direct browser checks covered the changed routes and new regression assertions are committed for the next clean run.
-- No deployment performed.
+**Primary interactions tested**
+
+- Homepage platform promise and routes visible.
+- Primary PAYE CTA scrolls to the calculator.
+- Empty salary Step 1 blocks progression and focuses Role.
+- Completed salary Step 1 advances to pay details.
+- Mobile homepage has no horizontal overflow.
+- Browser console errors checked on the primary homepage journey: none.
 
 final result: passed
 
----
+## Salary benchmark empty-state hierarchy, 2026-08-12
 
-# Design QA: focused admin moderation workspace
+- Source visual truth: the user-provided annotated `/salaries` screenshot.
+- Implementation screenshots: `design-audit/salary-empty-state-20260812/01-desktop-after.png` and `02-mobile-after.png`.
+- Viewports: desktop 1920 by 1080 CSS px and mobile 390 by 844 CSS px; device scale factor 1.
+- Root cause: the zero-group count and explanatory empty-state message were separated into two large components, producing a redundant full-width status band.
+- Fix: the zero-count banner is removed when no public groups exist. The privacy-threshold explanation remains inside Current benchmarks, directly beside the contribution form.
+- Populated state: when one or more groups exist, the page shows a compact count indicator above the benchmark grid.
+- Responsive result: no empty horizontal strip remains on desktop, and mobile moves directly from the introduction to the benchmark state.
+- Comparison history: the prior P2 hierarchy issue was a stretched metric row with duplicated empty-state messaging. Post-fix captures show no remaining P0, P1 or P2 issue.
 
-## Evidence
+final result: passed
 
-- Source visual truth: `design-audit/admin-current-2026-08-08/option-3-reference.png` (1487×1058 px).
-- Desktop implementation: `design-audit/admin-current-2026-08-08/03-admin-review-final.png` (1440×1024 px, CSS viewport 1440×1024, device scale factor 1).
-- Mobile implementation: `design-audit/admin-current-2026-08-08/04-admin-review-mobile.png` (390×2446 full-page capture, CSS viewport 390×844, device scale factor 1).
-- Normalized full-view comparison: `design-audit/admin-current-2026-08-08/06-admin-side-by-side-final.png`.
-- State: authenticated development fixture, first imported draft selected.
+## Holistic public-link navigation audit, 2026-08-12
 
-## Full-view comparison
+- Source evidence: user-provided annotated `/paye-guide` screenshots showing failed guide-card and FAQ navigation.
+- Audit scope: 31 public pages and 39 unique internal destinations, excluding authenticated administration, API routes, external sites, email links, and destructive actions.
+- Method: each public page was rendered, internal destinations were discovered from its anchors, each destination was checked for a successful response, and each unique destination was reached through a browser click.
+- Fixes: the three PAYE guide cards are now full standard-browser links, and all four PAYE FAQ links use reliable standard navigation.
+- Desktop result: all discovered internal destinations passed response and click-navigation checks.
+- Mobile result: all 39 unique internal destinations across all 31 pages passed response and click-navigation checks.
+- Regression coverage: `tests/public-link-audit.pw.ts` and `tests/tax-tools-navigation.pw.ts` preserve the whole-site audit and the key card-body click paths.
+- Evidence limit: authenticated administration, third-party destinations, mail clients, form submissions, and destructive controls require separate stateful audits.
 
-- The implementation preserves the selected concept's left review queue, focused job canvas, top-level section switcher, evidence checks, source-versus-SalarySabi comparison, and three decision actions.
-- SalarySabi's production logo, typography, forest green, lime highlight, off-white page and square geometry replace generated approximations.
-- The implementation intentionally shows a salary range rather than the mock's single midpoint because SalarySabi must not invent a representative salary.
+final result: passed
 
-## Focused comparison
+## Tax-tool card navigation reliability, 2026-08-12
 
-- Navigation, selected queue row, evidence states, editable fields and action hierarchy were readable in the full-size desktop capture; separate crops were unnecessary.
-- The 390px capture confirmed that every queue item remains reachable, fields stack to one column, controls stay within the viewport and actions no longer cover review evidence.
+- Source visual truth: the user-provided annotated `/tax-tools` screenshot.
+- Scope: all six tax-tool cards on desktop and mobile.
+- Root cause: the cards had valid destinations, but client-side route transitions were unreliable for some planner routes even though those pages returned successfully.
+- Fix: every full-card target now uses a standard browser link, preserving the existing appearance while providing a reliable document navigation fallback.
+- Interaction verification: automated tests click inside the body of each card rather than the visible action text and confirm the final URL.
+- Visual fidelity: card layout, spacing, borders, typography, and hover affordance are unchanged.
 
-## Findings and comparison history
+final result: passed
 
-### P2: mobile queue alternatives were hidden
+## Tax planner currency-control border correction, 2026-08-12
 
-- Earlier evidence: the first mobile capture exposed only the selected record, preventing job switching.
-- Fix: retained all queue rows on narrow screens.
-- Post-fix evidence: `04-admin-review-mobile.png` shows all three fixture jobs before the selected review canvas.
+- Source visual truth: the user-provided annotated company-tax screenshot plus `design-audit/eyebrow-contrast-20260812/05-company-tax-after.png` and `08-company-tax-mobile-after.png`.
+- Implementation screenshots: `design-audit/eyebrow-contrast-20260812/09-company-tax-controls-after.png` and `10-company-tax-controls-mobile-after.png`.
+- Viewports: desktop 1440 by 1000 CSS px and mobile 390 by 844 CSS px; device scale factor 1. Before and after captures use matching viewports and states.
+- Root cause: the shared control-height rule made the inner input taller than its wrapper, while an opaque input background covered portions of the wrapper border.
+- Fix: the currency wrapper now owns the complete border and focus ring. Its inner input is transparent, borderless, constrained to the wrapper height, and clipped safely inside it.
+- Scope: all tax-planner modes that use the shared currency-control structure, including company, freelancer, creator, foreign-income, and investment planners.
+- Comparison history: the initial P1 component defect produced visibly interrupted top, bottom, and side borders. Post-fix desktop and mobile captures show continuous rectangles with no remaining P0, P1 or P2 issue.
 
-### P2: sticky mobile actions obscured evidence
+final result: passed
 
-- Earlier evidence: the first mobile capture placed the action bar over the evidence section.
-- Fix: the action group now participates in normal document flow below 720px.
-- Post-fix evidence: the final mobile capture shows actions after the editable fields without overlap.
+## Sitewide dark-surface eyebrow contrast, 2026-08-12
 
-## Required fidelity surfaces
+- Source visual truth: the user-provided company-tax screenshot plus current-run captures `design-audit/eyebrow-contrast-20260812/01-company-tax-before.png`, `02-jobs-before.png`, `03-salaries-jobs-before.png`, and `04-company-tax-mobile-before.png`.
+- Implementation screenshots: `design-audit/eyebrow-contrast-20260812/05-company-tax-after.png`, `06-jobs-after.png`, `07-salaries-jobs-after.png`, and `08-company-tax-mobile-after.png`.
+- Viewports: desktop 1440 by 1000 CSS px and mobile 390 by 844 CSS px; device scale factor 1. Before and after captures use matching viewports and states.
+- Scope: shared eyebrow labels inside dark green calculator results, employer callouts, trust panels, product notes, PAYE guidance, deduction actions, payslip results, and administration introductions.
+- Typography and layout: unchanged. Only the contextual eyebrow color changes.
+- Color: dark surfaces now use the existing lime token for small uppercase labels. Light surfaces retain the standard green token.
+- Accessibility: the prior dark-green-on-dark-green label treatment was a visible contrast failure. The lime-on-dark treatment restores clear visual separation while preserving the SalarySabi palette.
+- Comparison history: the initial P1 accessibility issue appeared on the company-tax result and jobs employer callout. Both are visibly corrected in the post-fix captures, with no new P0, P1 or P2 layout issue.
 
-- Fonts and typography: production SalarySabi type tokens retained; hierarchy and wrapping match the chosen direction without clipped headings.
-- Spacing and layout rhythm: desktop queue/canvas split and mobile single-column flow are consistent and free of horizontal overflow.
-- Colors and visual tokens: production green, dark green, lime, paper and line tokens used; no gradients or decorative shadows introduced.
-- Image and asset fidelity: production BrandMark and BrandWordmark components used; no raster placeholders or improvised logo assets.
-- Copy and content: concise moderation language, exact NGN ranges, named evidence states and plain publish/reject outcomes.
+final result: passed
 
-## Interaction and technical verification
+## Contributor secondary action correction, 2026-08-12
 
-- Tested Review, Published, Reports and Analytics navigation.
-- Tested queue selection, salary-field editing and keyboard focus on Save draft.
-- Browser console and page errors: none.
-- Mobile document width: 390px at a 390px viewport.
-- Targeted ESLint passed.
-- 15 targeted unit and regression tests passed.
+- Source visual truth: the user-provided 1920 by 1080 annotated screenshot and `design-audit/contributors-reward-build-20260812/04-shorter-hero-desktop.png`.
+- Implementation screenshot: `design-audit/contributors-reward-build-20260812/05-secondary-action-desktop.png`.
+- Viewport: desktop 1920 by 1080 CSS px; device scale factor 1. Full-page captures were compared at the same viewport.
+- State: inactive contributor pilot with anonymous salary reporting still available.
+- Hierarchy: the oversized dark green panel was reduced to a compact pale secondary action so it no longer competes with the pilot waitlist.
+- Copy: repeated campaign policy language was removed. The remaining message states only the available unpaid action.
+- Layout: the panel now has a 780px maximum width, grouped heading and description, and a directly associated link.
+- Accessibility: the action retains a 44px minimum target and visible underlined link treatment.
+- Comparison history: the prior P2 issue was excessive visual weight and mixed messaging near the footer. The post-fix capture shows no remaining P0, P1 or P2 issue.
 
-## Follow-up polish
+final result: passed
 
-- P3: when the queue becomes large, add server-backed filtering and pagination rather than rendering every pending item.
+## Contributor reward introduction correction, 2026-08-12
+
+- Source visual truth: user-provided 1920 by 1080 screenshot of the split reward introduction.
+- Implementation screenshot: `design-audit/contributors-reward-build-20260812/03-header-fixed-desktop.png`.
+- Viewport: 1920 by 1080 CSS px; device scale factor 1; default contributor page state.
+- Full-view and focused-region evidence: the title and explanation now form one left-aligned reading group directly above the milestone cards. The full-resolution capture makes the affected region legible, so a separate crop was unnecessary.
+- Fonts and typography: heading and explanatory hierarchy remain consistent with the surrounding page.
+- Spacing and layout: the disconnected two-column header was replaced by a 760px text block with a 12px heading-to-description gap.
+- Colors and tokens: unchanged.
+- Image quality and assets: not applicable; no assets were added or replaced.
+- Copy: clarified that the three milestones total 100% and that employer confirmation protects contributors from employee monitoring.
+- Comparison history: the earlier P2 issue was ambiguous ownership between the left heading and distant right paragraph. The post-fix capture shows a single clear reading path with no remaining P0, P1 or P2 issue.
+
+final result: passed
+
+## Contributor pilot conversion update, 2026-08-12
+
+- Source visual truth: `design-audit/contributors-conversion-audit-20260812/01-desktop.png` and `02-mobile.png`.
+- Implementation screenshots: `design-audit/contributors-reward-build-20260812/01-desktop.png` and `02-mobile.png`.
+- Viewports: desktop 1440 by 1000 CSS px; mobile 390 by 844 CSS px; device scale factor 1. Full-page captures were compared at matching viewport widths.
+- State: inactive contributor pilot with working email waitlist.
+- Full-view comparison: the revised page preserves the existing grid while moving the contributor outcome, reward mechanics and CTA into a clear conversion sequence.
+- Focused-region comparison: the reward timeline and waitlist form were inspected at full resolution. The primary CTA was strengthened after the first implementation capture.
+- Fonts and typography: Source Serif remains reserved for the outcome-led page heading. Operational steps, percentages and form controls remain Source Sans.
+- Spacing and layout: the reward model spans the content width on desktop and becomes a compact vertical sequence on mobile without horizontal overflow.
+- Colors and tokens: the pale green reward surface, dark green CTA and lime disclaimer accent use existing SalarySabi tokens.
+- Image and icon fidelity: no new image assets or icons were required.
+- Copy: the page now explains the contributor benefit first, removes repeated inactive notices, uses no em dashes and labels the reward structure as proposed.
+- Interaction checked: the email form remains functional. Its button has clear default, hover, focus and disabled styling.
+- Comparison history: the initial P1 conversion issue was an internal validation story with no concrete reward path. This was replaced with an outcome-led hero, contributor steps and the 20%, 30%, 50% timeline. The first implementation had a low-emphasis gray waitlist button, which was upgraded to the primary green treatment. Post-fix screenshots show no remaining P0, P1 or P2 issue.
+- Follow-up polish: the final job reward amount intentionally remains unconfirmed until pilot economics are approved.
+
+final result: passed
+
+## Business scope notice — 2026-08-12
+
+- Source visual truth: `design-audit/holistic-live-20260812/10-business-desktop.png` and the user-provided 1920×1080 annotated screenshot.
+- Implementation screenshots: `design-audit/business-scope-local-20260812/business-desktop.png` and `business-mobile.png`.
+- Viewports: desktop 1920×1080 CSS px; mobile 390×844 CSS px; device scale factor 1. Full-page captures were used, with the business scope region compared at matching desktop width.
+- State: default, unauthenticated business landing page.
+- Full-view comparison: the new notice preserves the page grid while reducing the disclaimer from a full-width three-column bar to a compact supporting panel.
+- Focused-region comparison: copy, icon alignment, padding, border treatment, link proximity, and mobile wrapping were legible in the full-resolution captures; no separate crop was required.
+- Fonts and typography: existing Source Sans hierarchy retained; heading, explanatory copy, and action now have distinct weights.
+- Spacing and layout: compact 780px maximum width, 16px internal gap, and mobile wrapping remove the detached-column effect.
+- Colors and tokens: existing green, muted text, line, and pale surface tokens retained with sufficient visible differentiation.
+- Image and icon fidelity: no raster assets were required; the shield is from the existing Lucide dependency.
+- Copy: revised to state both SalarySabi's role and the employer's responsibility directly.
+- Interaction checked: responsibilities link remains a native link with existing hover/focus treatment.
+- Comparison history: initial P2 hierarchy issue was the equal-weight three-column strip; fixed with a grouped notice, shorter copy, attached action, and responsive two-part layout. Post-fix desktop and mobile evidence show no remaining P0/P1/P2 visual issue.
+- Follow-up polish: none required for this component.
 
 final result: passed

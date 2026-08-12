@@ -284,6 +284,21 @@ body .calculation-trust span { font-size: .75rem; }
   body .methodology-workspace { padding: 32px 0; }
 }
 
+/* Contributor programme */
+.contributor-page{width:min(var(--ss-content),calc(100% - var(--ss-gutter)));margin:0 auto;padding:var(--ss-page-top) 0 var(--ss-page-bottom)}
+.contributor-hero{max-width:950px;margin-bottom:34px}.contributor-hero h1{max-width:920px;margin:10px 0 16px;font-size:var(--ss-hero-size);line-height:.98;letter-spacing:-.052em}.contributor-hero p{max-width:780px;color:var(--muted);font-size:1.04rem;line-height:1.6}
+.contributor-rules{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}.contributor-rules article{min-height:220px;padding:24px;display:flex;flex-direction:column;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.contributor-rules article>span{color:var(--green);font-size:.75rem;font-weight:900}.contributor-rules h2{margin:30px 0 10px;font-size:1.35rem}.contributor-rules p{margin:0;color:var(--muted);line-height:1.55}
+.contributor-reward-model{margin-top:34px;padding:28px;border:1px solid var(--line);background:#f5faf7}.contributor-reward-model>header{max-width:760px}.contributor-reward-model h2{margin:0;font-size:var(--ss-section-title);line-height:1.08}.contributor-reward-model>header p{max-width:680px;margin:12px 0 0;color:var(--muted);line-height:1.55}.contributor-reward-model ol{display:grid;grid-template-columns:repeat(3,1fr);margin:24px 0 0;padding:0;border-top:1px solid var(--line);border-left:1px solid var(--line);list-style:none}.contributor-reward-model li{min-width:0;min-height:176px;padding:20px;display:grid;grid-template-columns:auto 1fr;align-content:start;gap:16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:white}.contributor-reward-model li>strong{color:var(--green-dark);font-family:var(--font-display);font-size:2rem;line-height:1}.contributor-reward-model li div{display:grid;align-content:start;gap:8px}.contributor-reward-model li span{font-weight:850;line-height:1.3}.contributor-reward-model li small{color:var(--muted);line-height:1.5}.contributor-pilot-status{margin:18px 0 0;padding:14px 16px;border-left:4px solid var(--lime);color:var(--muted);background:white;font-size:.84rem;line-height:1.5}.contributor-pilot-status strong{color:var(--ink)}
+.contributor-layout{margin-top:34px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:28px;align-items:start}.contributor-campaigns,.contributor-account{padding:var(--ss-panel-pad);border:1px solid var(--line)}.contributor-section-heading h2{margin:6px 0 22px;font-size:var(--ss-section-title)}.contributor-campaigns>div:last-child{display:grid;gap:16px}.contributor-campaigns article{padding:22px;border:1px solid var(--line)}.contributor-campaigns article>div:first-child{display:flex;justify-content:space-between;gap:20px;color:var(--green);font-size:.78rem}.contributor-campaigns article h3{margin:22px 0 8px;font-size:1.35rem}.contributor-campaigns article p{color:var(--muted);line-height:1.55}.contributor-campaigns article>a{color:var(--green-dark);font-weight:850;text-decoration:underline}.campaign-progress{height:8px;margin-top:20px;background:var(--paper-deep)}.campaign-progress span{height:100%;display:block;background:var(--lime)}.campaign-eligibility{padding-top:12px;border-top:1px solid var(--line);font-size:.84rem}.contributor-empty{padding:24px;border:1px solid var(--line);background:var(--paper-deep);line-height:1.6}
+.contributor-account{position:sticky;top:100px}.contributor-account h2{margin:8px 0 18px;font-size:1.7rem}.contributor-account form{display:grid;gap:16px}.contributor-account label{display:grid;gap:7px;font-weight:800}.contributor-account input{min-height:52px;padding:10px;border:1px solid var(--line)}.contributor-account>p{color:var(--muted);line-height:1.5}.account-mode{display:grid;grid-template-columns:1fr 1fr;margin-bottom:20px}.account-mode button{min-height:46px;border:1px solid var(--line);background:white}.account-mode button.active{color:white;background:var(--green-dark)}.wallet-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);border-left:1px solid var(--line)}.wallet-grid div{padding:16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.wallet-grid span,.wallet-grid strong{display:block}.wallet-grid span{color:var(--muted);font-size:.78rem}.wallet-grid strong{margin-top:5px;font-size:1.2rem}
+.contributor-payout-form{margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}.contributor-payout-form h3{margin:0}.contributor-payout-form select{min-height:52px;padding:10px;border:1px solid var(--line);background:white;color:var(--ink);font:inherit}.contributor-payout-form small{color:var(--muted);line-height:1.45}
+.contributor-account .early-access-form{margin-top:22px}.contributor-account .early-access-form .email-row{display:grid;grid-template-columns:minmax(0,1fr) auto}.contributor-account .early-access-form .email-row input{min-width:0}.contributor-account .early-access-form .email-row button{padding-inline:16px;border:1px solid var(--green-dark);color:white;background:var(--green-dark);font-weight:850;cursor:pointer}.contributor-account .early-access-form .email-row button:hover,.contributor-account .early-access-form .email-row button:focus-visible{background:var(--green)}.contributor-account .early-access-form .email-row button:disabled{cursor:wait;opacity:.7}.contributor-account .early-access-form .consent-row{display:grid;grid-template-columns:20px minmax(0,1fr);gap:10px;align-items:start;font-weight:400}.contributor-account .early-access-form .consent-row input{width:18px;height:18px;min-height:0;margin:2px 0 0}.contributor-account .early-access-form .consent-copy{display:grid;gap:2px;line-height:1.35}.contributor-account .early-access-form .consent-copy small{color:var(--muted);font-weight:400}.contributor-account .early-access-form .form-message{min-height:1.4em;color:var(--muted)}
+.contributor-boundary{max-width:780px;margin-top:34px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:28px;border:1px solid var(--line);border-left:4px solid var(--green);background:#f5faf7}.contributor-boundary>div{display:grid;gap:6px}.contributor-boundary .eyebrow{margin:0}.contributor-boundary h2{margin:0;color:var(--ink);font-size:1.2rem}.contributor-boundary p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.5}.contributor-boundary>a{min-height:44px;display:inline-flex;align-items:center;flex:0 0 auto;color:var(--green-dark);font-weight:850;text-decoration:underline;text-underline-offset:3px}.reward-campaign-note{padding:16px;display:grid;gap:5px;border-left:4px solid var(--lime);background:var(--paper-deep)}.reward-campaign-note span{color:var(--muted);font-size:.84rem}
+.contributor-admin{width:min(1180px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}.contributor-admin>header{display:flex;justify-content:space-between;gap:40px;align-items:end;padding-bottom:28px;border-bottom:1px solid var(--line)}.contributor-admin>header>div{max-width:820px}.contributor-admin h1{margin:8px 0 12px;font-size:clamp(2.5rem,4vw,3.6rem);line-height:1}.contributor-admin>section{margin-top:38px}.admin-campaign-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.admin-campaign-grid article{padding:24px;border:1px solid var(--line)}.admin-campaign-grid article>span{color:var(--green);font-weight:850;text-transform:capitalize}.admin-campaign-grid dl{display:grid;grid-template-columns:1fr 1fr}.admin-campaign-grid dl div{padding:12px 0;border-top:1px solid var(--line)}.admin-campaign-grid dd{margin:4px 0 0;font-weight:850}.admin-campaign-grid article>div:last-child{display:flex;gap:10px}.admin-campaign-grid button,.admin-claim-list button{min-height:46px;padding:10px 16px}.admin-claim-list{display:grid;border-top:1px solid var(--line)}.admin-claim-list article{padding:18px 0;display:flex;justify-content:space-between;gap:24px;border-bottom:1px solid var(--line)}.admin-claim-list article>div:first-child{display:grid;gap:4px}.admin-claim-list article>div:last-child{display:flex;gap:10px}
+@media(max-width:900px){.contributor-rules,.contributor-layout,.admin-campaign-grid{grid-template-columns:1fr}.contributor-reward-model ol{grid-template-columns:1fr}.contributor-reward-model li{min-height:0}.contributor-boundary{align-items:flex-start;flex-direction:column;gap:14px}.contributor-account{position:static}.contributor-admin>header{align-items:start;flex-direction:column}.admin-claim-list article{align-items:start;flex-direction:column}}
+@media(max-width:560px){.contributor-page,.contributor-admin{width:calc(100% - 24px)}.contributor-hero h1{font-size:clamp(2.25rem,11vw,3rem)}.contributor-rules article{min-height:0}.contributor-reward-model{padding:20px 18px}.contributor-reward-model li{padding:18px 16px}.contributor-campaigns article>div:first-child{align-items:start;flex-direction:column;gap:6px}.wallet-grid{grid-template-columns:1fr}.admin-claim-list article>div:last-child,.admin-campaign-grid article>div:last-child{width:100%;flex-direction:column}}
+@media(max-width:560px){.contributor-account .early-access-form .email-row{grid-template-columns:1fr}.contributor-account .early-access-form .email-row button{width:100%}}
+
 /* Final homepage gateway cascade. Keep after legacy homepage rules. */
 body .home-tools {
   display: block;
@@ -4651,7 +4666,9 @@ footer {
   padding: 26px;
   border-right: 1px solid #aebdb3;
   border-bottom: 1px solid #aebdb3;
+  color: var(--ink);
   background: var(--white);
+  text-decoration: none;
 }
 
 .paye-guide-card.is-primary {
@@ -4713,7 +4730,7 @@ footer {
   line-height: 1.4;
 }
 
-.paye-guide-card > a {
+.paye-guide-card-action {
   min-height: 48px;
   display: flex;
   align-items: center;
@@ -4725,8 +4742,20 @@ footer {
   font-weight: 850;
 }
 
-.paye-guide-card.is-primary > a {
+.paye-guide-card.is-primary .paye-guide-card-action {
   color: var(--white);
+}
+
+.paye-guide-card:hover,
+.paye-guide-card:focus-visible {
+  background: #f4f8f5;
+  box-shadow: inset 0 0 0 2px var(--green);
+}
+
+.paye-guide-card.is-primary:hover,
+.paye-guide-card.is-primary:focus-visible {
+  background: #064631;
+  box-shadow: inset 0 0 0 2px var(--lime);
 }
 
 .paye-guide-sequence {
@@ -5692,8 +5721,8 @@ footer {
 
 /* Simple, low-data interface */
 :root {
-  --font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-display: var(--font-body);
+  --font-body: var(--font-source-sans), "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-source-serif), Georgia, "Times New Roman", serif;
   --paper-deep: #eeece4;
   --content-width: 1120px;
   --page-gutter: clamp(16px, 4vw, 32px);
@@ -5704,6 +5733,7 @@ footer {
 body {
   font-family: var(--font-body);
   text-rendering: optimizeLegibility;
+  font-synthesis: none;
 }
 
 button,
@@ -8672,6 +8702,170 @@ button.secondary-button:focus-visible {
   text-decoration-line: none !important;
 }
 
+/* Multi-income tax tools and privacy-threshold salary benchmarks */
+.tool-index,.tax-planner,.salary-benchmark{width:min(1120px,calc(100% - 40px));margin:0 auto;padding:76px 0 100px}.tool-index>header,.tax-planner>header,.salary-benchmark>header{max-width:780px;margin-bottom:36px}.tool-index h1,.tax-planner h1,.salary-benchmark h1{margin:8px 0 14px;font-size:clamp(2.5rem,6vw,5rem);line-height:.95;letter-spacing:-.055em}.tool-index>header p,.tax-planner>header p,.salary-benchmark>header p{color:var(--muted);font-size:1.08rem;line-height:1.7}.tool-index>div{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}.tool-index>div>a{min-height:240px;padding:24px;display:flex;flex-direction:column;border-right:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none}.tool-index>div>a>span{color:var(--green);font-size:.75rem;font-weight:900}.tool-index>div>a>strong{margin-top:34px;font-size:1.45rem}.tool-index>div>a>p{color:var(--muted);line-height:1.5}.tool-index>div>a>b{margin-top:auto;color:var(--green)}.tax-planner-grid,.benchmark-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,.8fr);gap:28px;align-items:start}.tax-planner-form,.salary-benchmark form,.tax-planner-result,.benchmark-layout>section{padding:28px;border:1px solid var(--line);background:white}.tax-planner-form,.salary-benchmark form{display:grid;gap:20px}.tax-planner-form label,.salary-benchmark label{display:grid;gap:8px;font-weight:800}.tax-planner-form label small{color:var(--muted);font-weight:500;line-height:1.4}.tax-planner-form input,.salary-benchmark input,.salary-benchmark select{width:100%;min-height:48px;padding:10px;border:1px solid var(--line);background:white;color:var(--ink);font:inherit}.tax-planner-form .small-currency-input{display:grid;grid-template-columns:auto 1fr;align-items:center;border:1px solid var(--line);padding-left:12px}.tax-planner-form .small-currency-input input{border:0}.tax-planner-result{position:sticky;top:100px;background:var(--green-dark);color:white}.tax-planner-result>strong{display:block;margin:16px 0 28px;color:var(--lime);font-size:clamp(2.1rem,5vw,4rem)}.tax-planner-result dl{display:grid;gap:0}.tax-planner-result dl>div{padding:14px 0;display:flex;justify-content:space-between;gap:18px;border-top:1px solid #ffffff35}.tax-planner-result dd{margin:0;font-weight:850;text-align:right}.planner-caveat{margin-top:28px;color:#e3ebe6;font-size:.82rem;line-height:1.55}.benchmark-layout>section h2,.salary-benchmark form h2{margin-top:0}.benchmark-list{display:grid;gap:12px}.benchmark-list article,.benchmark-empty{padding:20px;border:1px solid var(--line)}.benchmark-list article{display:grid;gap:6px}.benchmark-list article>span,.benchmark-list article>small{color:var(--muted)}.benchmark-list article>strong{font-size:1.4rem;color:var(--green-dark)}.benchmark-empty{background:var(--paper-deep);line-height:1.6}.salary-benchmark form>p{color:var(--muted);line-height:1.5}.salary-benchmark form button{min-height:48px;border:0}
+@media(max-width:850px){.tool-index>div{grid-template-columns:1fr 1fr}.tax-planner-grid,.benchmark-layout{grid-template-columns:1fr}.tax-planner-result{position:static}}
+@media(max-width:560px){.tool-index,.tax-planner,.salary-benchmark{width:min(100% - 24px,1120px);padding-top:48px}.tool-index>div{grid-template-columns:1fr}.tax-planner-form,.salary-benchmark form,.tax-planner-result,.benchmark-layout>section{padding:20px}}
+
+/* Four-door product architecture */
+body .site-header > nav { gap: 22px; }
+body .site-header > nav .nav-cta { padding: 11px 16px; border: 1px solid var(--green); border-radius: 0; color: white; background: var(--green); }
+body .site-header > nav .nav-cta:hover,
+body .site-header > nav .nav-cta:focus-visible { color: white; background: var(--green-dark); }
+.product-hub { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 76px 0 100px; }
+.product-hub > header { max-width: 850px; margin-bottom: 44px; }
+.product-hub > header h1 { margin: 8px 0 18px; max-width: 820px; font-size: clamp(2.8rem, 6vw, 5.2rem); line-height: .95; letter-spacing: -.055em; }
+.product-hub > header p { max-width: 760px; color: var(--muted); font-size: 1.08rem; line-height: 1.7; }
+.product-hub-paths { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.product-hub-paths > a { min-height: 310px; padding: 28px; display: flex; flex-direction: column; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--ink); }
+.product-hub-paths > a > span { color: var(--green); font-size: .75rem; font-weight: 900; }
+.product-hub-paths h2 { margin: 48px 0 12px; font-size: 1.55rem; }
+.product-hub-paths p { color: var(--muted); line-height: 1.6; }
+.product-hub-paths strong { margin-top: auto; color: var(--green-dark); text-decoration: underline; text-underline-offset: 4px; }
+.product-hub-note { margin-top: 28px; padding: 28px; display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; color: white; background: var(--green-dark); }
+.product-hub-note h2 { margin: 8px 0 0; color: white; }
+.product-hub-note > div:last-child { display: flex; gap: 10px; }
+.product-hub-note a { padding: 14px 18px; border: 1px solid #ffffff70; font-weight: 850; }
+.product-hub-note a:first-child { color: var(--green-dark); border-color: var(--lime); background: var(--lime); }
+.product-hub-trust { max-width: 780px; margin-top: 28px; padding: 20px 24px; display: grid; grid-template-columns: auto minmax(0,1fr); gap: 16px; align-items: start; border: 1px solid #cbd8d0; border-left: 4px solid var(--green); background: #f5faf7; }
+.product-hub-trust > svg { width: 24px; height: 24px; margin-top: 1px; color: var(--green); stroke-width: 1.8; }
+.product-hub-trust > div { display: grid; gap: 7px; }
+.product-hub-trust strong { color: var(--ink); font-size: .96rem; }
+.product-hub-trust span { max-width: 650px; color: var(--muted); font-size: .9rem; line-height: 1.5; }
+.product-hub-trust a { width: fit-content; margin-top: 2px; color: var(--green-dark); font-size: .86rem; font-weight: 850; text-decoration: underline; text-underline-offset: 3px; }
+.guided-next-paths { margin-top: 24px; padding-top: 32px; border-top: 1px solid var(--line); }
+.guided-next-paths > header { max-width: 720px; margin-bottom: 22px; }
+.guided-next-paths h2 { margin: 6px 0 0; font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.guided-next-paths > div { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.guided-next-paths > div > a { min-height: 210px; padding: 22px; display: flex; flex-direction: column; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--ink); }
+.guided-next-paths a > span { color: var(--green); font-size: .72rem; font-weight: 900; }
+.guided-next-paths a > strong { margin-top: 28px; font-size: 1.1rem; }
+.guided-next-paths a > small { margin-top: 8px; color: var(--muted); line-height: 1.45; }
+.guided-next-paths a > b { margin-top: auto; color: var(--green-dark); font-size: .82rem; text-decoration: underline; }
+body .footer-legal-line { display: flex; justify-content: space-between; gap: 20px; }
+body .footer-legal-line > span:last-child { display: flex; flex-wrap: wrap; gap: 18px; }
+body .footer-legal-line a { text-decoration: underline; }
+@media (max-width: 900px) {
+  .product-hub-paths { grid-template-columns: 1fr; }
+  .product-hub-paths > a { min-height: 230px; }
+  .product-hub-paths h2 { margin-top: 28px; }
+  .product-hub-note { grid-template-columns: 1fr; }
+  .product-hub-note > div:last-child { align-items: stretch; flex-direction: column; }
+  .guided-next-paths > div { grid-template-columns: 1fr; }
+  .guided-next-paths > div > a { min-height: 180px; }
+}
+
+/* Work-and-pay platform homepage */
+.platform-home { width: min(1320px, calc(100% - 48px)); margin: 0 auto; padding: 24px 0 100px; }
+.platform-hero { min-height: 0; padding: clamp(54px, 6vw, 84px) 0 30px; display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: clamp(44px, 5vw, 72px); align-items: start; }
+.platform-hero-copy h1 { max-width: 800px; margin: 12px 0 20px; font-family: var(--font-display), sans-serif; font-size: clamp(3.3rem, 4.2vw, 4.1rem); line-height: .98; letter-spacing: -.05em; }
+.platform-outcomes { margin-top: 34px; }
+.platform-hero-copy > p { max-width: 690px; color: var(--muted); font-size: 1.08rem; line-height: 1.65; }
+.platform-hero-actions { margin: 32px 0 20px; display: flex; flex-wrap: wrap; gap: 12px; }
+.platform-hero-actions > * { min-height: 52px; padding: 14px 22px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--green-dark); color: var(--green-dark); font-weight: 850; }
+.platform-hero-actions .primary-button { width: auto; color: white; }
+.platform-hero-copy > small { color: var(--muted); line-height: 1.5; }
+.platform-outcomes { border: 1px solid var(--line); background: white; }
+.platform-outcomes > strong { min-height: 52px; padding: 14px 20px; display: flex; align-items: center; color: white; background: var(--green-dark); }
+.platform-outcomes > div { min-height: 106px; padding: 18px 22px; display: grid; grid-template-columns: 54px 1fr; gap: 18px; align-items: center; border-top: 1px solid var(--line); }
+.platform-outcomes > div > span { width: 54px; height: 54px; display: grid; place-items: center; color: var(--green-dark); background: var(--lime); }
+.platform-outcomes svg { width: 25px; height: 25px; stroke-width: 2.2; }
+.platform-outcomes p { margin: 0; display: grid; gap: 6px; }
+.platform-outcomes b { font-size: 1rem; }
+.platform-outcomes small { color: var(--muted); line-height: 1.45; }
+.platform-paths { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.platform-paths > article { min-width: 0; padding: 22px 26px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.platform-paths article > span { color: var(--green); font-size: .75rem; font-weight: 900; }
+.platform-paths h2 { margin: 8px 0; font-size: clamp(1.3rem, 2vw, 1.7rem); }
+.platform-paths article > p { min-height: 46px; margin: 0 0 14px; color: var(--muted); font-size: .9rem; line-height: 1.45; }
+.platform-paths nav { display: grid; }
+.platform-paths nav a { min-height: 46px; padding: 8px 6px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-top: 1px solid var(--line); color: var(--green-dark); }
+.platform-paths nav a.featured { margin-bottom: 2px; padding-inline: 14px; border: 1px solid var(--line); background: #f4f8f5; }
+.platform-paths nav b { font-size: .85rem; }
+.platform-calculator { padding-top: 54px; }
+.platform-calculator > header { max-width: 720px; margin-bottom: 26px; }
+.platform-calculator > header h2 { margin: 8px 0 10px; font-size: clamp(2rem, 3.4vw, 3.05rem); line-height: 1.02; letter-spacing: -.035em; }
+.platform-calculator > header p { color: var(--muted); line-height: 1.6; }
+.platform-calculator .guided-workspace { margin: 0; }
+.platform-trust { margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.platform-trust > div { min-height: 94px; padding: 20px 24px; display: grid; align-content: center; gap: 6px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.platform-trust strong { font-size: .9rem; }
+.platform-trust span { color: var(--muted); font-size: .78rem; line-height: 1.4; }
+
+/* Honest early marketplace states */
+.salary-benchmark { padding-top: 62px; }
+.salary-benchmark > header { max-width: 940px; margin-bottom: 30px; }
+.salary-benchmark > header h1 { max-width: 900px; font-size: clamp(3rem, 4.2vw, 4.15rem); line-height: .98; letter-spacing: -.05em; }
+.salary-benchmark > header p { max-width: 780px; }
+.benchmark-launch-status { width: fit-content; margin-bottom: 24px; padding: 10px 14px; display: inline-flex; gap: 8px; align-items: baseline; border-left: 4px solid var(--lime); background: #f5faf7; }
+.benchmark-launch-status strong { color: var(--green-dark); font-size: 1.15rem; }
+.benchmark-launch-status span { color: var(--muted); font-size: .86rem; }
+.benchmark-section-heading,.benchmark-form-heading { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; }
+.benchmark-section-heading > span,.benchmark-form-heading > small { color: var(--muted); font-size: .72rem; }
+.benchmark-preview { margin-top: 22px; padding-top: 18px; display: grid; gap: 7px; border-top: 1px solid var(--line); }
+.benchmark-preview span { color: var(--green); font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.benchmark-preview small,.benchmark-privacy-note { color: var(--muted); }
+.benchmark-form-heading h2 { margin: 2px 0 0; }
+.benchmark-form-step { display: none; gap: 18px; }
+.benchmark-form-step.active { display: grid; }
+.benchmark-form-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.benchmark-form-actions .secondary-button { min-height: 48px; padding: 12px 18px; }
+.benchmark-form-actions .primary-button { min-width: 180px; }
+.benchmark-privacy-note { margin: 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: .76rem; line-height: 1.5; }
+.jobs-market-status { max-width: 820px; margin-top: 28px; padding: 16px 20px; display: flex; gap: 22px; align-items: center; border-left: 4px solid var(--lime); background: #f5faf7; }
+.jobs-market-status span { color: var(--muted); line-height: 1.5; }
+.jobs-employer-callout { width: min(1120px, calc(100% - 40px)); margin: 0 auto 30px; padding: 26px 30px; display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; color: white; background: var(--green-dark); }
+.jobs-employer-callout h2 { margin: 7px 0; color: white; font-size: clamp(1.6rem, 3vw, 2.5rem); }
+.jobs-employer-callout p { margin: 0; color: #e4eee8; }
+.jobs-employer-callout a { min-height: 50px; padding: 14px 18px; display: flex; align-items: center; color: var(--green-dark); background: var(--lime); font-weight: 900; }
+
+/* Payroll product preview before authentication */
+.payroll-entry { max-width: 1180px; min-height: 70vh; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(360px, .72fr); gap: clamp(52px, 8vw, 110px); align-items: start; }
+.payroll-entry-intro > p { max-width: 680px; color: var(--muted); line-height: 1.6; }
+.payroll-feature-preview { margin: 32px 0 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
+.payroll-feature-preview li { min-height: 88px; padding: 16px 0; display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: center; border-bottom: 1px solid var(--line); }
+.payroll-feature-preview li > span { color: var(--green); font-size: .72rem; font-weight: 900; }
+.payroll-feature-preview li > div { display: grid; gap: 5px; }
+.payroll-feature-preview small { color: var(--muted); line-height: 1.45; }
+.payroll-boundary { margin-top: 22px; padding: 18px; display: grid; gap: 6px; border-left: 4px solid var(--lime); background: #f5faf7; }
+.payroll-boundary span { color: var(--muted); font-size: .8rem; line-height: 1.5; }
+.payroll-auth-panel { padding: 28px; border: 1px solid var(--line); background: white; }
+.payroll-auth-panel h2 { margin: 8px 0; font-size: 1.7rem; }
+.payroll-auth-panel > p { margin: 0; color: var(--muted); line-height: 1.5; }
+.payroll-auth-panel form { margin-top: 24px; display: grid; gap: 16px; }
+.payroll-auth-panel form > small { color: var(--muted); line-height: 1.5; }
+
+@media (max-width: 980px) {
+  .platform-hero { grid-template-columns: 1fr; padding: 64px 0; }
+  .platform-hero-copy h1 { font-size: clamp(3.2rem, 10vw, 5.4rem); }
+  .platform-outcomes { max-width: 720px; margin-top: 0; }
+  .platform-paths { grid-template-columns: 1fr; }
+  .platform-paths article > p { min-height: 0; }
+  .payroll-entry { grid-template-columns: 1fr; }
+  .payroll-auth-panel { max-width: 620px; }
+}
+@media (max-width: 700px) {
+  .platform-home { width: min(100% - 24px, 1320px); padding-top: 0; }
+  .platform-hero { min-height: 0; gap: 36px; }
+  .platform-hero-copy h1 { font-size: clamp(2.75rem, 13.5vw, 4.2rem); }
+  .platform-hero-actions { display: grid; }
+  .platform-hero-actions > * { width: 100%; }
+  .platform-outcomes > div { grid-template-columns: 44px 1fr; padding-inline: 16px; }
+  .platform-outcomes > div > span { width: 44px; height: 44px; }
+  .platform-paths > article { padding: 22px 18px; }
+  .platform-trust { grid-template-columns: 1fr; }
+  .benchmark-launch-status,.jobs-employer-callout { grid-template-columns: 1fr; }
+  .jobs-market-status { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .payroll-entry { width: min(100% - 24px, 1180px); }
+  .payroll-auth-panel { padding: 22px 18px; }
+}
+@media (max-width: 560px) {
+  .product-hub { width: min(100% - 24px, 1120px); padding: 48px 0 72px; }
+  .product-hub > header h1 { font-size: clamp(2.45rem, 13vw, 4rem); }
+  .product-hub-paths > a,.product-hub-note,.product-hub-trust { padding: 20px; }
+  body .footer-legal-line { align-items: flex-start; flex-direction: column; }
+}
+
 .trust-contact .primary-button,
 .deductions-next-step .primary-button,
 .paye-guide-actions .primary-button {
@@ -8691,4 +8885,469 @@ button.secondary-button:focus-visible {
 .deductions-next-step .secondary-button,
 .paye-guide-actions .secondary-button {
   --secondary-button-text: var(--white);
+}
+
+/* Wide-screen density: keep product pages useful above the fold. */
+@media (min-width: 1100px) {
+  .product-hub {
+    padding-top: 58px;
+  }
+
+  .product-hub > header {
+    max-width: 940px;
+    margin-bottom: 30px;
+  }
+
+  .product-hub > header h1 {
+    max-width: 900px;
+    margin-bottom: 14px;
+    font-size: clamp(3rem, 4.2vw, 4.15rem);
+    line-height: .98;
+  }
+
+  .product-hub > header p {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .product-hub-paths > a {
+    min-height: 252px;
+    padding: 23px 26px;
+  }
+
+  .product-hub-paths h2 {
+    margin-top: 30px;
+  }
+
+  .paye-guide-page {
+    padding-top: 44px;
+  }
+
+  .paye-guide-hero {
+    gap: 38px;
+    padding-bottom: 30px;
+  }
+
+  .paye-guide-hero h1 {
+    max-width: 860px;
+    margin-bottom: 12px;
+    font-size: clamp(3rem, 4.15vw, 4rem);
+  }
+
+  .paye-guide-hero p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .paye-guide-map {
+    padding-top: 34px;
+  }
+
+  .paye-guide-map-heading h2 {
+    font-size: clamp(1.8rem, 2.4vw, 2.25rem);
+  }
+
+  .paye-guide-cards {
+    margin-top: 18px;
+  }
+
+  .paye-guide-card {
+    gap: 14px;
+    padding: 22px 26px;
+  }
+
+  body .payslip-hero {
+    padding-top: 46px;
+    padding-bottom: 24px;
+  }
+
+  body .payslip-hero h1 {
+    max-width: 640px;
+    font-size: clamp(2.8rem, 3.7vw, 3.55rem);
+    line-height: 1.03;
+  }
+
+  body .payslip-checker {
+    column-gap: 52px;
+  }
+
+  body .payslip-checker > .payslip-result {
+    min-height: 490px;
+    margin-top: 96px;
+    padding: 34px 40px;
+  }
+
+  body .payslip-preview-list {
+    margin-top: 22px;
+  }
+
+  body .payslip-preview-list div {
+    padding: 15px 0;
+  }
+
+  body .payslip-caution {
+    margin-top: 22px;
+    padding-top: 18px;
+  }
+}
+
+/* SalarySabi interface system: shared geometry across every public product. */
+:root {
+  --ss-content: 1120px;
+  --ss-content-wide: 1180px;
+  --ss-gutter: 40px;
+  --ss-page-top: 56px;
+  --ss-page-bottom: 88px;
+  --ss-section-gap: 56px;
+  --ss-panel-pad: 26px;
+  --ss-control-height: 52px;
+  --ss-hero-size: clamp(3rem, 4.1vw, 4rem);
+  --ss-title-size: clamp(2.55rem, 3.6vw, 3.5rem);
+  --ss-section-title: clamp(1.75rem, 2.4vw, 2.25rem);
+}
+
+/* One page grid, with a wider exception only for dense data and workspaces. */
+:is(
+  .product-hub,
+  .tool-index,
+  .tax-planner,
+  .salary-benchmark,
+  .paye-guide-page,
+  .methodology-page,
+  .deductions-guide-page,
+  .trust-page,
+  .privacy-page,
+  .disclaimer-ledger-page,
+  .tax-news-page,
+  .tax-news-article,
+  .form-page-hero,
+  .standalone-job-form,
+  .job-wizard-hero,
+  .job-wizard-shell,
+  .jobs-hero,
+  .jobs-board,
+  .jobs-next-actions,
+  .jobs-employer-callout
+) {
+  width: min(var(--ss-content), calc(100% - var(--ss-gutter)));
+  margin-inline: auto;
+}
+
+:is(
+  .account-gateway,
+  .payroll-shell:not(.payroll-entry),
+  .info-page,
+  .paye-guide-trail,
+  .tax-bands-page
+) {
+  width: min(var(--ss-content-wide), calc(100% - var(--ss-gutter)));
+  margin-inline: auto;
+}
+
+/* Shared hero hierarchy for hubs, tools, guides, forms and workspaces. */
+:is(
+  .product-hub > header,
+  .tool-index > header,
+  .tax-planner > header,
+  .salary-benchmark > header,
+  .paye-guide-hero,
+  .methodology-hero,
+  .deductions-guide-hero,
+  .jobs-hero,
+  .job-wizard-hero,
+  .form-page-hero,
+  .privacy-hero,
+  .tax-news-article-hero
+) h1 {
+  margin-top: 10px;
+  margin-bottom: 14px;
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--ss-title-size);
+  line-height: 1;
+  letter-spacing: -.05em;
+}
+
+:is(.product-hub, .salary-benchmark) > header h1,
+.paye-guide-hero h1 {
+  font-size: var(--ss-hero-size);
+}
+
+:is(
+  .product-hub > header,
+  .tool-index > header,
+  .tax-planner > header,
+  .salary-benchmark > header,
+  .paye-guide-hero,
+  .methodology-hero,
+  .deductions-guide-hero,
+  .jobs-hero,
+  .job-wizard-hero,
+  .form-page-hero,
+  .privacy-hero,
+  .tax-news-article-hero
+) > p {
+  max-width: 760px;
+  margin-top: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* Consistent section headings and eyebrow rhythm. */
+:is(
+  .paye-guide-map-heading,
+  .paye-guide-faq-heading,
+  .methodology-section-heading,
+  .deductions-reference-heading,
+  .tax-bands-section-heading,
+  .tax-news-list-heading,
+  .trust-heading
+) h2 {
+  margin: 8px 0 0;
+  font-size: var(--ss-section-title);
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+
+.eyebrow {
+  line-height: 1.2;
+  letter-spacing: .16em;
+}
+
+/* Keep shared section labels readable on every dark SalarySabi surface. */
+:is(
+  .admin-entry-intro,
+  .trust-contact,
+  .tax-planner-result,
+  .jobs-employer-callout,
+  .product-hub-note,
+  .paye-guide-card.is-primary,
+  .paye-guide-actions,
+  .deductions-next-step,
+  .payslip-result
+) .eyebrow {
+  color: var(--lime);
+}
+
+/* A single form-control and button geometry across calculators and accounts. */
+:is(
+  .tax-planner,
+  .salary-benchmark,
+  .payslip-checker,
+  .account-gateway,
+  .payroll-shell,
+  .job-wizard-shell,
+  .standalone-job-form
+) :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  min-height: var(--ss-control-height);
+  border-radius: 0;
+}
+
+:is(
+  .tax-planner,
+  .salary-benchmark,
+  .payslip-checker,
+  .account-gateway,
+  .payroll-shell,
+  .job-wizard-shell,
+  .standalone-job-form
+) :is(button, .primary-button, .secondary-button) {
+  min-height: var(--ss-control-height);
+  border-radius: 0;
+}
+
+/* Currency fields are one control, so the inner input must not cover the wrapper border. */
+.tax-planner-form .small-currency-input {
+  min-width: 0;
+  min-height: var(--ss-control-height);
+  height: auto;
+  gap: 0;
+  padding-left: 12px;
+  overflow: hidden;
+  background: var(--white);
+  transition: border-color 160ms, box-shadow 160ms;
+}
+
+.tax-planner-form .small-currency-input:focus-within {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(13, 104, 73, .12);
+}
+
+.tax-planner-form .small-currency-input input {
+  min-width: 0;
+  min-height: calc(var(--ss-control-height) - 2px);
+  padding: 10px 12px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+/* Panels now share the same internal density instead of drifting by template. */
+:is(
+  .tax-planner-form,
+  .tax-planner-result,
+  .salary-benchmark form,
+  .benchmark-layout > section,
+  .payroll-auth-panel,
+  .account-auth,
+  .wizard-panel,
+  .wizard-summary,
+  .wizard-guidance
+) {
+  padding: var(--ss-panel-pad);
+  border-radius: 0;
+}
+
+.product-hub-paths > a,
+.tool-index > div > a,
+.paye-guide-card,
+.guided-next-paths > div > a {
+  border-radius: 0;
+}
+
+/* Keep public pages purposeful above the fold. */
+.tool-index,
+.tax-planner,
+.salary-benchmark,
+.product-hub {
+  padding-top: var(--ss-page-top);
+  padding-bottom: var(--ss-page-bottom);
+}
+
+.tool-index > header,
+.tax-planner > header,
+.salary-benchmark > header,
+.product-hub > header {
+  margin-bottom: 30px;
+}
+
+.jobs-hero {
+  padding-top: var(--ss-page-top);
+}
+
+.account-gateway,
+.payroll-entry {
+  padding-top: var(--ss-page-top);
+  padding-bottom: var(--ss-page-bottom);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --ss-gutter: 32px;
+    --ss-page-top: 44px;
+    --ss-page-bottom: 68px;
+    --ss-section-gap: 44px;
+    --ss-panel-pad: 22px;
+  }
+
+  :is(
+    .product-hub,
+    .tool-index,
+    .tax-planner,
+    .salary-benchmark,
+    .paye-guide-page,
+    .methodology-page,
+    .deductions-guide-page,
+    .trust-page,
+    .privacy-page,
+    .disclaimer-ledger-page,
+    .tax-news-page,
+    .tax-news-article,
+    .form-page-hero,
+    .standalone-job-form,
+    .job-wizard-hero,
+    .job-wizard-shell,
+    .jobs-hero,
+    .jobs-board,
+    .jobs-next-actions,
+    .jobs-employer-callout,
+    .account-gateway,
+    .payroll-shell,
+    .info-page,
+    .paye-guide-trail,
+    .tax-bands-page
+  ) {
+    width: calc(100% - var(--ss-gutter));
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --ss-gutter: 24px;
+    --ss-page-top: 36px;
+    --ss-page-bottom: 56px;
+    --ss-panel-pad: 18px;
+    --ss-hero-size: clamp(2.45rem, 12vw, 3.25rem);
+    --ss-title-size: clamp(2.25rem, 11vw, 3rem);
+  }
+}
+
+/* Editorial authority for page-level headings; operational UI and numeric data stay sans-serif. */
+:is(
+  .platform-hero-copy,
+  .product-hub > header,
+  .tool-index > header,
+  .tax-planner > header,
+  .salary-benchmark > header,
+  .contributor-hero,
+  .paye-guide-hero,
+  .methodology-hero,
+  .deductions-guide-hero,
+  .jobs-hero,
+  .job-wizard-hero,
+  .form-page-hero,
+  .privacy-hero,
+  .tax-news-article-hero
+) h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -.026em;
+}
+
+:is(button,input,select,textarea,nav,table,.wallet-grid,.tax-planner-result,.benchmark-list) {
+  font-family: var(--font-body);
+}
+
+/* Holistic responsive polish: preserve the desktop system without making
+   mobile pages feel like a stack of desktop-sized panels. */
+@media (max-width: 640px) {
+  .tool-index > div > a { min-height: 0; padding: 20px; }
+  .tool-index > div > a > strong { margin-top: 20px; }
+  .tool-index > div > a > b { margin-top: 16px; }
+
+  body .job-list { gap: 14px; padding-top: 16px; }
+  body .job-card { gap: 14px; padding: 18px; border: 1px solid var(--line); background: #fff; }
+  body .job-list-role { padding-block: 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  body .job-list-actions { grid-template-columns: 1fr 1fr; gap: 8px; }
+  body .job-list-actions a { min-height: 44px; justify-content: center; padding: 8px 10px; border: 1px solid var(--green-dark); text-align: center; }
+  body .job-list-actions a:last-child { color: #fff; background: var(--green-dark); }
+
+  .privacy-page-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .privacy-page-nav > strong { grid-column: 1 / -1; }
+  .privacy-summary { gap: 16px; padding: 20px 18px; }
+  .privacy-details { margin-top: 44px; }
+  .privacy-ledger-row > div { padding: 14px 16px; }
+
+  .paye-guide-card,
+  .paye-guide-faq-list article { padding: 20px; }
+
+  .account-gateway { gap: 28px; }
+  .account-access { padding: 20px 18px; }
+  .account-preview-label { align-items: flex-start; flex-direction: column; gap: 8px; }
+
+  .wizard-panel,
+  .wizard-guidance { padding: 20px 18px; }
+  .wizard-layout { gap: 14px; }
+
+  .contributor-account { position: static; }
+  .payroll-access,
+  .payroll-onboarding { min-height: 0; }
+
+  body .info-footer { gap: 30px; padding-top: 36px; }
+  body .info-footer .footer-links { row-gap: 28px; }
+  body .footer-legal-line { gap: 16px; padding-top: 18px; }
+}
+
+@media (max-width: 380px) {
+  body .job-list-actions { grid-template-columns: 1fr; }
 }

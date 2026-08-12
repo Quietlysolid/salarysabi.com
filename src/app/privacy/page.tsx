@@ -83,7 +83,7 @@ export default function PrivacyPage() {
         <header className="privacy-hero">
           <span className="eyebrow">Privacy</span>
           <h1>Privacy, in plain language</h1>
-          <p>Personal calculator figures stay in your browser. Employer payroll records are stored only when an account holder uses the payroll workspace.</p>
+          <p>Personal calculator figures stay in your browser. Employer payroll records are stored only when an account holder uses the payroll workspace. Anonymous salary reports are moderated and only published as groups of at least five similar reports.</p>
         </header>
 
         <nav className="privacy-page-nav" aria-label="Privacy page sections">

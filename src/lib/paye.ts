@@ -28,6 +28,12 @@ export type PayeResult = {
   bands: TaxBandResult[];
 };
 
+export type LegacyPayeResult = {
+  annualTax: number;
+  monthlyTax: number;
+  differenceFrom2026: number;
+};
+
 const TAX_BANDS = [
   { label: "First ₦800,000", width: 800_000, rate: 0 },
   { label: "Next ₦2,200,000", width: 2_200_000, rate: 0.15 },
@@ -85,4 +91,29 @@ export function calculatePaye(inputs: PayeInputs): PayeResult {
     monthlyIncomeAfterTax: (annualGrossIncome - annualTax) / 12,
     bands,
   };
+}
+
+// Planning comparison using the Personal Income Tax Act rules that applied
+// before 1 January 2026: CRA, the former graduated bands and minimum tax.
+export function calculateLegacyPaye(inputs: PayeInputs): LegacyPayeResult {
+  const gross = asMoney(inputs.annualGrossIncome);
+  if (!gross) return { annualTax: 0, monthlyTax: 0, differenceFrom2026: 0 };
+  const pension = asMoney(inputs.pensionContribution);
+  const nhf = asMoney(inputs.nhfContribution);
+  const nhis = asMoney(inputs.nhisContribution);
+  const life = asMoney(inputs.lifeInsurancePremium);
+  const cra = Math.max(200_000, gross * 0.01) + gross * 0.2;
+  let remaining = Math.max(0, gross - pension - nhf - nhis - life - cra);
+  const formerBands = [
+    [300_000, 0.07], [300_000, 0.11], [500_000, 0.15],
+    [500_000, 0.19], [1_600_000, 0.21], [Number.POSITIVE_INFINITY, 0.24],
+  ] as const;
+  const graduated = formerBands.reduce((tax, [width, rate]) => {
+    const amount = Math.min(remaining, width);
+    remaining = Math.max(0, remaining - amount);
+    return tax + amount * rate;
+  }, 0);
+  const annualTax = Math.max(graduated, gross * 0.01);
+  const current = calculatePaye(inputs).annualTax;
+  return { annualTax, monthlyTax: annualTax / 12, differenceFrom2026: annualTax - current };
 }

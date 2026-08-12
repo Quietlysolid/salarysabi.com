@@ -192,7 +192,7 @@ test("PAYE guide index connects its three child guides", async ({ page }) => {
   expect(await page.locator(".paye-guide-trail").evaluate((node) => Number.parseFloat(getComputedStyle(node).gap))).toBe(0);
   const trailCells = await page.locator(".paye-guide-trail > *").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().toJSON()));
   expect(Math.abs(trailCells[0].right - trailCells[1].left)).toBeLessThanOrEqual(1);
-  await expect(page.locator('nav[aria-label="Primary navigation"] a[aria-current="page"]')).toHaveText("PAYE guide");
+  await expect(page.locator('nav[aria-label="Primary navigation"] a[aria-current="page"]')).toHaveText("Learn");
 });
 
 test("tax bands explain marginal rates with a worked example", async ({ page }, testInfo) => {

@@ -26,12 +26,12 @@ export default function PayeGuidePage() {
           <div className="paye-guide-map-heading"><span className="eyebrow">What do you need?</span><h2 id="guide-map-title">Pick the guide that answers it</h2></div>
           <div className="paye-guide-cards">
             {guides.map((guide) => (
-              <article className={guide.number === "01" ? "paye-guide-card is-primary" : "paye-guide-card"} key={guide.href}>
+              <a className={guide.number === "01" ? "paye-guide-card is-primary" : "paye-guide-card"} href={guide.href} key={guide.href}>
                 <span className="paye-guide-card-number">{guide.number}</span>
                 <div><span className="eyebrow">{guide.eyebrow}</span><h3>{guide.title}</h3><p>{guide.description}</p></div>
                 <dl><dt>Answers</dt><dd>{guide.answer}</dd></dl>
-                <Link href={guide.href}>{guide.action}<span aria-hidden="true">→</span></Link>
-              </article>
+                <span className="paye-guide-card-action">{guide.action}<span aria-hidden="true">→</span></span>
+              </a>
             ))}
           </div>
         </section>
@@ -52,22 +52,22 @@ export default function PayeGuidePage() {
             <article>
               <h3>How do I calculate PAYE in Nigeria in 2026?</h3>
               <p>Convert employment income to an annual amount, subtract eligible deductions and rent relief, apply the graduated tax bands, then divide annual PAYE by 12 for a regular monthly estimate.</p>
-              <Link href="/how-paye-is-calculated">Follow the full PAYE calculation</Link>
+              <a href="/how-paye-is-calculated">Follow the full PAYE calculation</a>
             </article>
             <article>
               <h3>What are Nigeria&apos;s PAYE tax bands for 2026?</h3>
               <p>The first ₦800,000 of chargeable income is taxed at 0%. Higher portions move through the 15%, 18%, 21%, 23% and 25% bands. A higher rate does not apply to all your income.</p>
-              <Link href="/tax-bands">See every band and a worked example</Link>
+              <a href="/tax-bands">See every band and a worked example</a>
             </article>
             <article>
               <h3>Is minimum wage taxed in Nigeria?</h3>
               <p>Employment income at or below the current national minimum wage of ₦70,000 monthly, or ₦840,000 yearly, is treated as exempt under SalarySabi&apos;s 2026 ruleset.</p>
-              <Link href="/how-paye-is-calculated#special-rules">Check the exemption and official source</Link>
+              <a href="/how-paye-is-calculated#special-rules">Check the exemption and official source</a>
             </article>
             <article>
               <h3>How do I calculate gross salary to net salary in Nigeria?</h3>
               <p>Start with gross pay, subtract PAYE and the deductions that apply to you, such as pension, NHF or NHIS. SalarySabi estimates PAYE separately so you can see what changes your take-home pay.</p>
-              <Link href="/payslip-checker">Compare the figures on your payslip</Link>
+              <a href="/payslip-checker">Compare the figures on your payslip</a>
             </article>
           </div>
           <p className="paye-guide-faq-note">These are educational estimates, not personal tax advice. Check unusual pay arrangements with the relevant revenue authority or a qualified Nigerian tax professional.</p>

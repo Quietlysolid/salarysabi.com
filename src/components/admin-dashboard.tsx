@@ -455,7 +455,7 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
             <button aria-current={activeView === view ? "page" : undefined} className={activeView === view ? "is-active" : ""} key={view} onClick={() => setActiveView(view)} type="button">{label}{view === "review" && reviewQueue.length ? <span>{reviewQueue.length}</span> : null}</button>
           ))}
         </nav>
-        <div className="admin-topbar-actions"><span>{session.user.email}</span><button className="admin-add-job" onClick={() => setActiveView("add")} type="button">Add job</button><button type="button" onClick={() => supabase.auth.signOut()}>Sign out</button></div>
+        <div className="admin-topbar-actions"><span>{session.user.email}</span><Link href="/admin/contributors">Contributor programme</Link><button className="admin-add-job" onClick={() => setActiveView("add")} type="button">Add job</button><button type="button" onClick={() => supabase.auth.signOut()}>Sign out</button></div>
       </header>
       <div className={`admin-dashboard-status is-${dashboardStatus}`} role="status">
         <span>{dashboardStatus === "loading" ? "Loading the latest administration data..." : message}</span>

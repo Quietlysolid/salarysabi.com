@@ -5,7 +5,7 @@ import { track } from "@/components/analytics";
 import type { AnalyticsEvent } from "@/lib/launch";
 
 type FormState = "idle" | "submitting" | "success" | "error";
-type SignupSource = "payslip_checker" | "employer_payroll";
+type SignupSource = "payslip_checker" | "employer_payroll" | "contributor_program";
 
 const eventNames: Record<
   SignupSource,
@@ -20,6 +20,11 @@ const eventNames: Record<
     viewed: "payroll_signup_viewed",
     submitted: "payroll_signup_submitted",
     succeeded: "payroll_signup_succeeded",
+  },
+  contributor_program: {
+    viewed: "contributor_interest_viewed",
+    submitted: "contributor_interest_submitted",
+    succeeded: "contributor_interest_succeeded",
   },
 };
 

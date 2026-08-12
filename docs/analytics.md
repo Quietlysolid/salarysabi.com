@@ -12,6 +12,8 @@ Analytics must never include salary amounts, PAYE amounts, deductions, payslip v
 
 Because identifiers are not retained, the local dashboard reports page views and actions rather than claiming an exact unique-visitor count. Supabase account totals are exact database counts.
 
+Internal reviewers can exclude their browser from both Supabase and PostHog by visiting any production page once with `?analytics=off`. The preference is kept in local storage and the query parameter is immediately removed from the URL. Visit once with `?analytics=on` to resume collection. Analytics is always disabled on local development builds.
+
 ## Local setup
 
 1. Apply `supabase/migrations/202608070001_product_analytics.sql` to the intended non-production Supabase project.

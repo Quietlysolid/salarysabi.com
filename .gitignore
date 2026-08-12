@@ -2,6 +2,7 @@ node_modules
 .next
 .open-next
 .open-next-stale-*/
+.open-next-locked-*/
 .wrangler/
 supabase/.temp/
 out
