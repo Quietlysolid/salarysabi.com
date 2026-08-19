@@ -3,8 +3,13 @@ import { buildJobAlertEmail } from "../_shared/job-alert-email.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const resendApiKey = Deno.env.get("RESEND_API_KEY");
-const fromAddress = Deno.env.get("JOB_ALERT_FROM") || "SalarySabi Jobs <jobs@updates.salarysabi.com>";
+const cloudflareAccountId = Deno.env.get("CLOUDFLARE_ACCOUNT_ID");
+const cloudflareEmailApiToken = Deno.env.get("CLOUDFLARE_EMAIL_API_TOKEN");
+const fromAddress = Deno.env.get("JOB_ALERT_FROM") || "SalarySabi Jobs <jobs@salarysabi.com>";
+const fromAddressMatch = fromAddress.match(/^\s*(.*?)\s*<([^<>]+)>\s*$/);
+const cloudflareFrom = fromAddressMatch
+  ? { name: fromAddressMatch[1], address: fromAddressMatch[2] }
+  : fromAddress;
 const supabase = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
 
 Deno.serve(async (request) => {
@@ -18,7 +23,9 @@ Deno.serve(async (request) => {
   const cronSecret = request.headers.get("x-cron-secret") || "";
   const { data: authorized } = await supabase.rpc("verify_job_alert_cron_secret", { p_secret: cronSecret });
   if (!authorized) return new Response("Unauthorized", { status: 401 });
-  if (!resendApiKey) return Response.json({ error: "RESEND_API_KEY is not configured" }, { status: 503 });
+  if (!cloudflareAccountId || !cloudflareEmailApiToken) {
+    return Response.json({ error: "Cloudflare Email Sending is not configured" }, { status: 503 });
+  }
 
   const { data: alerts, error: alertError } = await supabase.from("job_alerts").select("*").eq("active", true).not("user_id", "is", null);
   if (alertError) return Response.json({ error: alertError.message }, { status: 500 });
@@ -41,19 +48,19 @@ Deno.serve(async (request) => {
 
     const unsubscribeUrl = `${supabaseUrl}/functions/v1/send-job-alerts?unsubscribe=${alert.unsubscribe_token}`;
     const email = buildJobAlertEmail({ alertId: alert.id, recipient: user.email, keywords: alert.keywords, jobs: matches, unsubscribeUrl, date: new Date().toISOString().slice(0, 10) });
-    const response = await fetch("https://api.resend.com/emails", {
+    const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${cloudflareAccountId}/email/sending/send`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json", "Idempotency-Key": email.idempotencyKey },
+      headers: { Authorization: `Bearer ${cloudflareEmailApiToken}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: fromAddress,
-        to: email.to,
+        from: cloudflareFrom,
+        to: email.to[0],
         subject: email.subject,
         html: email.html,
       }),
     });
     if (!response.ok) continue;
     const result = await response.json();
-    await supabase.from("job_notifications").insert(matches.slice(0, 20).map((job) => ({ alert_id: alert.id, job_id: job.id, provider_message_id: result.id })));
+    await supabase.from("job_notifications").insert(matches.slice(0, 20).map((job) => ({ alert_id: alert.id, job_id: job.id, provider_message_id: result.result?.message_id ?? null })));
     await supabase.from("job_alerts").update({ last_sent_at: new Date().toISOString() }).eq("id", alert.id);
     sent += 1;
   }

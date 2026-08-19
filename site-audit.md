@@ -130,7 +130,7 @@ Of the original seven recommendations, five are complete or superseded by a stro
 
 - Implemented a branded restricted-workspace entry, clear internal-purpose and access messaging, secure-session reassurance, public-site escape path, session checking, sign-in progress, generic credential failure copy and dashboard retry or account-switch recovery.
 - The authenticated dashboard now identifies the signed-in account and warns that changes affect public listings.
-- Added a privacy-first product analytics foundation: aggregated 30-day activity, exact account totals, comparison periods, daily activity, top pages and referral sources appear in the restricted workspace after the local migration. Optional PostHog forwarding supports deeper funnels without autocapture, replay, cookies or persistent visitor identifiers.
+- Added a privacy-first product analytics foundation: aggregated 30-day activity, exact account totals, comparison periods, daily activity, top pages and referral sources appear in the restricted workspace after the local migration.
 - Remaining: exercise authorized, forbidden, expired-session and partial-data failure states against a dedicated non-production administrator account.
 
 ## Cross-product tracker

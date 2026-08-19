@@ -1,150 +1,48 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { InfoPage } from "@/components/info-page";
+import { ArticleStructuredData } from "@/components/article-structured-data";
+import { PublicPageShell } from "@/components/info-page";
 import { PayeGuideTrail } from "@/components/paye-guide-trail";
+import { taxActUrl } from "@/lib/site";
+import { salaryTerms } from "@/lib/salary-terms";
 
 export const metadata: Metadata = {
-  title: "Nigeria PAYE Tax Bands 2026",
-  description:
-    "See Nigeria's 2026 personal income tax bands and understand how graduated rates apply to chargeable income.",
+  title: "Nigeria Tax Bands 2026",
+  description: "See Nigeria's 2026 PAYE rates and how each rate applies to only part of taxable income.",
   alternates: { canonical: "/tax-bands" },
 };
 
 const bands = [
-  { band: "First ₦800,000", range: "₦0 to ₦800,000", rate: "0%", maximum: "₦0" },
-  { band: "Next ₦2,200,000", range: "₦800,001 to ₦3,000,000", rate: "15%", maximum: "₦330,000" },
-  { band: "Next ₦9,000,000", range: "₦3,000,001 to ₦12,000,000", rate: "18%", maximum: "₦1,620,000" },
-  { band: "Next ₦13,000,000", range: "₦12,000,001 to ₦25,000,000", rate: "21%", maximum: "₦2,730,000" },
-  { band: "Next ₦25,000,000", range: "₦25,000,001 to ₦50,000,000", rate: "23%", maximum: "₦5,750,000" },
-  { band: "Amount above ₦50,000,000", range: "More than ₦50,000,000", rate: "25%", maximum: "No fixed maximum" },
-] as const;
-
-const exampleBands = [
-  {
-    className: "tax-bands-example-zero",
-    label: "First ₦800,000",
-    portion: "₦800,000",
-    calculation: "₦800,000 × 0%",
-    tax: "₦0",
-  },
-  {
-    className: "tax-bands-example-fifteen",
-    label: "Next ₦2,200,000",
-    portion: "₦2,200,000",
-    calculation: "₦2,200,000 × 15%",
-    tax: "₦330,000",
-  },
-  {
-    className: "tax-bands-example-eighteen",
-    label: "Remaining ₦3,000,000",
-    portion: "₦3,000,000",
-    calculation: "₦3,000,000 × 18%",
-    tax: "₦540,000",
-  },
+  ["First ₦800,000", "0%", "₦0"],
+  ["Next ₦2,200,000", "15%", "₦330,000"],
+  ["Next ₦9,000,000", "18%", "₦1,620,000"],
+  ["Next ₦13,000,000", "21%", "₦2,730,000"],
+  ["Next ₦25,000,000", "23%", "₦5,750,000"],
+  ["Above ₦50,000,000", "25%", "No maximum"],
 ] as const;
 
 export default function TaxBandsPage() {
-  return (
-    <InfoPage
-      trail={<PayeGuideTrail current="bands" />}
-      eyebrow="Nigeria Tax Act 2025"
-      contents={[
-        { href: "#worked-example", label: "How the bands combine" },
-        { href: "#rates", label: "2026 rate table" },
-        { href: "#chargeable-income", label: "Chargeable income" },
-      ]}
-      title="Nigeria’s PAYE tax bands for 2026"
-      intro="PAYE uses graduated rates. Only the part of your chargeable income inside a band is taxed at that band’s rate."
-    >
-      <div className="tax-bands-page">
-        <section id="worked-example" className="tax-bands-example">
-          <div className="tax-bands-section-heading">
-            <div>
-              <span className="eyebrow">Worked example</span>
-              <h2>See how ₦6 million is divided</h2>
-            </div>
-            <p>
-              This example starts with <strong>₦6,000,000 in annual chargeable income</strong>,
-              after eligible deductions. It is not a ₦6 million gross-salary example.
-            </p>
-          </div>
+  return <PublicPageShell>
+    <ArticleStructuredData headline="Nigeria Tax Bands 2026" description="See Nigeria's 2026 PAYE rates and how marginal bands work." path="/tax-bands" about={["Nigeria tax bands", "PAYE"]} />
+    <PayeGuideTrail current="bands" />
+    <article className="simple-guide tax-bands-page">
+      <header className="simple-guide-hero"><span className="eyebrow">2026 PAYE rates</span><h1>Nigeria tax bands</h1><p>A higher rate applies only to the part of taxable income inside that band—not your whole salary.</p><Link className="primary-button" href="/#calculator">Calculate take-home pay</Link></header>
 
-          <div className="tax-bands-stack" aria-label="How ₦6 million of chargeable income is divided across three tax bands">
-            {exampleBands.map((band, index) => (
-              <div className={band.className} key={band.label}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <strong>{band.portion}</strong>
-                <small>{band.label}</small>
-              </div>
-            ))}
-          </div>
+      <section className="simple-guide-section simple-example" aria-labelledby="band-example-title">
+        <div><span className="eyebrow">Example</span><h2 id="band-example-title">₦6 million taxable income</h2><p>The income is split across three bands.</p></div>
+        <dl><div><dt>First ₦800,000 at 0%</dt><dd>₦0</dd></div><div><dt>Next ₦2.2m at 15%</dt><dd>₦330,000</dd></div><div><dt>Remaining ₦3m at 18%</dt><dd>₦540,000</dd></div><div><dt>Total yearly PAYE</dt><dd>₦870,000</dd></div></dl>
+      </section>
 
-          <div className="tax-bands-arithmetic" aria-label="Tax calculation for ₦6 million of chargeable income">
-            {exampleBands.map((band) => (
-              <div key={band.label}>
-                <span>{band.label}</span>
-                <strong>{band.calculation}</strong>
-                <em>{band.tax} tax</em>
-              </div>
-            ))}
-            <div className="tax-bands-total">
-              <span>Total annual PAYE</span>
-              <strong>₦870,000</strong>
-              <em>14.5% of chargeable income</em>
-            </div>
-          </div>
+      <section className="simple-guide-section" aria-labelledby="band-table-title">
+        <h2 id="band-table-title">2026 tax bands</h2>
+        <div className="simple-band-table" role="table" aria-label="Nigeria 2026 personal income tax bands">
+          <div role="row"><strong role="columnheader">Taxable income</strong><strong role="columnheader">Rate</strong><strong role="columnheader">Maximum tax in band</strong></div>
+          {bands.map(([band, rate, maximum]) => <div role="row" key={band}><span role="cell">{band}</span><strong role="cell">{rate}</strong><span role="cell">{maximum}</span></div>)}
+        </div>
+      </section>
 
-          <aside className="tax-bands-rule">
-            <strong>The 18% rate does not apply to all ₦6 million.</strong>
-            <p>The first ₦800,000 remains at 0%, the next ₦2.2 million stays at 15%, and only the final ₦3 million reaches 18%.</p>
-          </aside>
-        </section>
-
-        <section id="rates" className="tax-bands-reference">
-          <div className="tax-bands-section-heading">
-            <div>
-              <span className="eyebrow">Reference table</span>
-              <h2>Individual income-tax rates</h2>
-            </div>
-            <p>
-              “Maximum tax in band” means the most tax that one fully used band can add.
-              It is not your total tax bill.
-            </p>
-          </div>
-          <div className="info-table tax-bands-table" role="table" aria-label="2026 PAYE bands">
-            <div className="table-head" role="row">
-              <span role="columnheader">Chargeable income band</span>
-              <span role="columnheader">Income range</span>
-              <span role="columnheader">Rate</span>
-              <span role="columnheader">Maximum tax in band</span>
-            </div>
-            {bands.map(({ band, range, rate, maximum }) => (
-              <div role="row" key={band}>
-                <strong role="cell">{band}</strong>
-                <span data-label="Income range" role="cell">{range}</span>
-                <em data-label="Rate" role="cell">{rate}</em>
-                <span data-label="Maximum tax in band" role="cell">{maximum}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="chargeable-income" className="tax-bands-definition">
-          <span className="eyebrow">Before the rates apply</span>
-          <h2>Chargeable income is not always gross salary</h2>
-          <div>
-            <p>
-              Chargeable income is annual taxable employment income after eligible deductions
-              and reliefs. That is the amount divided across the bands above.
-            </p>
-            <p>
-              Check <Link href="/eligible-deductions">which deductions belong in the calculator</Link>,
-              follow <Link href="/how-paye-is-calculated">the complete calculation method</Link>, or
-              use the <Link href="/#calculator">free PAYE calculator</Link> to inspect your own band breakdown.
-            </p>
-          </div>
-        </section>
-      </div>
-    </InfoPage>
-  );
+      <div className="simple-callout-grid"><aside><strong>Taxable income is not always gross salary.</strong><span>{salaryTerms.chargeableIncome}</span><Link href="/eligible-deductions">Check eligible deductions</Link></aside><aside><strong>Your top rate is not your average rate.</strong><span>Lower portions keep their lower rates.</span><Link href="/how-paye-is-calculated">See the five calculation steps</Link></aside></div>
+      <details className="simple-guide-details"><summary>Official source</summary><div><p><a href={taxActUrl} rel="noreferrer" target="_blank">Nigeria Tax Act 2025 ↗</a></p></div></details>
+    </article>
+  </PublicPageShell>;
 }

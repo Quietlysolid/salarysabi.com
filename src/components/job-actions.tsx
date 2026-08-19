@@ -51,12 +51,9 @@ export function JobActions({ jobId }: { jobId: string }) {
   }
 
   return <section className="job-user-actions">
-    <div>
-      <h2>Save or track this job</h2>
-      <p>Keep it in one place and record when you apply.</p>
-    </div>
-    {userId ? <JobAccountActionBar saved={saved} applied={applied} onToggleSave={() => { void toggleSave(); }} onMarkApplied={() => { void markApplied(); }} /> : <p><Link href="/account">Sign in or create an account</Link> to save and track this job.</p>}
-    <details className="job-report"><summary>Report a problem with this job</summary><form onSubmit={report}><label>Problem<select name="reason"><option value="expired">Job is filled or expired</option><option value="broken_link">Application link is broken</option><option value="misleading">Details are misleading</option><option value="fee_requested">Someone requested a fee</option><option value="other">Another problem</option></select></label><label>Details<textarea name="details" maxLength={1000} rows={4} /></label><label>Email, optional<input name="email" type="email" /></label><button type="submit">Send report</button></form></details>
+    <h2>Save this job</h2>
+    {userId ? <JobAccountActionBar saved={saved} applied={applied} onToggleSave={() => { void toggleSave(); }} onMarkApplied={() => { void markApplied(); }} /> : <Link className="job-sign-in-action" href="/account">Sign in to save this job</Link>}
+    <details className="job-report"><summary>Report a problem</summary><form onSubmit={report}><label>Problem<select name="reason"><option value="expired">Job is filled or expired</option><option value="broken_link">Application link is broken</option><option value="misleading">Details are misleading</option><option value="fee_requested">Someone requested a fee</option><option value="other">Another problem</option></select></label><label>Details<textarea name="details" maxLength={1000} rows={4} /></label><label>Email, optional<input name="email" type="email" /></label><button type="submit">Send report</button></form></details>
     <p role="status">{message}</p>
   </section>;
 }

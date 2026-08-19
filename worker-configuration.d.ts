@@ -6,9 +6,6 @@ interface __BaseEnv_CloudflareEnv {
 	ASSETS: Fetcher;
 	NEXT_PUBLIC_SUPABASE_URL: string;
 	NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: string;
-	NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: string;
-	NEXT_PUBLIC_POSTHOG_HOST: string;
-	NEXT_PUBLIC_POSTHOG_DASHBOARD_URL: string;
 	WORKER_SELF_REFERENCE: Service<typeof import("./.open-next/worker").default>;
 }
 declare namespace Cloudflare {
@@ -22,7 +19,7 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 	[Binding in keyof EnvType]: EnvType[Binding] extends string ? EnvType[Binding] : string;
 };
 declare namespace NodeJS {
-	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "NEXT_PUBLIC_SUPABASE_URL" | "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY" | "NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN" | "NEXT_PUBLIC_POSTHOG_HOST" | "NEXT_PUBLIC_POSTHOG_DASHBOARD_URL">> {}
+	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "NEXT_PUBLIC_SUPABASE_URL" | "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY">> {}
 }
 
 // Begin runtime types

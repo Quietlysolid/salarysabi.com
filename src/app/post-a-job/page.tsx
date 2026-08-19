@@ -13,10 +13,9 @@ export default function PostAJobPage() {
   return (
     <PublicPageShell>
       <section className="job-wizard-hero">
-        <span className="eyebrow">For employers and recruiters</span>
-        <h1>Post your own salary-transparent job</h1>
-        <p>Create a listing for a role your organisation or client is hiring for.</p>
-        <aside className="submission-path-note"><strong>Not the employer or recruiter?</strong><span>If you found an existing public listing, <Link href="/suggest-a-job">share its official link instead</Link>.</span></aside>
+        <h1>Post a job</h1>
+        <p>For employers and recruiters. Free during beta. Reviewed within 1–2 business days.</p>
+        <Link className="job-suggest-link" href="/suggest-a-job">Found an existing listing? Suggest the job instead.</Link>
       </section>
       <section className="job-wizard-shell">
         <JobSubmissionForm />

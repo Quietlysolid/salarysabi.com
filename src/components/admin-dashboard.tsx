@@ -495,9 +495,7 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
       {activeView === "analytics" && <section className="admin-analytics" aria-labelledby="admin-analytics-title">
         <header>
           <div><span className="eyebrow">Last 30 days</span><h2 id="admin-analytics-title">Product analytics</h2><p>First-party counts exclude salary figures, deductions, payslip values, passwords and form text.</p></div>
-          {process.env.NEXT_PUBLIC_POSTHOG_DASHBOARD_URL
-            ? <a href={process.env.NEXT_PUBLIC_POSTHOG_DASHBOARD_URL} rel="noreferrer" target="_blank">Open detailed PostHog reports <ExternalLinkIcon /></a>
-            : <span className="admin-analytics-setup">PostHog awaits local environment keys</span>}
+          <span className="admin-analytics-setup">First-party analytics</span>
         </header>
         {productAnalytics ? <>
           <div className="admin-analytics-cards">

@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { legalContentUpdatedDate, rulesVerifiedDate } from "./site";
+import { salaryTerms } from "./salary-terms";
 
 const root = resolve(process.cwd());
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
@@ -34,12 +35,39 @@ describe("shared product contracts", () => {
 
   it("keeps analytics events free of sensitive financial and credential properties", () => {
     const analytics = read("src/components/analytics.tsx");
-    expect(analytics).toContain('autocapture: false');
-    expect(analytics).toContain('disable_session_recording: true');
-    expect(analytics).toContain('persistence: "memory"');
     expect(analytics).toContain("analyticsOptOutKey");
     expect(analytics).toContain('process.env.NODE_ENV !== "production"');
+    expect(analytics).toContain("window.location.pathname");
+    expect(analytics).toContain("p_event_name: event");
+    expect(analytics).toContain("p_page_path: pagePath");
+    expect(analytics).toContain("p_referrer_host:");
+    expect(analytics).not.toContain("window.location.search");
+    expect(analytics).not.toMatch(/posthog/i);
     expect(analytics).not.toMatch(/salary|deduction|password|payslip_value|email/i);
+  });
+
+  it("allows Cloudflare's production analytics beacon without weakening other CSP boundaries", () => {
+    const config = read("next.config.ts");
+    expect(config).toContain("script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com");
+    expect(config).toContain("connect-src 'self' https://*.supabase.co wss://*.supabase.co");
+    expect(config).toContain("frame-ancestors 'none'");
+  });
+
+  it("keeps gross salary, chargeable income and net salary definitions synchronized", () => {
+    const grossNetGuide = read("src/app/net-salary-vs-gross-salary-nigeria/page.tsx");
+    const taxBandsGuide = read("src/app/tax-bands/page.tsx");
+    const payeGuide = read("src/app/how-paye-is-calculated/page.tsx");
+    const calculator = read("src/components/calculator.tsx");
+
+    expect(salaryTerms.grossSalary).toContain("before employee deductions");
+    expect(salaryTerms.grossSalary).toContain("basic salary and taxable allowances");
+    expect(salaryTerms.chargeableIncome).toContain("after eligible deductions and reliefs");
+    expect(salaryTerms.netSalary).toContain("PAYE and every other applicable payroll deduction");
+    expect(grossNetGuide).toContain("salaryTerms.grossSalary");
+    expect(grossNetGuide).toContain("salaryTerms.netSalary");
+    expect(taxBandsGuide).toContain("salaryTerms.chargeableIncome");
+    expect(payeGuide).toContain("salaryTerms.chargeableIncome");
+    expect(calculator).toContain("Taxable income");
   });
 
   it("keeps the analytics allow-list synchronized with the database migration", () => {
@@ -82,15 +110,19 @@ describe("shared product contracts", () => {
     expect(migration).toContain("-request.amount_kobo");
   });
 
-  it("keeps contributor validation non-payable and independently measurable", () => {
+  it("keeps the funded salary pilot bounded and job sourcing separate", () => {
     const page = read("src/components/contributor-program.tsx");
-    const migration = read("supabase/migrations/202608120001_contributor_interest_validation.sql");
-    expect(page).toContain("not active offers");
-    expect(page).toContain('source="contributor_program"');
-    expect(page).not.toContain("ensure_contributor_profile");
-    expect(migration).toContain("contributor_interest_viewed");
-    expect(migration).toContain("contributor_interest_submitted");
-    expect(migration).toContain("contributor_interest_succeeded");
+    const jobPage = read("src/app/contributors/job-sourcing/page.tsx");
+    const migration = read("supabase/migrations/202608120003_activate_salary_report_pilot.sql");
+    const rewardIncrease = read("supabase/migrations/202608190001_raise_salary_report_pilot_reward.sql");
+    expect(page).toContain("Get ₦1,000");
+    expect(page).toContain("first 20 approved reports");
+    expect(jobPage).toContain("Reward TBD");
+    expect(migration).toContain("target_approved=20");
+    expect(migration).toContain("budget_kobo=1000000");
+    expect(migration).toContain("Minimum payout is NGN 500");
+    expect(rewardIncrease).toContain("reward_kobo = 100000");
+    expect(rewardIncrease).toContain("budget_kobo = 2000000");
   });
 });
 
@@ -119,5 +151,23 @@ describe("search visibility contracts", () => {
     expect(article).toContain("https://www.jrb.gov.ng/assets/2026-pit-guidelines-TJG3n9-T.pdf");
     expect(article).toContain("No qualified tax professional has independently reviewed SalarySabi yet.");
     expect(sitemap).toContain("/tax-news/nigeria-tax-act-2025-paycheck-2026");
+  });
+
+  it("publishes Article structured data on every core PAYE guide", () => {
+    const structuredData = read("src/components/article-structured-data.tsx");
+    expect(structuredData).toContain('"@type": "Article"');
+    expect(structuredData).toContain("mainEntityOfPage");
+    expect(structuredData).toContain("dateModified");
+    expect(structuredData).toContain("founderLinkedInUrl");
+    expect(structuredData).toContain("founderGitHubUrl");
+
+    for (const route of [
+      "src/app/how-paye-is-calculated/page.tsx",
+      "src/app/tax-bands/page.tsx",
+      "src/app/eligible-deductions/page.tsx",
+      "src/app/net-salary-vs-gross-salary-nigeria/page.tsx",
+    ]) {
+      expect(read(route)).toContain("<ArticleStructuredData");
+    }
   });
 });

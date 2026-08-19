@@ -9,8 +9,6 @@ import {
   formatJobSalary,
   jobDeadlineLabel,
   monthlyGrossRange,
-  salarySourceLabel,
-  verificationLabel,
   type Job,
 } from "@/lib/jobs";
 import { getPublishedJobBySlug } from "@/lib/supabase";
@@ -39,7 +37,7 @@ export async function generateMetadata({
     };
   return {
     title: `${job.title} at ${job.company_name} | SalarySabi Jobs`,
-    description: `${formatJobSalary(job)}. ${job.location}. View the role and apply through the employer's application page.`,
+    description: `${formatJobSalary(job)}. ${job.location}. View the listing source and current verification status before applying.`,
     alternates: { canonical: `/jobs/${job.slug}` },
     openGraph: {
       title: `${job.title} at ${job.company_name}`,
@@ -59,6 +57,11 @@ export default async function JobPage({
   const job = (await getPublishedJobBySlug(slug)) as Job | null;
   if (!job) notFound();
   const gross = monthlyGrossRange(job);
+  const sourceName = job.source_name || "listing source";
+  const employerStatus = job.employer_verified ? "Employer confirmed" : "Employer confirmation pending";
+  const descriptionParts = job.description.split(/(?<=[.!?])\s+(?=[A-Z])/).map((part) => part.trim()).filter(Boolean);
+  const overview = descriptionParts[0];
+  const keyDetails = descriptionParts.slice(1);
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
@@ -122,7 +125,6 @@ export default async function JobPage({
         <section className="job-pay-panel">
           <span>Advertised salary</span>
           <strong>{formatJobSalary(job)}</strong>
-          <small>{salarySourceLabel(job)}</small>
           {gross && (
             <>
               <span>Estimated income after PAYE only</span>
@@ -139,32 +141,14 @@ export default async function JobPage({
         </section>
         <section className="job-detail-description">
           <h2>About this job</h2>
-          <p>{job.description}</p>
+          <p>{overview}</p>
+          {keyDetails.length > 0 && <><h2>Key details</h2><ul>{keyDetails.map((detail) => <li key={detail}>{detail}</li>)}</ul></>}
         </section>
-        {(job.transparency_score != null || job.transparency_notes?.length) && (
-          <section className="job-detail-description">
-            <h2>Transparency check</h2>
-            {job.transparency_score != null && <p><strong>{job.transparency_score}/100 transparency score</strong></p>}
-            {job.transparency_notes?.map((note) => <p key={note}>{note}</p>)}
-          </section>
-        )}
         <section className="job-source-panel">
           <div>
-            <strong>{verificationLabel(job)}</strong>
-            <span>
-              Last checked {formatJobDate(job.source_verified_at)} · {jobDeadlineLabel(job)}
-            </span>
-            {job.source_url && (
-              <a
-                href={job.source_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View official listing
-                <ExternalLinkIcon />
-                <span className="sr-only"> (opens in a new tab)</span>
-              </a>
-            )}
+            <span>Listing status</span>
+            <strong>{sourceName} · Checked {formatJobDate(job.source_verified_at)}</strong>
+            <p>{employerStatus} · {jobDeadlineLabel(job)}</p>
           </div>
           <a
             className="primary-button"
@@ -172,7 +156,7 @@ export default async function JobPage({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Apply on official site
+            Apply on {sourceName}
             <ExternalLinkIcon />
             <span className="sr-only"> (opens in a new tab)</span>
           </a>

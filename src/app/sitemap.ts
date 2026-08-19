@@ -21,10 +21,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/tax-news/nigeria-tax-act-2025-paycheck-2026", lastModified: siteContentUpdatedIso },
     { path: "/how-paye-is-calculated", lastModified: rulesVerifiedIso },
     { path: "/tax-bands", lastModified: rulesVerifiedIso },
+    { path: "/net-salary-vs-gross-salary-nigeria", lastModified: rulesVerifiedIso },
     { path: "/eligible-deductions", lastModified: rulesVerifiedIso },
     { path: "/privacy", lastModified: legalContentUpdatedIso },
     { path: "/disclaimer", lastModified: legalContentUpdatedIso },
     { path: "/about", lastModified: siteContentUpdatedIso },
+    { path: "/contact", lastModified: siteContentUpdatedIso },
     { path: "/tax-updates", lastModified: siteContentUpdatedIso },
     { path: "/terms", lastModified: siteContentUpdatedIso },
     { path: "/security", lastModified: siteContentUpdatedIso },
@@ -34,6 +36,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/payslip-checker", lastModified: siteContentUpdatedIso },
     { path: "/post-a-job", lastModified: siteContentUpdatedIso },
     { path: "/suggest-a-job", lastModified: siteContentUpdatedIso },
+    { path: "/contributors", lastModified: siteContentUpdatedIso },
+    { path: "/contributors/job-sourcing", lastModified: siteContentUpdatedIso },
   ];
 
   const staticPages: MetadataRoute.Sitemap = pages.map(({ path, lastModified }) => ({

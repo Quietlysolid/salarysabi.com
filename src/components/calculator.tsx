@@ -3,9 +3,10 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { track } from "@/components/analytics";
-import { calculateLegacyPaye, calculatePaye } from "@/lib/paye";
+import { EarlyAccessForm } from "@/components/early-access-form";
+import { calculatePaye } from "@/lib/paye";
 import { readPayContext, writePayContext } from "@/lib/pay-context";
-import { rulesVerifiedDate, rulesetName, rulesetVersion } from "@/lib/site";
+import { pitGuidelinesUrl, rulesetName, rulesetVersion, rulesUpdateLabel, taxActUrl, taxReviewStatus } from "@/lib/site";
 
 type FieldName =
   | "gross"
@@ -21,10 +22,7 @@ type FormValues = Record<FieldName, string>;
 type DeductionField = {
   name: Exclude<FieldName, "gross">;
   label: string;
-  question: string;
-  help: string;
-  example: string;
-  guideAnchor: string;
+  hint?: string;
 };
 
 const initialValues: FormValues = {
@@ -46,54 +44,32 @@ const money = new Intl.NumberFormat("en-NG", {
 const commonDeductionFields: DeductionField[] = [
   {
     name: "pension",
-    guideAnchor: "pension",
     label: "Pension",
-    question: "Does your payslip show a pension deduction?",
-    help: "Enter the amount beside “Pension” on your payslip, not your pension account balance.",
-    example: "For example, ₦40,000 monthly is ₦480,000 yearly.",
   },
   {
     name: "nhf",
-    guideAnchor: "nhf",
     label: "National Housing Fund (NHF)",
-    question: "Does your payslip show an NHF deduction?",
-    help: "Enter the amount beside “NHF” on your payslip. If it is not listed, leave this at ₦0.",
-    example: "Use the amount actually deducted from your salary.",
   },
   {
     name: "nhis",
-    guideAnchor: "nhis",
     label: "National health insurance",
-    question: "Does your payslip show NHIS or NHIA?",
-    help: "Enter the eligible health-insurance amount shown on your payslip.",
-    example: "A private HMO may not qualify. Check with payroll if unsure.",
   },
   {
     name: "rent",
-    guideAnchor: "rent-relief",
-    label: "Rent for your home",
-    question: "How much rent do you pay for your home?",
-    help: "Enter your rent and we will calculate the relief automatically.",
-    example: "This lowers taxable income; it is not a cash refund.",
+    label: "Home rent",
   },
 ];
 
 const otherDeductionFields: DeductionField[] = [
   {
     name: "mortgage",
-    guideAnchor: "mortgage-interest",
     label: "Mortgage interest",
-    question: "Do you pay interest on a mortgage for your main home?",
-    help: "Enter only the interest charged, not the full payment or loan repayment.",
-    example: "Use the interest amount on your lender’s statement.",
+    hint: "Enter interest only, not the full repayment.",
   },
   {
     name: "insurance",
-    guideAnchor: "life-assurance",
     label: "Life assurance",
-    question: "Do you pay life-assurance premiums for yourself or your spouse?",
-    help: "Enter qualifying life-assurance premiums, not car, travel or ordinary health insurance.",
-    example: "Use the amount on your insurer’s receipt or statement.",
+    hint: "Use the amount on your insurer’s statement.",
   },
 ];
 
@@ -107,7 +83,7 @@ function formatInput(value: string) {
   return raw ? Number(raw).toLocaleString("en-NG") : "";
 }
 
-export function Calculator({ guided = false }: { guided?: boolean }) {
+export function Calculator() {
   const [values, setValues] = useState(initialValues);
   const [period, setPeriod] = useState<"monthly" | "annual">("monthly");
   const [deductionPeriod, setDeductionPeriod] = useState<"monthly" | "annual">(
@@ -119,6 +95,7 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
   const [hasCalculated, setHasCalculated] = useState(false);
   const [exporting, setExporting] = useState<"pdf" | "excel" | null>(null);
   const [contextReady, setContextReady] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
   const resultsRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -171,7 +148,6 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
   }, [deductionPeriod, period, values]);
 
   const result = useMemo(() => calculatePaye(inputs), [inputs]);
-  const legacyResult = useMemo(() => calculateLegacyPaye(inputs), [inputs]);
   const showResult = hasCalculated || inputs.annualGrossIncome > 0;
 
   function update(name: FieldName, value: string) {
@@ -210,6 +186,21 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
     }
   }
 
+  async function shareResult() {
+    const text = `My estimated Nigerian PAYE is ${money.format(result.monthlyTax)} monthly on ${money.format(result.annualGrossIncome)} annual gross pay. Calculated with SalarySabi's 2026 ruleset.`;
+    try {
+      if (navigator.share) await navigator.share({ title: "My PAYE breakdown", text, url: window.location.origin });
+      else {
+        await navigator.clipboard.writeText(`${text} ${window.location.origin}`);
+        setShareMessage("Breakdown copied. You can paste it into a message.");
+      }
+      track("paye_result_shared");
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      setShareMessage("Sharing is not available in this browser. Download the PDF instead.");
+    }
+  }
+
   function renderDeductionField(field: DeductionField) {
     const periodLabel = deductionPeriod === "monthly" ? "monthly" : "yearly";
     return (
@@ -221,9 +212,8 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
         }
         key={field.name}
       >
-        <span className="deduction-kicker">{field.label}</span>
-        <strong>{field.question}</strong>
-        <small>{field.help}</small>
+        <strong>{field.label}</strong>
+        {field.hint && <small>{field.hint}</small>}
         <div className="small-currency-input">
           <span>₦</span>
           <input
@@ -236,22 +226,6 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
           />
           <em>{periodLabel}</em>
         </div>
-        <small className="field-example">{field.example}</small>
-        <Link
-          className="deduction-guide-link"
-          href={`/eligible-deductions?from=calculator#${field.guideAnchor}`}
-          onClick={() => {
-            writePayContext(window.localStorage, {
-              values,
-              period,
-              deductionPeriod,
-              returnField: field.name,
-              updatedAt: Date.now(),
-            });
-          }}
-        >
-          Check what belongs in this field
-        </Link>
         {field.name === "rent" && parseMoney(values.rent) > 0 && (
           <span className="rent-feedback" role="status">
             <span>Your calculated rent relief</span>
@@ -270,13 +244,10 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
   return (
     <div className="calculator-shell">
       <form className="calculator-card" onSubmit={submit}>
-        <div className="card-heading">
-          <div>
-            <h2>How much do you earn?</h2>
-            <small className="live-note">
-              Enter your salary before tax and other deductions.
-            </small>
-          </div>
+        <div className="tax-review-byline calculator-review-byline">
+          <strong>Prepared and maintained by Ozichi Nwosu</strong>
+          <span>{taxReviewStatus}</span>
+          <small><Link href="/tax-updates">See source history and review status</Link></small>
         </div>
 
         <div className="period-toggle" aria-label="Income period">
@@ -299,10 +270,8 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
         <label className="amount-field">
           <span>
             {isExampleSalary
-              ? `Example ${period === "monthly" ? "monthly" : "yearly"} salary`
-              : period === "monthly"
-                ? "Your monthly salary before deductions"
-                : "Your total yearly salary before deductions"}
+              ? "Example salary before deductions"
+              : "Salary before deductions"}
           </span>
           <div className="currency-input">
             <span>₦</span>
@@ -315,7 +284,7 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
                 update("gross", event.target.value);
               }}
               aria-label="Salary before deductions"
-              placeholder="500,000"
+              placeholder="e.g. 500,000"
             />
           </div>
         </label>
@@ -327,39 +296,34 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
           onClick={() => setShowDeductions((value) => !value)}
         >
           <span>
-            <strong>Add pension, rent or other deductions</strong>
-            <small>Optional. Skip this if none apply to you.</small>
+            <strong>Optional deductions</strong>
           </span>
           <span className={showDeductions ? "chevron open" : "chevron"}>
-            {showDeductions ? "Hide" : "Show"}
+            {showDeductions ? "Hide" : "Add"}
           </span>
         </button>
 
         {showDeductions && (
           <div className="deduction-flow">
             <div className="deduction-intro">
-              <strong>Enter only what you can confirm</strong>
-              <p>
-                Check your payslip, PFA statement or receipt. If you do not
-                recognise an item, leave it at ₦0.
-              </p>
+              <p>Use amounts from your payslip. Leave unknown fields at ₦0.</p>
             </div>
 
             <div className="deduction-period">
-              <span>I want to enter</span>
+              <span>Amounts are</span>
               <button
                 className={deductionPeriod === "monthly" ? "active" : ""}
                 type="button"
                 onClick={() => setDeductionPeriod("monthly")}
               >
-                Monthly amounts
+                Monthly
               </button>
               <button
                 className={deductionPeriod === "annual" ? "active" : ""}
                 type="button"
                 onClick={() => setDeductionPeriod("annual")}
               >
-                Yearly totals
+                Yearly
               </button>
             </div>
 
@@ -374,11 +338,10 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
               onClick={() => setShowOtherDeductions((value) => !value)}
             >
               <span>
-                <strong>Other deductions you may have</strong>
-                <small>Mortgage interest and life assurance</small>
+                <strong>More deductions</strong>
               </span>
               <span className={showOtherDeductions ? "chevron open" : "chevron"}>
-                {showOtherDeductions ? "Hide" : "Show"}
+                {showOtherDeductions ? "Hide" : "Add"}
               </span>
             </button>
 
@@ -391,14 +354,11 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
         )}
 
         <button className="primary-button" type="submit">
-          Calculate my PAYE
+          {hasCalculated ? "Update result" : "Calculate take-home pay"}
         </button>
-        <p className="privacy-note">
-          No signup. Your salary figures stay in this browser.
-        </p>
       </form>
 
-      {(!guided || showResult) && <section
+      {<section
         className="results-card"
         id="results"
         aria-live="polite"
@@ -409,47 +369,36 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
           {isExampleSalary && (
             <span className="result-state-label">Example preview</span>
           )}
-          <p>Your PAYE estimate</p>
+          <p>Take-home pay</p>
           {showResult ? (
             <>
-              <strong>{money.format(result.monthlyTax)}</strong>
+              <strong>{money.format(result.monthlyIncomeAfterTax)}</strong>
+              {" "}
               <span className="per-month">per month</span>
-              <small className="result-explainer">
-                Based on a {money.format(parseMoney(values.gross))}{" "}
-                {period === "monthly" ? "monthly" : "yearly"} salary
-              </small>
             </>
           ) : (
             <div className="result-empty">
-              <h2>No estimate yet</h2>
-              <p>Enter your salary and select Calculate my PAYE to see the breakdown.</p>
+              <h2>Your result appears here</h2>
             </div>
           )}
         </div>
 
         {showResult && <div className="result-summary">
           <div>
-            <span>Income after PAYE only</span>
-            <strong>{money.format(result.monthlyIncomeAfterTax)}</strong>
-            <small>Before pension, NHF and other payroll deductions</small>
+            <span>PAYE per month</span>
+            <strong>{money.format(result.monthlyTax)}</strong>
           </div>
           <div>
-            <span>Share of salary paid as PAYE</span>
+            <span>PAYE rate</span>
             <strong>{(result.effectiveTaxRate * 100).toFixed(1)}%</strong>
-            <small>Excludes pension, NHF, NHIS and other payroll deductions</small>
-          </div>
-          <div>
-            <span>Compared with the pre-2026 estimate</span>
-            <strong>{legacyResult.differenceFrom2026 >= 0 ? `${money.format(legacyResult.differenceFrom2026)} less yearly` : `${money.format(Math.abs(legacyResult.differenceFrom2026))} more yearly`}</strong>
-            <small>Planning comparison using the former CRA, bands and minimum tax</small>
           </div>
         </div>}
 
         {showResult && <details className="calculation-details">
           <summary>
             <span>
-              <strong>See how we got this number</strong>
-              <small>Yearly figures and every 2026 tax band</small>
+              <strong>View calculation</strong>
+              <small>Yearly figures and tax bands</small>
             </span>
             <span className="details-plus" aria-hidden="true">
               +
@@ -458,18 +407,17 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
 
           <div className="breakdown">
             <div className="section-title">
-              <h3>Your yearly calculation</h3>
-              <span>NGN</span>
+              <h3>Yearly totals</h3>
             </div>
             <dl>
               <div>
-                <dt>Total yearly salary</dt>
+                <dt>Salary</dt>
                 <dd>{money.format(result.annualGrossIncome)}</dd>
               </div>
               <div>
-                <dt>Deductions that reduce taxable income</dt>
+                <dt>Eligible deductions</dt>
                 <dd className="deduction">
-                  − {money.format(result.totalEligibleDeductions)}
+                  {money.format(result.totalEligibleDeductions)}
                 </dd>
               </div>
               {result.rentRelief > 0 && (
@@ -479,11 +427,11 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
                 </div>
               )}
               <div className="chargeable">
-                <dt>Income used to calculate your tax</dt>
+                <dt>Taxable income</dt>
                 <dd>{money.format(result.chargeableIncome)}</dd>
               </div>
               <div>
-                <dt>Total PAYE for the year</dt>
+                <dt>PAYE</dt>
                 <dd>{money.format(result.annualTax)}</dd>
               </div>
             </dl>
@@ -491,10 +439,11 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
 
           <div className="bands">
             <div className="section-title">
-              <h3>How each tax band applies</h3>
+              <h3>Tax bands</h3>
             </div>
-            {result.bands.map((band) => (
-              <div className="band-row" key={band.label}>
+            {result.bands.map((band) => {
+              const reached = band.taxableAmount > 0;
+              return <div className={reached ? "band-row" : "band-row is-unreached"} key={band.label}>
                 <div>
                   <span>{band.label}</span>
                   <small>{Math.round(band.rate * 100)}%</small>
@@ -513,9 +462,9 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
                     }}
                   />
                 </div>
-                <strong>{money.format(band.tax)}</strong>
-              </div>
-            ))}
+                <strong>{reached ? money.format(band.tax) : "Not reached"}</strong>
+              </div>;
+            })}
           </div>
         </details>}
 
@@ -524,7 +473,7 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
             <p>
               <strong>Based on official 2026 JRB guidance</strong>
               <small>
-                Independent estimate. Rules checked {rulesVerifiedDate}.
+                Independent estimate. {rulesUpdateLabel}.
               </small>
             </p>
           </div>
@@ -552,12 +501,21 @@ export function Calculator({ guided = false }: { guided?: boolean }) {
         </div>}
         {hasCalculated && <aside className="calculation-trust" aria-label="Calculation source and freshness">
           <div>
-            <span>Rules verified</span>
-            <strong>{rulesVerifiedDate}</strong>
+            <span>Tax review status</span>
+            <strong>{taxReviewStatus}</strong>
           </div>
-          <p><strong>Ruleset {rulesetVersion}</strong><br />Based on the {rulesetName}.</p>
-          <Link href="/how-paye-is-calculated">See the calculation</Link>
+          <p><strong>Ruleset {rulesetVersion}</strong><br />{rulesUpdateLabel}. Based on the {rulesetName}.</p>
+          <p className="calculation-source-links"><a href={taxActUrl} rel="noreferrer" target="_blank">Act: ss. 30, 58, 163(1)(t)</a><a href={pitGuidelinesUrl} rel="noreferrer" target="_blank">JRB Guidelines: ¶¶8–9, Apps. 1 &amp; 4</a><Link href="/tax-updates">Changelog</Link></p>
         </aside>}
+        {hasCalculated && <aside className="founder-result-link"><div className="founder-result-avatar" aria-hidden="true">ON</div><p><strong>Built and tested by Ozichi Nwosu</strong><span>See the exact calculation steps, source clauses and checks behind this estimate.</span></p><Link href="/how-paye-is-calculated">See how this PAYE was calculated →</Link></aside>}
+        {hasCalculated && <section className="post-result-actions" aria-labelledby="post-result-title">
+          <div className="post-result-heading"><span className="eyebrow">What next?</span><h2 id="post-result-title">Put this number to work.</h2></div>
+          <div className="post-result-grid">
+            <Link className="post-result-primary" href="/salaries?campaign=salary-pilot-2026#salary-report"><span>Founding salary pilot · 20 reports only</span><strong>Earn ₦500 for an approved anonymous salary report</strong><small>Share your role, location and pay. One reward per person; reports are reviewed and only published in groups.</small><b>Share my salary for ₦500 →</b></Link>
+            <div className="post-result-download"><span>Keep or share it</span><strong>Take your PAYE breakdown with you</strong><small>The PDF is generated on this device. Share sends the displayed summary only when you choose it.</small><div><button disabled={exporting !== null} onClick={exportPdf} type="button">{exporting === "pdf" ? "Preparing…" : "Download PDF"}</button><button onClick={shareResult} type="button">Share result</button></div><small role="status">{shareMessage}</small></div>
+          </div>
+          <div className="tax-update-signup"><div><span className="eyebrow">Tax-band alerts</span><h3>Get notified when Nigerian PAYE bands change.</h3><p>We will email only when an official rule change affects the calculator.</p></div><EarlyAccessForm source="tax_updates" idPrefix="tax-updates" label="Email address" placeholder="you@example.com" buttonText="Notify me" successMessage="You’re on the tax-update list." consentText="I agree to receive Nigerian tax-band and calculator updates." consentHelp="No salary figures are attached. Unsubscribe anytime." /></div>
+        </section>}
         {hasCalculated && (
           <Link className="payslip-context-action" href="/payslip-checker?from=calculator">
             <span>

@@ -23,7 +23,7 @@ describe("route-owned style isolation", () => {
   });
 
   it("keeps the disclaimer ledger under a disclaimer namespace", () => {
-    expect(disclaimer).toContain('className="disclaimer-ledger-row"');
+    expect(disclaimer).toContain('className="disclaimer-summary-grid"');
     expect(disclaimer).not.toMatch(/className="evidence-(page|row|ledger|actions)/);
     expect(css).not.toMatch(/(^|[\s,{])\.evidence-row(?=[\s:{>,.#])/m);
   });
@@ -39,5 +39,39 @@ describe("route-owned style isolation", () => {
     expect(css).toContain(".disclaimer-ledger-page");
     expect(css).toContain(".methodology-page");
     expect(css).toContain(".privacy-page");
+  });
+});
+
+describe("sitewide typography contract", () => {
+  it("uses named display, title, body and caption roles", () => {
+    for (const token of [
+      "--ss-type-display-hero",
+      "--ss-type-page-title",
+      "--ss-type-section-title",
+      "--ss-type-body-large",
+      "--ss-type-body",
+      "--ss-type-helper",
+      "--ss-type-caption",
+    ]) {
+      expect(css).toContain(token);
+    }
+  });
+
+  it("keeps the public weight scale intentionally small", () => {
+    const weights = [...css.matchAll(/font-weight:\s*(\d+)/g)].map((match) => Number(match[1]));
+    expect(new Set(weights)).toEqual(new Set([400, 600, 700, 800]));
+  });
+
+  it("uses proportional tracking and tabular operational numbers", () => {
+    expect(css).not.toMatch(/letter-spacing:\s*-?[\d.]+px/);
+    expect(css).toContain("font-variant-numeric: tabular-nums lining-nums");
+  });
+
+  it("gives job and account titles the shared display treatment", () => {
+    expect(css).toMatch(/#main-content\s+:is\([\s\S]*\.job-detail-heading,[\s\S]*\.account-preview,[\s\S]*\) h1 \{[\s\S]*font-family:\s*var\(--font-display\);/);
+  });
+
+  it("does not duplicate fallback families already owned by font tokens", () => {
+    expect(css).not.toMatch(/font-family:\s*var\(--font-(?:display|body)\),\s*sans-serif/);
   });
 });

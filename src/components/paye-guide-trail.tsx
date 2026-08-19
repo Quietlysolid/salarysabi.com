@@ -4,6 +4,7 @@ const guides = [
   { key: "methodology", href: "/how-paye-is-calculated", label: "Calculation method" },
   { key: "deductions", href: "/eligible-deductions", label: "Eligible deductions" },
   { key: "bands", href: "/tax-bands", label: "Tax bands" },
+  { key: "gross-net", href: "/net-salary-vs-gross-salary-nigeria", label: "Gross vs take-home" },
 ] as const;
 
 export function PayeGuideTrail({ current }: { current?: (typeof guides)[number]["key"] }) {

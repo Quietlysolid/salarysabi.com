@@ -81,45 +81,16 @@ export function JobSeekerAccount() {
   if (!session) return (
     <section className="account-gateway">
       <div className="account-preview">
-        <span className="eyebrow">Private job workspace</span>
-        <h1>Keep your job search in one place.</h1>
-        <p>Save jobs, record applications and manage verified email alerts.</p>
+        <h1>Save and track jobs.</h1>
 
-        <div className="account-preview-label"><strong>Your workspace after sign in</strong><span>Preview only</span></div>
-        <div className="account-workspace-preview">
-          <section>
-            <header><Bookmark aria-hidden="true" /><strong>Saved</strong><span>3</span></header>
-            <article><div><strong>Product Designer</strong><span>Kuda</span></div><small>Saved<br />2d ago</small></article>
-            <article><div><strong>Finance Analyst</strong><span>Flutterwave</span></div><small>Saved<br />1w ago</small></article>
-            <article><div><strong>UX Researcher</strong><span>Paystack</span></div><small>Saved<br />2w ago</small></article>
-            <footer>View saved jobs</footer>
-          </section>
-          <section>
-            <header><BriefcaseBusiness aria-hidden="true" /><strong>Applied</strong><span>2</span></header>
-            <article><div><strong>Product Designer</strong><span>Kuda</span></div><small>Applied<br />3d ago</small></article>
-            <article><div><strong>Finance Analyst</strong><span>Flutterwave</span></div><small>Under review</small></article>
-            <footer>View applications</footer>
-          </section>
-          <section>
-            <header><Bell aria-hidden="true" /><strong>Alerts</strong><span>2</span></header>
-            <article><div><strong>Product design</strong><span>Lagos · Hybrid</span></div><small>Daily</small></article>
-            <article><div><strong>Finance analyst</strong><span>Lagos · Hybrid</span></div><small>Weekly</small></article>
-            <footer>Manage alerts</footer>
-          </section>
-        </div>
-
-        <div className="account-preview-benefits">
-          <p><strong>All in one place</strong>Save jobs, track applications and manage alerts.</p>
-          <p><strong>You’re in control</strong>You choose what to save and track.</p>
-          <p><strong>Private by default</strong>No recruiter can see your saved activity.</p>
+        <div className="account-benefits" aria-label="What your account can do">
+          <div><Bookmark aria-hidden="true" /><h2>Save jobs</h2></div>
+          <div><BriefcaseBusiness aria-hidden="true" /><h2>Track applications</h2></div>
+          <div><Bell aria-hidden="true" /><h2>Get job alerts</h2></div>
         </div>
       </div>
 
       <form className="account-access" onSubmit={authenticate}>
-        <header>
-          <h2>Access your job workspace</h2>
-          <p>{authMode === "signin" ? "Sign in to view your saved jobs, applications and email alerts." : "Create an account to start saving jobs and tracking applications."}</p>
-        </header>
         <div className="account-mode" aria-label="Account access mode">
           <button aria-pressed={authMode === "signin"} className={authMode === "signin" ? "active" : ""} onClick={() => { setAuthMode("signin"); setMessage(""); }} type="button">Sign in</button>
           <button aria-pressed={authMode === "signup"} className={authMode === "signup" ? "active" : ""} onClick={() => { setAuthMode("signup"); setMessage(""); }} type="button">Create account</button>
@@ -133,9 +104,8 @@ export function JobSeekerAccount() {
         {authMode === "signup" && <p className="account-form-note">Use at least 8 characters. We’ll email you a confirmation link.</p>}
         <button className="primary-button account-submit" type="submit">{authMode === "signin" ? "Sign in" : "Create account"}</button>
         <p className="form-message" role="status">{message}</p>
-        <div className="account-access-divider"><span>or</span></div>
-        <Link className="account-browse-link" href="/jobs">Browse all jobs</Link>
-        <p className="account-privacy-note"><LockKeyhole aria-hidden="true" />Your saved activity is private. Salary calculations are never attached to your account.</p>
+        <Link className="account-browse-link" href="/jobs">Browse jobs</Link>
+        <p className="account-privacy-note"><LockKeyhole aria-hidden="true" />Your saved activity is private.</p>
       </form>
     </section>
   );

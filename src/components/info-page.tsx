@@ -13,14 +13,16 @@ export function InfoHeader() {
       </Link>
       <SiteNavigation />
       <div className="mobile-nav">
-        <Link href="/tax-tools">Calculate</Link>
-        <Link href="/payslip-checker">Check payslip</Link>
+        <Link href="/#calculator">Take-home pay</Link>
+        <Link href="/payslip-checker">Check PAYE</Link>
         <details>
           <summary>Menu</summary>
           <div>
             <Link href="/salaries-and-jobs">Salaries & jobs</Link>
             <Link href="/business">For businesses</Link>
             <Link href="/paye-guide">Learn about PAYE</Link>
+            <Link href="/contributors">Earn ₦1,000</Link>
+            <Link href="/contact">Contact us</Link>
           </div>
         </details>
       </div>
@@ -36,20 +38,20 @@ export function InfoFooter() {
           <BrandMark />
           <BrandWordmark />
         </Link>
-        <p>Know what you earn, what you owe and what you keep.</p>
+        <p>Know what you earn,<br />what you owe and what you keep.</p>
       </div>
       <div className="footer-links">
         <nav aria-labelledby="footer-pay-tools">
           <h2 id="footer-pay-tools">Calculate</h2>
-          <Link href="/tax-tools">All calculators</Link>
-          <Link href="/#calculator">Employee PAYE</Link>
-          <Link href="/payslip-checker">Check payslip</Link>
+          <Link href="/#calculator">Take-home pay</Link>
+          <Link href="/payslip-checker">Check payslip PAYE</Link>
+          <Link href="/tax-tools">Other calculators</Link>
         </nav>
         <nav aria-labelledby="footer-jobs">
           <h2 id="footer-jobs">Salaries & jobs</h2>
           <Link href="/salaries">Salary benchmarks</Link>
           <Link href="/jobs">Jobs with salaries</Link>
-          <Link href="/account">Job workspace</Link>
+          <Link href="/contributors">Earn rewards</Link>
         </nav>
         <nav aria-labelledby="footer-salarysabi">
           <h2 id="footer-salarysabi">For businesses</h2>
@@ -60,12 +62,11 @@ export function InfoFooter() {
         <nav aria-labelledby="footer-learn">
           <h2 id="footer-learn">Learn & trust</h2>
           <Link href="/paye-guide">PAYE guide</Link>
-          <Link href="/tax-updates">Tax updates</Link>
-          <Link href="/privacy">Privacy</Link>
           <Link href="/about">About SalarySabi</Link>
+          <Link href="/contact">Contact us</Link>
         </nav>
       </div>
-      <p className="footer-legal-line"><span>© 2026 SalarySabi.</span><span><Link href="/terms">Terms</Link><Link href="/disclaimer">Disclaimer</Link><Link href="/security">Security</Link><Link href="/accessibility">Accessibility</Link></span></p>
+      <p className="footer-legal-line"><span>© 2026 SalarySabi.</span><span><Link href="/terms">Terms</Link><Link href="/privacy">Privacy</Link><Link href="/disclaimer">Disclaimer</Link><Link href="/security">Security</Link><Link href="/accessibility">Accessibility</Link></span></p>
     </footer>
   );
 }
@@ -94,9 +95,9 @@ export function InfoPage({
   contents,
   trail,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
-  intro: string;
+  intro?: string;
   children: ReactNode;
   contents?: { href: string; label: string }[];
   trail?: ReactNode;
@@ -106,9 +107,9 @@ export function InfoPage({
       {trail}
       <article className="info-page">
         <div className="info-hero">
-          <span className="eyebrow">{eyebrow}</span>
+          {eyebrow && <span className="eyebrow">{eyebrow}</span>}
           <h1>{title}</h1>
-          <p>{intro}</p>
+          {intro && <p>{intro}</p>}
         </div>
         {contents && contents.length > 0 && (
           <nav className="info-contents" aria-label="On this page">

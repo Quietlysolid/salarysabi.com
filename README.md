@@ -102,12 +102,13 @@ The production artifact must be built in an environment where the public
 Supabase values are present. Configure the Supabase Auth site URL as
 `https://salarysabi.com` and allow `https://salarysabi.com/account` as a redirect.
 
-Job alert delivery also requires a verified sending domain with Resend and two
-Supabase Edge Function secrets:
+Job alert delivery also requires a domain onboarded for Cloudflare Email Sending
+and the following Supabase Edge Function secrets:
 
 ```text
-RESEND_API_KEY=re_...
-JOB_ALERT_FROM=SalarySabi Jobs <jobs@YOUR_VERIFIED_DOMAIN>
+CLOUDFLARE_ACCOUNT_ID=your_cloudflare_account_id
+CLOUDFLARE_EMAIL_API_TOKEN=your_email_sending_api_token
+JOB_ALERT_FROM=SalarySabi Jobs <jobs@salarysabi.com>
 ```
 
 The database schedules the `send-job-alerts` Edge Function daily at 07:00 UTC.

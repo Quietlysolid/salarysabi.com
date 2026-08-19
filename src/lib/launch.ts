@@ -23,6 +23,10 @@ export const analyticsEvents = [
   "contributor_interest_viewed",
   "contributor_interest_submitted",
   "contributor_interest_succeeded",
+  "tax_update_signup_viewed",
+  "tax_update_signup_submitted",
+  "tax_update_signup_succeeded",
+  "paye_result_shared",
 ] as const;
 
 export type AnalyticsEvent = (typeof analyticsEvents)[number];

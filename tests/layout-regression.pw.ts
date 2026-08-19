@@ -263,7 +263,7 @@ test("pay context survives guidance and carries into the payslip checker", async
 
 test("populated job detail exposes source and account actions", async ({ page }) => {
   await page.goto("/jobs");
-  const href = await page.locator(".job-card").first().getByRole("link", { name: "View job" }).getAttribute("href");
+  const href = await page.locator(".job-card").first().getByRole("link", { name: "View details" }).getAttribute("href");
   expect(href).toBeTruthy();
   await page.goto(href!);
   await expect(page.locator(".job-detail h1")).toBeVisible();

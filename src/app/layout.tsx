@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
+import { Bricolage_Grotesque, Source_Sans_3 } from "next/font/google";
 import { Analytics } from "@/components/analytics";
-import { siteUrl } from "@/lib/site";
+import { founderGitHubUrl, founderLinkedInUrl, siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const sourceSans = Source_Sans_3({
@@ -10,11 +10,10 @@ const sourceSans = Source_Sans_3({
   display: "swap",
 });
 
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
+const bricolageGrotesque = Bricolage_Grotesque({
+  variable: "--font-bricolage-grotesque",
   subsets: ["latin"],
   display: "swap",
-  axes: ["opsz"],
 });
 
 export const metadata: Metadata = {
@@ -58,7 +57,7 @@ export default function RootLayout({
         name: "SalarySabi",
         url: siteUrl,
         logo: `${siteUrl}/favicon.svg`,
-        founder: { "@type": "Person", name: "Ozichi Nwosu" },
+        founder: { "@type": "Person", name: "Ozichi Nwosu", url: `${siteUrl}/about`, sameAs: [founderLinkedInUrl, founderGitHubUrl], jobTitle: "Software Engineer", alumniOf: { "@type": "CollegeOrUniversity", name: "University of Maryland Global Campus" } },
       },
       {
         "@type": "WebSite",
@@ -73,7 +72,7 @@ export default function RootLayout({
   };
 
   return (
-    <html className={`${sourceSans.variable} ${sourceSerif.variable}`} lang="en-NG" data-scroll-behavior="smooth">
+    <html className={`${sourceSans.variable} ${bricolageGrotesque.variable}`} lang="en-NG" data-scroll-behavior="smooth">
       <body>
         <a className="skip-link" href="#main-content">Skip to main content</a>
         <script

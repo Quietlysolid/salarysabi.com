@@ -8,12 +8,11 @@ export const metadata: Metadata = {
 };
 
 export default function AccessibilityPage() {
-  return <InfoPage eyebrow="Accessibility" title="Salary information should work for everybody." intro="SalarySabi should work across devices, input methods and assistive technologies. That is the standard we are working toward.">
-    <div className="legal-sections">
-      <section><h2>What we work toward</h2><p>We use semantic headings, labelled fields, keyboard-operable controls, visible focus styles, plain language, responsive layouts and status messages that do not rely on colour alone.</p></section>
-      <section><h2>Supported browsers</h2><p>SalarySabi is designed for current versions of Chrome, Edge, Firefox and Safari on desktop and mobile. Older browsers may not support every feature or visual detail.</p></section>
-      <section><h2>Known limitations</h2><p>SalarySabi has not yet completed an independent WCAG conformance audit or full testing across every screen reader and browser combination. Downloaded PDF and spreadsheet exports may provide less navigation structure than the website.</p><p>Interactive job and account features can also change as those tools develop. We will record confirmed accessibility issues and material fixes here.</p></section>
-      <section><h2>Report a problem</h2><p>Email <a href="mailto:hello@salarysabi.com?subject=Accessibility%20feedback">hello@salarysabi.com</a>. Tell us the page, what you were trying to do, your browser or assistive technology, and what went wrong. Do not include sensitive salary or identity information.</p></section>
+  return <InfoPage title="Accessibility" intro="SalarySabi is designed to work with keyboards, screen readers and different screen sizes.">
+    <div className="legal-sections accessibility-sections">
+      <section><h2>What we support</h2><p>Clear headings, labelled fields, visible focus states, keyboard controls, plain language and messages that do not rely on colour alone.</p></section>
+      <section><h2>Known limitations</h2><p>An independent WCAG audit has not yet been completed. Downloaded files may be less accessible than the website.</p></section>
+      <section><h2>Report a problem</h2><p>Email <a href="mailto:hello@salarysabi.com?subject=Accessibility%20feedback">hello@salarysabi.com</a> with the page, what you tried to do, and your browser or assistive technology. Do not include sensitive information.</p></section>
     </div>
   </InfoPage>;
 }

@@ -11,7 +11,7 @@ const jobsCacheKey = "salarysabi:jobs-cache:v1";
 
 function salaryAmount(job: Job, monthly = false) {
   const divisor = monthly && job.salary_period === "annual" ? 12 : 1;
-  const formatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+  const formatter = new Intl.NumberFormat(job.salary_currency === "NGN" ? "en-NG" : "en-US", { style: "currency", currency: job.salary_currency, maximumFractionDigits: 0 });
   const minimum = formatter.format(job.salary_min / divisor);
   const maximum = formatter.format(job.salary_max / divisor);
   return job.salary_min === job.salary_max ? minimum : `${minimum} to ${maximum}`;
@@ -62,6 +62,7 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
   }, [initialJobs, reloadKey]);
 
   const locations = useMemo(() => [...new Set(jobs.map((job) => job.location))].sort(), [jobs]);
+  const showDiscoveryControls = jobs.length > 1;
   const visible = useMemo(() => {
     const rows = jobs.filter((job) =>
       jobMatches(job, query, workMode) &&
@@ -89,8 +90,8 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
   }
 
   return (
-    <div className="jobs-results-layout">
-      <button
+    <div className={showDiscoveryControls?"jobs-results-layout":"jobs-results-layout jobs-results-layout--simple"}>
+      {showDiscoveryControls&&<button
         type="button"
         className="job-filter-toggle"
         aria-expanded={filtersOpen}
@@ -99,21 +100,21 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
       >
         {filtersOpen ? "Hide filters" : "Filter jobs"}
         <span aria-hidden="true">{filtersOpen ? "−" : "+"}</span>
-      </button>
-      <aside id="job-search-filters" className={filtersOpen ? "job-search is-open" : "job-search"} role="search" aria-label="Refine job results">
+      </button>}
+      {showDiscoveryControls&&<aside id="job-search-filters" className={filtersOpen ? "job-search is-open" : "job-search"} role="search" aria-label="Refine job results">
         <h2>Refine results</h2>
         <label><span>Search</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Job title, skill, company or location" /></label>
         <label><span>Location</span><select value={location} onChange={(event) => setLocation(event.target.value)}><option value="all">All locations</option>{locations.map((item) => <option key={item}>{item}</option>)}</select></label>
         <label><span>Work arrangement</span><select value={workMode} onChange={(event) => setWorkMode(event.target.value as "all" | WorkMode)}><option value="all">All arrangements</option><option value="remote">Remote</option><option value="hybrid">Hybrid</option><option value="onsite">On-site</option></select></label>
         <label><span>Salary currency</span><select value={currency} onChange={(event) => setCurrency(event.target.value as typeof currency)}><option value="all">All currencies</option><option value="NGN">NGN</option><option value="USD">USD</option><option value="GBP">GBP</option><option value="EUR">EUR</option></select></label>
         <button type="button" onClick={clearFilters}>Clear all</button>
-      </aside>
+      </aside>}
 
       <div className="job-results-column">
-        <div className="job-results-toolbar">
-          <p>{state === "loading" ? <strong>Loading listings</strong> : <><strong>{visible.length}</strong> {visible.length === 1 ? "job" : "jobs"} found</>}</p>
-          <label><span>Sort by</span><select disabled={state === "loading" || state === "error"} value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}><option value="closing">Closing date, earliest first</option><option value="newest">Newest first</option><option value="salary">Highest salary</option></select></label>
-        </div>
+        {(showDiscoveryControls||state==="loading")&&<div className="job-results-toolbar">
+          <p>{state === "loading" ? <strong>Loading jobs</strong> : <><strong>{visible.length}</strong> {visible.length === 1 ? "job" : "jobs"} available</>}</p>
+          {showDiscoveryControls&&<label><span>Sort by</span><select disabled={state === "loading" || state === "error"} value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}><option value="closing">Closing date, earliest first</option><option value="newest">Newest first</option><option value="salary">Highest salary</option></select></label>}
+        </div>}
 
         {state === "loading" && <ProductState kind="loading" title="Loading current jobs" detail="Your filters will remain available." />}
         {state === "error" && <ProductState kind="error" title="We could not load the jobs" detail="Your filters are still here. Retry now or check back shortly." action={<button type="button" onClick={() => { setState("loading"); setReloadKey((value) => value + 1); }}>Try again</button>} links={<><Link href="/account">Open job workspace</Link><Link href="/suggest-a-job">Share an existing job</Link></>} />}
@@ -123,19 +124,31 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
         <div className="job-list">
           {visible.map((job) => (
             <article className="job-card" key={job.id}>
-              <div className="job-list-salary">
-                <strong>{job.salary_currency} {salaryAmount(job)}</strong>
-                <span>per {job.salary_period === "annual" ? "year" : "month"}</span>
-                {job.salary_period === "annual" && <small>{job.salary_currency} {salaryAmount(job, true)} per month</small>}
+              <div className="job-list-role">
+                <h2><Link href={`/jobs/${job.slug}`}>{job.title}</Link></h2>
+                <p>{job.company_name}</p>
+                <small>{job.location}</small>
               </div>
-              <div className="job-list-role"><h2><Link href={`/jobs/${job.slug}`}>{job.title}</Link></h2><span>{job.company_name}</span><small>{job.location}</small></div>
-              <div className="job-list-mode"><span>{job.work_mode === "onsite" ? "On-site" : job.work_mode}</span><small>{job.employment_type}</small></div>
-              <div className={closesToday(job.expires_at) && job.deadline_status !== "unknown" ? "job-list-closing urgent" : "job-list-closing"}><strong>{closesToday(job.expires_at) && job.deadline_status !== "unknown" ? "Closes today" : jobDeadlineLabel(job)}</strong><small>Last checked {formatJobDate(job.source_verified_at)}</small></div>
-              <div className="job-list-actions"><Link href={`/jobs/${job.slug}`}>View job</Link><a href={job.application_url} target="_blank" rel="noopener noreferrer" onClick={() => track("job_apply_clicked")}>Official application <ExternalLinkIcon /><span className="sr-only"> (opens in a new tab)</span></a></div>
+              <div className="job-list-salary">
+                <span>Salary</span>
+                <strong>{salaryAmount(job)}</strong>
+                <small>{job.salary_period === "annual" ? "per year" : "per month"}</small>
+                {job.salary_period === "annual" && <small>{salaryAmount(job, true)} per month</small>}
+              </div>
+              <div className="job-list-facts">
+                <span>{job.work_mode === "onsite" ? "On-site" : job.work_mode[0].toUpperCase()+job.work_mode.slice(1)}</span>
+                <span>{job.employment_type}</span>
+              </div>
+              <div className={closesToday(job.expires_at) && job.deadline_status !== "unknown" ? "job-list-closing urgent" : "job-list-closing"}>
+                <strong>{job.employer_verified ? "Employer confirmed" : "Employer confirmation pending"}</strong>
+                <span>{closesToday(job.expires_at) && job.deadline_status !== "unknown" ? "Closes today" : jobDeadlineLabel(job)}</span>
+                <small>{job.source_name || "Listing source"} · Checked {formatJobDate(job.source_verified_at)}</small>
+              </div>
+              <div className={`job-list-actions ${job.employer_verified ? "is-verified" : "needs-review"}`}><Link href={`/jobs/${job.slug}`}>{job.employer_verified ? "View details" : "Review details first"}</Link><a href={job.application_url} target="_blank" rel="noopener noreferrer" onClick={() => track("job_apply_clicked")}>Apply on {job.source_name||"listing site"} <ExternalLinkIcon /><span className="sr-only"> (opens in a new tab)</span></a></div>
             </article>
           ))}
         </div>
-        {(state === "ready" || state === "cached") && visible.length > 0 && <p className="jobs-end-state">You have reached the end of the results.</p>}
+        {(state === "ready" || state === "cached") && visible.length > 1 && <p className="jobs-end-state">End of results.</p>}
       </div>
     </div>
   );

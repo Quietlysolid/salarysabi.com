@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, MouseEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { createBrowserSupabaseClient } from "@/lib/supabase";
 
@@ -13,19 +13,40 @@ export function SalaryBenchmarks(){
   const [busy,setBusy]=useState(false);
   const [step,setStep]=useState<1|2>(1);
   const [campaignId,setCampaignId]=useState("");
-  const [campaignReward,setCampaignReward]=useState(0);
+  const [rewardSessionReady,setRewardSessionReady]=useState(false);
+  const [rewardEmail,setRewardEmail]=useState("");
+  const [draft,setDraft]=useState({role:"",industry:"",location:""});
+  const [showUnpaidForm,setShowUnpaidForm]=useState(false);
+  const stepHeadingRef=useRef<HTMLSpanElement>(null);
   const supabase=useMemo(()=>createBrowserSupabaseClient(),[]);
   const endpoint=process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-  useEffect(()=>{if(!endpoint||!key)return; fetch(`${endpoint}/rest/v1/rpc/public_salary_benchmarks`,{method:"POST",headers:{apikey:key,Authorization:`Bearer ${key}`,"Content-Type":"application/json"},body:"{}"}).then(async r=>r.ok?await r.json() as Benchmark[]:[]).then(setBenchmarks).catch(()=>setBenchmarks([])); const requested=new URLSearchParams(window.location.search).get("campaign")||""; if(requested){supabase.rpc("public_active_contribution_campaigns").then(({data})=>{const campaign=(data??[]).find((item:{id:string;contribution_type:string})=>item.id===requested&&item.contribution_type==="salary_report"); if(campaign){setCampaignId(campaign.id);setCampaignReward(Number(campaign.reward_kobo));}});}},[endpoint,key,supabase]);
+  useEffect(()=>{if(!endpoint||!key)return; fetch(`${endpoint}/rest/v1/rpc/public_salary_benchmarks`,{method:"POST",headers:{apikey:key,Authorization:`Bearer ${key}`,"Content-Type":"application/json"},body:"{}"}).then(async r=>r.ok?await r.json() as Benchmark[]:[]).then(setBenchmarks).catch(()=>setBenchmarks([])); const requested=new URLSearchParams(window.location.search).get("campaign")||""; if(requested){supabase.rpc("public_active_contribution_campaigns").then(({data})=>{const campaign=(data??[]).find((item:{id:string;slug:string;contribution_type:string})=>item.slug===requested&&item.contribution_type==="salary_report"); if(campaign){setCampaignId(campaign.id);}});supabase.auth.getSession().then(({data})=>setRewardSessionReady(Boolean(data.session)));const {data:listener}=supabase.auth.onAuthStateChange((_event,session)=>setRewardSessionReady(Boolean(session)));return()=>listener.subscription.unsubscribe();}},[endpoint,key,supabase]);
+
+  useEffect(()=>{if(showUnpaidForm)requestAnimationFrame(()=>stepHeadingRef.current?.focus());},[showUnpaidForm]);
+
+  async function sendRewardSignIn(){
+    if(!rewardEmail.trim()){setMessage("Enter your email to receive a secure sign-in link.");return;}
+    const {error}=await supabase.auth.signInWithOtp({email:rewardEmail.trim().toLowerCase(),options:{emailRedirectTo:`${window.location.origin}/salaries?campaign=salary-pilot-2026#salary-report`}});
+    setMessage(error?"We could not send the sign-in link. Try again.":"Check your email for a secure sign-in link, then return to submit your report.");
+  }
 
   function continueToPay(event: MouseEvent<HTMLButtonElement>){
+    event.preventDefault();
     const fields=event.currentTarget.form?.querySelectorAll<HTMLInputElement>(".benchmark-form-step.active input");
     const invalid=fields ? Array.from(fields).find((field)=>!field.checkValidity()) : undefined;
     if(invalid){invalid.reportValidity();return;}
+    const form=event.currentTarget.form;
+    if(form){
+      const data=new FormData(form);
+      setDraft({role:String(data.get("role")||""),industry:String(data.get("industry")||""),location:String(data.get("location")||"")});
+    }
     setStep(2);
+    stepHeadingRef.current?.focus();
   }
+
+  function returnToJobDetails(){setStep(1);stepHeadingRef.current?.focus();}
 
   async function submit(event:FormEvent<HTMLFormElement>){
     event.preventDefault();
@@ -43,24 +64,33 @@ export function SalaryBenchmarks(){
     else setMessage("We could not save that report. Check the fields and try again.");
   }
 
+  const showForm=showUnpaidForm||Boolean(campaignId);
+
   return <main className="salary-benchmark">
-    <header><span className="eyebrow">Anonymous salary reports</span><h1>Know what people doing similar work earn.</h1><p>SalarySabi publishes ranges, never individual submissions. A group needs at least five approved reports before it appears.</p></header>
+    <header><h1>Compare salaries</h1></header>
     {benchmarks.length > 0 && <aside className="benchmark-launch-status"><strong>{benchmarks.length}</strong><span>{benchmarks.length === 1 ? "public benchmark group" : "public benchmark groups"} available</span></aside>}
-    <div className="benchmark-layout">
-      <section><div className="benchmark-section-heading"><h2>Current benchmarks</h2><span>Real approved reports only</span></div>{benchmarks.length?<div className="benchmark-list">{benchmarks.map(item=><article key={`${item.role}-${item.industry}-${item.location}-${item.experience_band}`}><span>{item.role} · {item.location}</span><strong>{money.format(item.median_monthly_gross)} monthly</strong><p>{money.format(item.low_monthly_gross)}–{money.format(item.high_monthly_gross)} middle range</p><small>{item.industry} · {item.experience_band} years · {item.sample_size} reports</small></article>)}</div>:<div className="benchmark-empty"><strong>No group has reached the five-report privacy threshold yet.</strong><p>We will not invent salary figures or expose early contributors. Once five similar approved reports arrive, this area will show the median, middle range and sample size.</p><div className="benchmark-preview" aria-label="Example of the benchmark format"><span>Example format—not salary data</span><b>Role · Location</b><small>Median pay · Middle range · Number of reports</small></div></div>}</section>
-      <form onSubmit={submit}>
-        {campaignId&&<aside className="reward-campaign-note"><strong>Contributor campaign · {money.format(campaignReward/100)} after approval</strong><span>Your salary amount does not affect the reward. <Link href="/contributors">View programme rules</Link></span></aside>}
-        <div className="benchmark-form-heading"><div><span className="eyebrow">Step {step} of 2</span><h2>Share your salary anonymously</h2></div><small>No name, employer or email</small></div>
-        <p>Your report helps unlock a private group benchmark. You will be able to return and compare it once enough similar reports are approved.</p>
+    <div className={benchmarks.length?"benchmark-layout":"benchmark-layout benchmark-layout--empty"}>
+      <section>{benchmarks.length?<><div className="benchmark-section-heading"><span>Approved reports only</span></div><div className="benchmark-list">{benchmarks.map(item=><article key={`${item.role}-${item.industry}-${item.location}-${item.experience_band}`}><span>{item.role} · {item.location}</span><strong>{money.format(item.median_monthly_gross)} monthly</strong><p>{money.format(item.low_monthly_gross)}–{money.format(item.high_monthly_gross)} typical range</p><small>{item.industry} · {item.experience_band} years · Based on {item.sample_size} reports</small></article>)}</div></>:<div className="benchmark-empty"><strong>No public comparisons yet.</strong><p>A range appears after five similar reports are approved.</p><small>More reports are needed. Counts stay private until the threshold is reached.</small></div>}</section>
+      {!showForm&&<section className="benchmark-contribution-choice"><h2>Share your salary</h2><div><Link href="/contributors">Earn ₦1,000</Link><button onClick={()=>setShowUnpaidForm(true)} type="button">Share without a reward</button></div></section>}
+      {showForm&&<form id="salary-report" onSubmit={submit}>
+        {campaignId&&<aside className="reward-campaign-note"><strong>Earn ₦1,000 after approval</strong><span>One reward per person. <Link href="/contributors">View eligibility rules</Link></span>{!rewardSessionReady&&<div className="reward-signin"><label>Email for reward access<input autoComplete="email" onChange={event=>setRewardEmail(event.target.value)} placeholder="you@example.com" type="email" value={rewardEmail} /></label><button onClick={sendRewardSignIn} type="button">Continue by email</button></div>}</aside>}
+        {(!campaignId||rewardSessionReady)&&<>
+        <div className="benchmark-form-heading"><div><span className="eyebrow" ref={stepHeadingRef} tabIndex={-1}>Step {step} of 2</span></div></div>
+        {step===2&&<p>Check your job details, then add your pay.</p>}
         <div className={step===1?"benchmark-form-step active":"benchmark-form-step"} aria-hidden={step!==1}>
-          <label>Role<input name="role" minLength={2} maxLength={80} required /></label><label>Industry<input name="industry" minLength={2} maxLength={80} required /></label><label>Location<input name="location" minLength={2} maxLength={80} required /></label>
+          <label>Job title<input autoComplete="organization-title" list="salary-role-options" name="role" placeholder="e.g. Product Designer" minLength={2} maxLength={80} required /></label><label>Industry<input list="salary-industry-options" name="industry" placeholder="e.g. Technology" minLength={2} maxLength={80} required /></label><label>Work location<input autoComplete="address-level2" list="salary-location-options" name="location" placeholder="e.g. Lagos" minLength={2} maxLength={80} required /></label>
+          <datalist id="salary-role-options"><option value="Accountant"/><option value="Customer Support Specialist"/><option value="Data Analyst"/><option value="Product Designer"/><option value="Software Engineer"/></datalist>
+          <datalist id="salary-industry-options"><option value="Banking and Finance"/><option value="Education"/><option value="Healthcare"/><option value="Retail"/><option value="Technology"/></datalist>
+          <datalist id="salary-location-options"><option value="Abuja"/><option value="Lagos"/><option value="Port Harcourt"/><option value="Remote in Nigeria"/></datalist>
         </div>
         <div className={step===2?"benchmark-form-step active":"benchmark-form-step"} aria-hidden={step!==2}>
-          <label>Experience<select name="experience" required><option value="0-2">0–2 years</option><option value="3-5">3–5 years</option><option value="6-9">6–9 years</option><option value="10+">10+ years</option></select></label><label>Company size<select name="size" required><option value="1-10">1–10</option><option value="11-50">11–50</option><option value="51-200">51–200</option><option value="201+">201+</option></select></label><label>Monthly gross salary<input name="gross" type="number" min="1000" max="100000000" required /></label><label>Pay reliability<select name="reliability" required><option value="on-time">Usually on time</option><option value="sometimes-late">Sometimes late</option><option value="frequently-late">Frequently late</option></select></label>
+          <div className="benchmark-draft-summary"><span>Your job details</span><strong>{draft.role}</strong><small>{draft.industry} · {draft.location}</small><button onClick={returnToJobDetails} type="button">Edit</button></div>
+          <label>Years of experience<select name="experience" required><option value="0-2">0–2 years</option><option value="3-5">3–5 years</option><option value="6-9">6–9 years</option><option value="10+">10+ years</option></select></label><label>Company size<select name="size" required><option value="1-10">1–10 people</option><option value="11-50">11–50 people</option><option value="51-200">51–200 people</option><option value="201+">201+ people</option></select></label><label>Monthly salary before tax and deductions<div className="benchmark-money-input"><span aria-hidden="true">₦</span><input inputMode="numeric" name="gross" type="number" min="1000" max="100000000" placeholder="e.g. 500,000" required /></div></label><label>Are you usually paid on time?<select name="reliability" required><option value="on-time">Yes, usually on time</option><option value="sometimes-late">Sometimes late</option><option value="frequently-late">Often late</option></select></label>
         </div>
-        <div className="benchmark-form-actions">{step===2&&<button className="secondary-button" onClick={()=>setStep(1)} type="button">Back</button>}{step===1?<button className="primary-button" onClick={continueToPay} type="button">Continue</button>:<button className="primary-button" disabled={busy} type="submit">{busy?"Submitting…":"Submit anonymous report"}</button>}</div>
-        <p className="benchmark-privacy-note">Reports are moderated and only published as grouped statistics. Do not enter identifying information.</p><p role="status">{message}</p>
-      </form>
+        <div className="benchmark-form-actions">{step===2&&<button className="secondary-button" onClick={returnToJobDetails} type="button">Back</button>}{step===1?<button className="primary-button" onClick={continueToPay} type="button">Continue</button>:<button className="primary-button" disabled={busy} type="submit">{busy?"Submitting…":"Submit anonymous report"}</button>}</div>
+        {step===2&&<p className="benchmark-privacy-note">Never enter your name or employer. We publish only grouped results.</p>}
+        </>}<p role="status">{message}</p>
+      </form>}
     </div>
   </main>;
 }
