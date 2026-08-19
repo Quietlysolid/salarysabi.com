@@ -1,6 +1,7 @@
 export const analyticsEvents = [
   "page_view",
   "paye_calculated",
+  "payslip_checked",
   "pdf_exported",
   "excel_exported",
   "print_opened",
@@ -12,6 +13,20 @@ export const analyticsEvents = [
   "payroll_signup_viewed",
   "payroll_signup_submitted",
   "payroll_signup_succeeded",
+  "job_apply_clicked",
+  "job_submission_started",
+  "job_submission_succeeded",
+  "job_alert_created",
+  "account_signup_started",
+  "account_signup_succeeded",
+  "account_signin_succeeded",
+  "contributor_interest_viewed",
+  "contributor_interest_submitted",
+  "contributor_interest_succeeded",
+  "tax_update_signup_viewed",
+  "tax_update_signup_submitted",
+  "tax_update_signup_succeeded",
+  "paye_result_shared",
 ] as const;
 
 export type AnalyticsEvent = (typeof analyticsEvents)[number];

@@ -1,4 +1,5 @@
 import type { PayeInputs, PayeResult } from "./paye";
+import { rulesetName, rulesetVersion } from "./site";
 
 const formatNumber = (value: number) =>
   new Intl.NumberFormat("en-NG", {
@@ -28,7 +29,8 @@ function exportRows(inputs: PayeInputs, result: PayeResult) {
   return [
     ["SalarySabi PAYE Calculation", ""],
     ["Calculation date", today()],
-    ["Ruleset", "Nigeria Tax Act 2025 / JRB PIT Guidelines 2026"],
+    ["Ruleset version", rulesetVersion],
+    ["Ruleset source", rulesetName],
     ["", ""],
     ["Inputs", "Amount (NGN)"],
     ["Total annual emolument", result.annualGrossIncome],
@@ -136,7 +138,7 @@ export async function downloadPdf(inputs: PayeInputs, result: PayeResult) {
   doc.text("SalarySabi PAYE Calculation", left, 18);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.text(`Generated ${today()} | 2026 rules`, left, 27);
+  doc.text(`Generated ${today()} | Ruleset ${rulesetVersion}`, left, 27);
 
   y = 51;
   doc.setFontSize(12);
@@ -208,7 +210,7 @@ export async function downloadPdf(inputs: PayeInputs, result: PayeResult) {
   doc.setFontSize(8);
   doc.setTextColor(95, 105, 100);
   const disclaimer =
-    "Estimate based on the Nigeria Tax Act 2025 and JRB Personal Income Tax Guidelines 2026. This document is not tax advice or proof of remittance.";
+    `Ruleset ${rulesetVersion}. Estimate based on the ${rulesetName}. This document is not tax advice or proof of remittance.`;
   doc.text(doc.splitTextToSize(disclaimer, 174), left, y);
 
   doc.save(`salarysabi-paye-calculation-${new Date().toISOString().slice(0, 10)}.pdf`);

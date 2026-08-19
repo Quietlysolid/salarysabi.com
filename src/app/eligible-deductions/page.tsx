@@ -1,69 +1,38 @@
 import type { Metadata } from "next";
-import { InfoPage } from "@/components/info-page";
+import Link from "next/link";
+import { ArticleStructuredData } from "@/components/article-structured-data";
+import { PublicPageShell } from "@/components/info-page";
+import { PayeGuideTrail } from "@/components/paye-guide-trail";
 
 export const metadata: Metadata = {
   title: "Nigeria PAYE Eligible Deductions 2026",
-  description:
-    "Understand pension, NHF, NHIS, mortgage interest, life assurance and rent relief when estimating Nigerian PAYE in 2026.",
+  description: "See which confirmed amounts belong in a Nigerian PAYE estimate.",
   alternates: { canonical: "/eligible-deductions" },
 };
 
 const deductions = [
-  {
-    title: "Pension: money saved for your retirement",
-    text: "Look for “Pension” on your payslip or PFA statement. Enter the amount deducted from your salary, not the total balance in your retirement account. For example, ₦40,000 monthly equals ₦480,000 yearly.",
-  },
-  {
-    title: "NHF: a housing-fund deduction",
-    text: "Look for “NHF” on your payslip. Enter the amount actually deducted. If your payslip does not show NHF, leave it at ₦0.",
-  },
-  {
-    title: "NHIS or NHIA: national health insurance",
-    text: "Enter the eligible health-insurance contribution shown on your payslip. An ordinary private HMO payment may not qualify, so check with payroll if you are unsure.",
-  },
-  {
-    title: "Mortgage interest: interest on your main home",
-    text: "Enter only the interest charged on a qualifying mortgage for the home you live in. Do not enter the full mortgage payment, the amount repaid on the loan, rent or a mortgage for an investment property.",
-  },
-  {
-    title: "Life assurance: cover for you or your spouse",
-    text: "Enter qualifying premiums shown on your insurer’s receipt or statement. Do not include car, travel or ordinary health insurance.",
-  },
-  {
-    title: "Rent relief: part of your home rent",
-    text: "Enter the rent paid for your home and SalarySabi calculates 20%, up to ₦500,000 yearly. For example, ₦1,200,000 annual rent gives ₦240,000 relief. This reduces taxable income; it is not a cash refund.",
-  },
-];
+  ["Pension", "Payslip or PFA statement", "Amount deducted from your salary", "Not your pension balance"],
+  ["National Housing Fund (NHF)", "Payslip", "NHF amount actually deducted", "Leave at ₦0 if it is not shown"],
+  ["NHIS or NHIA", "Payslip or payroll record", "Eligible health-insurance contribution", "Not an ordinary private HMO payment"],
+  ["Mortgage interest", "Lender statement", "Interest on a qualifying mortgage for your home", "Not the full mortgage payment"],
+  ["Life assurance", "Insurer statement", "Qualifying premium for you or your spouse", "Not car, travel or health insurance"],
+  ["Home rent", "Rent receipt or tenancy record", "Rent you actually pay for your home", "SalarySabi calculates the relief"],
+] as const;
 
 export default function DeductionsPage() {
-  return (
-    <InfoPage
-      eyebrow="Before tax bands"
-      title="Eligible PAYE deductions explained"
-      intro="You do not need to know tax language. Use amounts shown on your payslip, PFA statement, lender statement or receipt. If an item does not apply to you, leave it at ₦0."
-    >
-      <section>
-        <h2>What you can enter</h2>
-        <div className="deduction-list">
-          {deductions.map((deduction, index) => (
-            <article key={deduction.title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <h3>{deduction.title}</h3>
-                <p>{deduction.text}</p>
-              </div>
-            </article>
-          ))}
+  return <PublicPageShell>
+    <ArticleStructuredData headline="Nigeria PAYE Eligible Deductions 2026" description="See which confirmed amounts belong in a Nigerian PAYE estimate." path="/eligible-deductions" about={["PAYE deductions", "Pension", "Rent relief"]} />
+    <PayeGuideTrail current="deductions" />
+    <article className="deductions-guide-page simple-guide">
+      <header className="simple-guide-hero"><span className="eyebrow">Eligible deductions</span><h1>What can reduce your PAYE?</h1><p>Use only amounts you can confirm. Leave anything else at ₦0.</p></header>
+      <section className="simple-guide-section" aria-labelledby="deduction-list-title">
+        <h2 id="deduction-list-title">Check each amount</h2>
+        <div className="simple-deduction-list">
+          {deductions.map(([name, source, enter, avoid]) => <article key={name}><div><h3>{name}</h3><small>Find it on: {source}</small></div><p><strong>Enter:</strong> {enter}</p><p><strong>Do not enter:</strong> {avoid}</p></article>)}
         </div>
       </section>
-      <aside className="callout">
-        <strong>Use amounts you can confirm.</strong>
-        <p>
-          Keep the payslip, statement or receipt supporting each amount.
-          SalarySabi provides an estimate; your employer or tax adviser can
-          confirm whether a deduction applies to your situation.
-        </p>
-      </aside>
-    </InfoPage>
-  );
+      <aside className="simple-guide-note"><strong>Keep your records.</strong><span>Keep the payslip, statement or receipt supporting every amount.</span></aside>
+      <div className="simple-guide-actions"><Link className="primary-button" href="/?restore=deduction#calculator">Back to my calculation</Link><Link href="/how-paye-is-calculated">How PAYE is calculated</Link></div>
+    </article>
+  </PublicPageShell>;
 }

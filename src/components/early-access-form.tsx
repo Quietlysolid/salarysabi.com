@@ -5,7 +5,7 @@ import { track } from "@/components/analytics";
 import type { AnalyticsEvent } from "@/lib/launch";
 
 type FormState = "idle" | "submitting" | "success" | "error";
-type SignupSource = "payslip_checker" | "employer_payroll";
+type SignupSource = "payslip_checker" | "employer_payroll" | "contributor_program" | "tax_updates";
 
 const eventNames: Record<
   SignupSource,
@@ -21,6 +21,16 @@ const eventNames: Record<
     submitted: "payroll_signup_submitted",
     succeeded: "payroll_signup_succeeded",
   },
+  contributor_program: {
+    viewed: "contributor_interest_viewed",
+    submitted: "contributor_interest_submitted",
+    succeeded: "contributor_interest_succeeded",
+  },
+  tax_updates: {
+    viewed: "tax_update_signup_viewed",
+    submitted: "tax_update_signup_submitted",
+    succeeded: "tax_update_signup_succeeded",
+  },
 };
 
 export function EarlyAccessForm({
@@ -30,6 +40,8 @@ export function EarlyAccessForm({
   placeholder,
   buttonText = "Join the list",
   successMessage,
+  consentText = "I agree to receive one early-access email.",
+  consentHelp = "No spam. Unsubscribe anytime.",
 }: {
   source: SignupSource;
   idPrefix: string;
@@ -37,6 +49,8 @@ export function EarlyAccessForm({
   placeholder: string;
   buttonText?: string;
   successMessage: string;
+  consentText?: string;
+  consentHelp?: string;
 }) {
   const startedAt = useRef(0);
   const formRef = useRef<HTMLFormElement>(null);
@@ -140,8 +154,8 @@ export function EarlyAccessForm({
       <label className="consent-row">
         <input name="consent" type="checkbox" required />
         <span className="consent-copy">
-          <span>I agree to receive one early-access email.</span>
-          <small>No spam. Unsubscribe anytime.</small>
+          <span>{consentText}</span>
+          <small>{consentHelp}</small>
         </span>
       </label>
       <label className="honeypot" aria-hidden="true">

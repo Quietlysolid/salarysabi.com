@@ -1,23 +1,31 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { lastVerified } from "@/lib/site";
+import { BrandMark } from "@/components/brand-mark";
+import { BrandWordmark } from "@/components/brand-wordmark";
+import { SiteNavigation } from "@/components/site-navigation";
 
 export function InfoHeader() {
   return (
     <header className="site-header info-header">
-      <Link className="brand" href="/">
-        <span className="brand-mark">§</span>
-        <span>
-          Salary<span className="brand-accent">Sabi</span>
-        </span>
+      <Link aria-label="SalarySabi home" className="brand" href="/">
+        <BrandMark />
+        <BrandWordmark />
       </Link>
-      <nav aria-label="Information navigation">
-        <Link href="/how-paye-is-calculated">Methodology</Link>
-        <Link href="/eligible-deductions">Deductions</Link>
-        <Link className="nav-cta" href="/#calculator">
-          Open calculator
-        </Link>
-      </nav>
+      <SiteNavigation />
+      <div className="mobile-nav">
+        <Link href="/#calculator">Take-home pay</Link>
+        <Link href="/payslip-checker">Check PAYE</Link>
+        <details>
+          <summary>Menu</summary>
+          <div>
+            <Link href="/salaries-and-jobs">Salaries & jobs</Link>
+            <Link href="/business">For businesses</Link>
+            <Link href="/paye-guide">Learn about PAYE</Link>
+            <Link href="/contributors">Earn ₦1,000</Link>
+            <Link href="/contact">Contact us</Link>
+          </div>
+        </details>
+      </div>
     </header>
   );
 }
@@ -25,25 +33,57 @@ export function InfoHeader() {
 export function InfoFooter() {
   return (
     <footer className="info-footer">
-      <Link className="brand footer-brand" href="/">
-        <span className="brand-mark">§</span>
-        <span>
-          Salary<span className="brand-accent">Sabi</span>
-        </span>
-      </Link>
-      <div className="footer-links">
-        <Link href="/privacy">Privacy</Link>
-        <Link href="/disclaimer">Disclaimer</Link>
-        <a
-          href="https://www.jrb.gov.ng/assets/2026-pit-guidelines-TJG3n9-T.pdf"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Official JRB guidance ↗
-        </a>
+      <div className="footer-identity">
+        <Link aria-label="SalarySabi home" className="brand footer-brand" href="/">
+          <BrandMark />
+          <BrandWordmark />
+        </Link>
+        <p>Know what you earn,<br />what you owe and what you keep.</p>
       </div>
-      <span>Calculation rules last verified {lastVerified}</span>
+      <div className="footer-links">
+        <nav aria-labelledby="footer-pay-tools">
+          <h2 id="footer-pay-tools">Calculate</h2>
+          <Link href="/#calculator">Take-home pay</Link>
+          <Link href="/payslip-checker">Check payslip PAYE</Link>
+          <Link href="/tax-tools">Other calculators</Link>
+        </nav>
+        <nav aria-labelledby="footer-jobs">
+          <h2 id="footer-jobs">Salaries & jobs</h2>
+          <Link href="/salaries">Salary benchmarks</Link>
+          <Link href="/jobs">Jobs with salaries</Link>
+          <Link href="/contributors">Earn rewards</Link>
+        </nav>
+        <nav aria-labelledby="footer-salarysabi">
+          <h2 id="footer-salarysabi">For businesses</h2>
+          <Link href="/payroll">Small-team payroll</Link>
+          <Link href="/company-tax">Company tax</Link>
+          <Link href="/post-a-job">Post a job</Link>
+        </nav>
+        <nav aria-labelledby="footer-learn">
+          <h2 id="footer-learn">Learn & trust</h2>
+          <Link href="/paye-guide">PAYE guide</Link>
+          <Link href="/about">About SalarySabi</Link>
+          <Link href="/contact">Contact us</Link>
+        </nav>
+      </div>
+      <p className="footer-legal-line"><span>© 2026 SalarySabi.</span><span><Link href="/terms">Terms</Link><Link href="/privacy">Privacy</Link><Link href="/disclaimer">Disclaimer</Link><Link href="/security">Security</Link><Link href="/accessibility">Accessibility</Link></span></p>
     </footer>
+  );
+}
+
+export function PublicPageShell({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <main className={className}>
+      <InfoHeader />
+      {children}
+      <InfoFooter />
+    </main>
   );
 }
 
@@ -52,28 +92,40 @@ export function InfoPage({
   title,
   intro,
   children,
+  contents,
+  trail,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
-  intro: string;
+  intro?: string;
   children: ReactNode;
+  contents?: { href: string; label: string }[];
+  trail?: ReactNode;
 }) {
   return (
-    <main>
-      <InfoHeader />
+    <PublicPageShell>
+      {trail}
       <article className="info-page">
         <div className="info-hero">
-          <span className="eyebrow">{eyebrow}</span>
+          {eyebrow && <span className="eyebrow">{eyebrow}</span>}
           <h1>{title}</h1>
-          <p>{intro}</p>
-          <div className="verified-note">
-            <span>✓</span>
-            Rules last verified {lastVerified}
-          </div>
+          {intro && <p>{intro}</p>}
         </div>
+        {contents && contents.length > 0 && (
+          <nav className="info-contents" aria-label="On this page">
+            <strong>On this page</strong>
+            <div>
+              {contents.map((item, index) => (
+                <a href={item.href} key={item.href}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </nav>
+        )}
         <div className="prose">{children}</div>
       </article>
-      <InfoFooter />
-    </main>
+    </PublicPageShell>
   );
 }

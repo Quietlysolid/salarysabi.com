@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { Bricolage_Grotesque, Source_Sans_3 } from "next/font/google";
 import { Analytics } from "@/components/analytics";
-import { siteUrl } from "@/lib/site";
+import { founderGitHubUrl, founderLinkedInUrl, siteUrl } from "@/lib/site";
 import "./globals.css";
 
-const bodyFont = DM_Sans({
-  variable: "--font-body",
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const bricolageGrotesque = Bricolage_Grotesque({
+  variable: "--font-bricolage-grotesque",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -20,7 +27,7 @@ export const metadata: Metadata = {
     "gross to net salary Nigeria",
     "PAYE tax calculator Nigeria",
   ],
-  alternates: { canonical: "/" },
+  icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
     locale: "en_NG",
@@ -41,11 +48,39 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const siteIdentity = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`,
+        name: "SalarySabi",
+        url: siteUrl,
+        logo: `${siteUrl}/favicon.svg`,
+        founder: { "@type": "Person", name: "Ozichi Nwosu", url: `${siteUrl}/about`, sameAs: [founderLinkedInUrl, founderGitHubUrl], jobTitle: "Software Engineer", alumniOf: { "@type": "CollegeOrUniversity", name: "University of Maryland Global Campus" } },
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        url: siteUrl,
+        name: "SalarySabi",
+        alternateName: "Salary Sabi",
+        publisher: { "@id": `${siteUrl}/#organization` },
+        inLanguage: "en-NG",
+      },
+    ],
+  };
+
   return (
-    <html lang="en">
-      <body className={bodyFont.variable}>
+    <html className={`${sourceSans.variable} ${bricolageGrotesque.variable}`} lang="en-NG" data-scroll-behavior="smooth">
+      <body>
+        <a className="skip-link" href="#main-content">Skip to main content</a>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteIdentity) }}
+        />
         <Analytics />
-        {children}
+        <div id="main-content" tabIndex={-1}>{children}</div>
       </body>
     </html>
   );

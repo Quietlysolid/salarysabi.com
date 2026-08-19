@@ -28,6 +28,12 @@ export type PayeResult = {
   bands: TaxBandResult[];
 };
 
+export type LegacyPayeResult = {
+  annualTax: number;
+  monthlyTax: number;
+  differenceFrom2026: number;
+};
+
 const TAX_BANDS = [
   { label: "First ₦800,000", width: 800_000, rate: 0 },
   { label: "Next ₦2,200,000", width: 2_200_000, rate: 0.15 },
@@ -36,6 +42,11 @@ const TAX_BANDS = [
   { label: "Next ₦25,000,000", width: 25_000_000, rate: 0.23 },
   { label: "Above ₦50,000,000", width: Number.POSITIVE_INFINITY, rate: 0.25 },
 ] as const;
+
+// National Minimum Wage (Amendment) Act 2024: ₦70,000 per month.
+// Nigeria Tax Act 2025, s. 163(1)(t), exempts employment income where gross
+// income is no more than the national minimum wage.
+export const ANNUAL_NATIONAL_MINIMUM_WAGE = 70_000 * 12;
 
 const asMoney = (value: number | undefined) =>
   Number.isFinite(value) && (value ?? 0) > 0 ? value ?? 0 : 0;
@@ -62,7 +73,10 @@ export function calculatePaye(inputs: PayeInputs): PayeResult {
     remaining = Math.max(0, remaining - taxableAmount);
     return { ...band, taxableAmount, tax };
   });
-  const annualTax = bands.reduce((total, band) => total + band.tax, 0);
+  const annualTax =
+    annualGrossIncome <= ANNUAL_NATIONAL_MINIMUM_WAGE
+      ? 0
+      : bands.reduce((total, band) => total + band.tax, 0);
 
   return {
     annualGrossIncome,
@@ -77,4 +91,29 @@ export function calculatePaye(inputs: PayeInputs): PayeResult {
     monthlyIncomeAfterTax: (annualGrossIncome - annualTax) / 12,
     bands,
   };
+}
+
+// Planning comparison using the Personal Income Tax Act rules that applied
+// before 1 January 2026: CRA, the former graduated bands and minimum tax.
+export function calculateLegacyPaye(inputs: PayeInputs): LegacyPayeResult {
+  const gross = asMoney(inputs.annualGrossIncome);
+  if (!gross) return { annualTax: 0, monthlyTax: 0, differenceFrom2026: 0 };
+  const pension = asMoney(inputs.pensionContribution);
+  const nhf = asMoney(inputs.nhfContribution);
+  const nhis = asMoney(inputs.nhisContribution);
+  const life = asMoney(inputs.lifeInsurancePremium);
+  const cra = Math.max(200_000, gross * 0.01) + gross * 0.2;
+  let remaining = Math.max(0, gross - pension - nhf - nhis - life - cra);
+  const formerBands = [
+    [300_000, 0.07], [300_000, 0.11], [500_000, 0.15],
+    [500_000, 0.19], [1_600_000, 0.21], [Number.POSITIVE_INFINITY, 0.24],
+  ] as const;
+  const graduated = formerBands.reduce((tax, [width, rate]) => {
+    const amount = Math.min(remaining, width);
+    remaining = Math.max(0, remaining - amount);
+    return tax + amount * rate;
+  }, 0);
+  const annualTax = Math.max(graduated, gross * 0.01);
+  const current = calculatePaye(inputs).annualTax;
+  return { annualTax, monthlyTax: annualTax / 12, differenceFrom2026: annualTax - current };
 }

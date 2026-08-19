@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculatePaye } from "./paye";
+import { ANNUAL_NATIONAL_MINIMUM_WAGE, calculatePaye } from "./paye";
 
 describe("calculatePaye", () => {
   it("matches the official JRB ₦2.4m no-deduction example", () => {
@@ -12,6 +12,21 @@ describe("calculatePaye", () => {
   it("charges no tax when chargeable income is within the zero band", () => {
     const result = calculatePaye({ annualGrossIncome: 800_000 });
     expect(result.annualTax).toBe(0);
+  });
+
+  it("exempts employment income at the national minimum wage", () => {
+    const result = calculatePaye({
+      annualGrossIncome: ANNUAL_NATIONAL_MINIMUM_WAGE,
+    });
+    expect(result.annualTax).toBe(0);
+    expect(result.monthlyTax).toBe(0);
+  });
+
+  it("applies the tax bands when gross income exceeds the minimum wage", () => {
+    const result = calculatePaye({
+      annualGrossIncome: ANNUAL_NATIONAL_MINIMUM_WAGE + 1,
+    });
+    expect(result.annualTax).toBeCloseTo(6_000.15);
   });
 
   it("applies the 15% band after the first ₦800,000", () => {

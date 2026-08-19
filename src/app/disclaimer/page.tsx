@@ -1,50 +1,37 @@
 import type { Metadata } from "next";
-import { InfoPage } from "@/components/info-page";
+import Link from "next/link";
+import { PublicPageShell } from "@/components/info-page";
 
 export const metadata: Metadata = {
   title: "Tax Calculator Disclaimer",
-  description:
-    "Important limitations of SalarySabi estimates and exported calculations.",
+  description: "Important limitations and guidance for SalarySabi PAYE calculator estimates.",
   alternates: { canonical: "/disclaimer" },
+  robots: { index: true, follow: true },
 };
+
+const essentials = [
+  "Check your entries before relying on a result.",
+  "Confirm filing and remittance obligations with a qualified professional.",
+  "Downloads are personal records, not tax returns or tax-clearance certificates.",
+  "Estimates use SalarySabi's 2026 calculation rules.",
+];
 
 export default function DisclaimerPage() {
   return (
-    <InfoPage
-      eyebrow="Important"
-      title="Calculator estimates are not tax advice"
-      intro="SalarySabi is an independent educational tool. It is not operated, endorsed or certified by the Joint Revenue Board or a state revenue authority."
-    >
-      <section>
-        <h2>Confirm your obligations</h2>
-        <p>
-          Results depend on the completeness and accuracy of the amounts
-          entered. Benefits in kind, non-periodic payments, tax credits,
-          residency, changes during the year and other circumstances may
-          change the final liability.
-        </p>
-        <p>
-          Employers and taxpayers should confirm filing, deduction and
-          remittance obligations with the relevant tax authority or a
-          qualified Nigerian tax professional.
-        </p>
-      </section>
-      <section>
-        <h2>Exports are calculation records</h2>
-        <p>
-          A downloaded PDF, workbook or printed result is not a tax return,
-          assessment, tax-clearance certificate, payslip or evidence that PAYE
-          has been remitted.
-        </p>
-      </section>
-      <section>
-        <h2>Rules can change</h2>
-        <p>
-          Tax legislation, administrative guidance and interpretations can
-          change. Every result identifies the ruleset used, and the site shows
-          when its calculation rules were last verified.
-        </p>
-      </section>
-    </InfoPage>
+    <PublicPageShell>
+      <article className="disclaimer-ledger-page disclaimer-plain-page">
+        <header className="disclaimer-plain-hero">
+          <h1>Disclaimer</h1>
+        </header>
+        <section className="disclaimer-summary-grid" aria-label="What you need to know">
+          {essentials.map((item) => <p key={item}>{item}</p>)}
+        </section>
+        <nav className="disclaimer-ledger-actions disclaimer-plain-actions" aria-label="Disclaimer next steps">
+          <Link className="primary-button" href="/how-paye-is-calculated">See how we calculate</Link>
+          <Link href="/#calculator">Calculate again</Link>
+          <Link className="disclaimer-privacy-link" href="/privacy">Privacy</Link>
+        </nav>
+      </article>
+    </PublicPageShell>
   );
 }
