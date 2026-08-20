@@ -66,14 +66,14 @@ export function SalaryBenchmarks(){
 
   const showForm=showUnpaidForm||Boolean(campaignId);
 
-  return <main className="salary-benchmark">
+  return <div className="salary-benchmark">
     <header><h1>Compare salaries</h1></header>
     {benchmarks.length > 0 && <aside className="benchmark-launch-status"><strong>{benchmarks.length}</strong><span>{benchmarks.length === 1 ? "public benchmark group" : "public benchmark groups"} available</span></aside>}
     <div className={benchmarks.length?"benchmark-layout":"benchmark-layout benchmark-layout--empty"}>
-      <section>{benchmarks.length?<><div className="benchmark-section-heading"><span>Approved reports only</span></div><div className="benchmark-list">{benchmarks.map(item=><article key={`${item.role}-${item.industry}-${item.location}-${item.experience_band}`}><span>{item.role} · {item.location}</span><strong>{money.format(item.median_monthly_gross)} monthly</strong><p>{money.format(item.low_monthly_gross)}–{money.format(item.high_monthly_gross)} typical range</p><small>{item.industry} · {item.experience_band} years · Based on {item.sample_size} reports</small></article>)}</div></>:<div className="benchmark-empty"><strong>No public comparisons yet.</strong><p>A range appears after five similar reports are approved.</p><small>More reports are needed. Counts stay private until the threshold is reached.</small></div>}</section>
+      <section>{benchmarks.length?<><div className="benchmark-section-heading"><span>Approved reports only</span></div><div className="benchmark-list">{benchmarks.map(item=><article key={`${item.role}-${item.industry}-${item.location}-${item.experience_band}`}><span>{item.role} · {item.location}</span><strong>{money.format(item.median_monthly_gross)} monthly</strong><p>{money.format(item.low_monthly_gross)}–{money.format(item.high_monthly_gross)} typical range</p><small>{item.industry} · {item.experience_band} years · Based on {item.sample_size} reports</small></article>)}</div></>:<div className="benchmark-empty"><strong>Public comparisons are building.</strong><p>To protect contributors, a salary range appears only after five similar reports are approved.</p><div className="benchmark-empty-actions"><span>While a group is forming, you can:</span><Link href="/jobs">Browse jobs with published pay</Link><Link href="/#calculator">Check your take-home pay</Link></div><small>Submission counts stay private until the five-report threshold is reached.</small></div>}</section>
       {!showForm&&<section className="benchmark-contribution-choice"><h2>Share your salary</h2><div><Link href="/contributors">Earn ₦1,000</Link><button onClick={()=>setShowUnpaidForm(true)} type="button">Share without a reward</button></div></section>}
       {showForm&&<form id="salary-report" onSubmit={submit}>
-        {campaignId&&<aside className="reward-campaign-note"><strong>Earn ₦1,000 after approval</strong><span>One reward per person. <Link href="/contributors">View eligibility rules</Link></span>{!rewardSessionReady&&<div className="reward-signin"><label>Email for reward access<input autoComplete="email" onChange={event=>setRewardEmail(event.target.value)} placeholder="you@example.com" type="email" value={rewardEmail} /></label><button onClick={sendRewardSignIn} type="button">Continue by email</button></div>}</aside>}
+        {campaignId&&<aside className="reward-campaign-note"><strong>Earn ₦1,000 after approval</strong><span>One reward per person. <Link href="/contributors">View eligibility rules</Link></span>{!rewardSessionReady&&<div className="reward-signin"><label>Email for secure sign-in and reward payment<input autoComplete="email" onChange={event=>setRewardEmail(event.target.value)} placeholder="you@example.com" type="email" value={rewardEmail} /></label><p>Your email is kept separate from the salary information used in public benchmarks. <Link href="/privacy">How we protect your data</Link></p><button onClick={sendRewardSignIn} type="button">Continue by email</button></div>}</aside>}
         {(!campaignId||rewardSessionReady)&&<>
         <div className="benchmark-form-heading"><div><span className="eyebrow" ref={stepHeadingRef} tabIndex={-1}>Step {step} of 2</span></div></div>
         {step===2&&<p>Check your job details, then add your pay.</p>}
@@ -92,5 +92,5 @@ export function SalaryBenchmarks(){
         </>}<p role="status">{message}</p>
       </form>}
     </div>
-  </main>;
+  </div>;
 }

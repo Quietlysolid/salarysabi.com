@@ -2,11 +2,11 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import { track } from "@/components/analytics";
-import { EarlyAccessForm } from "@/components/early-access-form";
 import { calculatePaye } from "@/lib/paye";
 import { readPayContext, writePayContext } from "@/lib/pay-context";
-import { pitGuidelinesUrl, rulesetName, rulesetVersion, rulesUpdateLabel, taxActUrl, taxReviewStatus } from "@/lib/site";
+import { rulesVerifiedDate, taxReviewStatus } from "@/lib/site";
 
 type FieldName =
   | "gross"
@@ -96,6 +96,8 @@ export function Calculator() {
   const [exporting, setExporting] = useState<"pdf" | "excel" | null>(null);
   const [contextReady, setContextReady] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
+  const [grossError, setGrossError] = useState("");
+  const grossInputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -152,10 +154,18 @@ export function Calculator() {
 
   function update(name: FieldName, value: string) {
     setValues((current) => ({ ...current, [name]: formatInput(value) }));
+    if (name === "gross" && parseMoney(value) > 0) setGrossError("");
   }
 
   function submit(event: FormEvent) {
     event.preventDefault();
+    if (inputs.annualGrossIncome <= 0) {
+      setHasCalculated(false);
+      setGrossError("Enter your salary before calculating.");
+      grossInputRef.current?.focus();
+      return;
+    }
+    setGrossError("");
     setHasCalculated(true);
     track("paye_calculated");
     requestAnimationFrame(() => {
@@ -244,6 +254,11 @@ export function Calculator() {
   return (
     <div className="calculator-shell">
       <form className="calculator-card" onSubmit={submit}>
+        <header className="simple-home-intro">
+          <p className="simple-home-slogan">Know what you earn, what you owe and what you keep.</p>
+          <h1>Check your take-home pay</h1>
+        </header>
+
         <div className="tax-review-byline calculator-review-byline">
           <strong>Prepared and maintained by Ozichi Nwosu</strong>
           <span>{taxReviewStatus}</span>
@@ -277,6 +292,7 @@ export function Calculator() {
             <span>₦</span>
             <input
               id="calculator-gross"
+              ref={grossInputRef}
               inputMode="numeric"
               value={values.gross}
               onChange={(event) => {
@@ -284,9 +300,12 @@ export function Calculator() {
                 update("gross", event.target.value);
               }}
               aria-label="Salary before deductions"
+              aria-invalid={Boolean(grossError)}
+              aria-describedby={grossError ? "calculator-gross-error" : undefined}
               placeholder="e.g. 500,000"
             />
           </div>
+          {grossError && <small className="field-error" id="calculator-gross-error" role="alert">{grossError}</small>}
         </label>
 
         <button
@@ -299,7 +318,7 @@ export function Calculator() {
             <strong>Optional deductions</strong>
           </span>
           <span className={showDeductions ? "chevron open" : "chevron"}>
-            {showDeductions ? "Hide" : "Add"}
+            {showDeductions ? "−" : "+"}
           </span>
         </button>
 
@@ -385,11 +404,11 @@ export function Calculator() {
 
         {showResult && <div className="result-summary">
           <div>
-            <span>PAYE per month</span>
+            <span>PAYE</span>
             <strong>{money.format(result.monthlyTax)}</strong>
           </div>
           <div>
-            <span>PAYE rate</span>
+            <span>Effective rate</span>
             <strong>{(result.effectiveTaxRate * 100).toFixed(1)}%</strong>
           </div>
         </div>}
@@ -397,7 +416,7 @@ export function Calculator() {
         {showResult && <details className="calculation-details">
           <summary>
             <span>
-              <strong>View calculation</strong>
+              <strong>View full calculation</strong>
               <small>Yearly figures and tax bands</small>
             </span>
             <span className="details-plus" aria-hidden="true">
@@ -468,63 +487,29 @@ export function Calculator() {
           </div>
         </details>}
 
-        {hasCalculated && <div className="result-footer">
-          <div>
-            <p>
-              <strong>Based on official 2026 JRB guidance</strong>
-              <small>
-                Independent estimate. {rulesUpdateLabel}.
-              </small>
-            </p>
-          </div>
-          <div className="export-actions">
-            <button disabled={exporting !== null} type="button" onClick={exportPdf}>
-              {exporting === "pdf" ? "Preparing…" : "PDF"}
-            </button>
-            <button
-              disabled={exporting !== null}
-              type="button"
-              onClick={exportExcel}
-            >
-              {exporting === "excel" ? "Preparing…" : "Excel"}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                track("print_opened");
-                window.print();
-              }}
-            >
-              Print
-            </button>
-          </div>
-        </div>}
         {hasCalculated && <aside className="calculation-trust" aria-label="Calculation source and freshness">
-          <div>
-            <span>Tax review status</span>
-            <strong>{taxReviewStatus}</strong>
-          </div>
-          <p><strong>Ruleset {rulesetVersion}</strong><br />{rulesUpdateLabel}. Based on the {rulesetName}.</p>
-          <p className="calculation-source-links"><a href={taxActUrl} rel="noreferrer" target="_blank">Act: ss. 30, 58, 163(1)(t)</a><a href={pitGuidelinesUrl} rel="noreferrer" target="_blank">JRB Guidelines: ¶¶8–9, Apps. 1 &amp; 4</a><Link href="/tax-updates">Changelog</Link></p>
-        </aside>}
-        {hasCalculated && <aside className="founder-result-link"><div className="founder-result-avatar" aria-hidden="true">ON</div><p><strong>Built and tested by Ozichi Nwosu</strong><span>See the exact calculation steps, source clauses and checks behind this estimate.</span></p><Link href="/how-paye-is-calculated">See how this PAYE was calculated →</Link></aside>}
-        {hasCalculated && <section className="post-result-actions" aria-labelledby="post-result-title">
-          <div className="post-result-heading"><span className="eyebrow">What next?</span><h2 id="post-result-title">Put this number to work.</h2></div>
-          <div className="post-result-grid">
-            <Link className="post-result-primary" href="/salaries?campaign=salary-pilot-2026#salary-report"><span>Founding salary pilot · 20 reports only</span><strong>Earn ₦500 for an approved anonymous salary report</strong><small>Share your role, location and pay. One reward per person; reports are reviewed and only published in groups.</small><b>Share my salary for ₦500 →</b></Link>
-            <div className="post-result-download"><span>Keep or share it</span><strong>Take your PAYE breakdown with you</strong><small>The PDF is generated on this device. Share sends the displayed summary only when you choose it.</small><div><button disabled={exporting !== null} onClick={exportPdf} type="button">{exporting === "pdf" ? "Preparing…" : "Download PDF"}</button><button onClick={shareResult} type="button">Share result</button></div><small role="status">{shareMessage}</small></div>
-          </div>
-          <div className="tax-update-signup"><div><span className="eyebrow">Tax-band alerts</span><h3>Get notified when Nigerian PAYE bands change.</h3><p>We will email only when an official rule change affects the calculator.</p></div><EarlyAccessForm source="tax_updates" idPrefix="tax-updates" label="Email address" placeholder="you@example.com" buttonText="Notify me" successMessage="You’re on the tax-update list." consentText="I agree to receive Nigerian tax-band and calculator updates." consentHelp="No salary figures are attached. Unsubscribe anytime." /></div>
-        </section>}
-        {hasCalculated && (
-          <Link className="payslip-context-action" href="/payslip-checker?from=calculator">
-            <span>
-              <strong>Have this month’s payslip?</strong>
-              <small>Carry this salary into the payslip checker.</small>
-            </span>
-            <span aria-hidden="true">→</span>
+          <Link href="/tax-updates" aria-label="See calculation source and review status">
+            <ShieldCheck aria-hidden="true" />
+            <p><strong>Official 2026 rules</strong><span> · Reviewed {rulesVerifiedDate}</span></p>
           </Link>
-        )}
+        </aside>}
+        {hasCalculated && <section className="result-next-actions" aria-labelledby="result-next-title">
+          <h2 id="result-next-title">What to do next</h2>
+          <ol>
+            <li><Link className="result-next-primary" href="/payslip-checker?from=calculator"><span><strong>Verify with my payslip</strong></span><ArrowRight aria-hidden="true" /></Link></li>
+            <li><Link href="/salaries"><span><strong>Compare my salary</strong></span><ArrowRight aria-hidden="true" /></Link></li>
+            <li><Link href="/jobs"><span><strong>Find jobs with published pay</strong></span><ArrowRight aria-hidden="true" /></Link></li>
+          </ol>
+        </section>}
+        {hasCalculated && <div className="result-footer">
+          <Link href="/how-paye-is-calculated">How this PAYE was calculated</Link>
+          <div className="export-actions">
+            <button disabled={exporting !== null} type="button" onClick={exportPdf}>{exporting === "pdf" ? "Preparing…" : "PDF"}</button>
+            <button disabled={exporting !== null} type="button" onClick={exportExcel}>{exporting === "excel" ? "Preparing…" : "Excel"}</button>
+            <button type="button" onClick={shareResult}>Share</button>
+          </div>
+          <small role="status">{shareMessage}</small>
+        </div>}
       </section>}
     </div>
   );

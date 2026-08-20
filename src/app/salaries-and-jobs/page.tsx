@@ -15,7 +15,7 @@ const paths = [
 export default function Page() {
   return (
     <PublicPageShell>
-      <main className="product-hub product-hub--salary-jobs">
+      <div className="product-hub product-hub--salary-jobs">
         <header>
           <h1>Salaries &amp; jobs</h1>
         </header>
@@ -35,7 +35,7 @@ export default function Page() {
           <span aria-hidden="true">·</span>
           <Link href="/suggest-a-job">Share job</Link>
         </aside>
-      </main>
+      </div>
     </PublicPageShell>
   );
 }

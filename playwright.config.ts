@@ -6,7 +6,7 @@ export default defineConfig({
   fullyParallel: true,
   reporter: "line",
   use: {
-    baseURL: "http://localhost:3100",
+    baseURL: "http://localhost:3000",
     trace: "retain-on-failure",
     extraHTTPHeaders: { "x-salarysabi-e2e": "workspace-fixture" },
   },
@@ -15,8 +15,8 @@ export default defineConfig({
     { name: "mobile-chromium", use: { ...devices["Desktop Chrome"], viewport: { width: 500, height: 900 } } },
   ],
   webServer: {
-    command: "npm run dev -- -p 3100",
-    url: "http://localhost:3100",
+    command: "npm run dev -- -p 3000",
+    url: "http://localhost:3000",
     reuseExistingServer: true,
     timeout: 120_000,
   },

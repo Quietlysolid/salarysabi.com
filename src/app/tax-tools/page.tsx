@@ -8,4 +8,4 @@ const tools = [
   ["Investment income", "/investment-tax", "Estimate withholding on dividends, interest or royalties."],
   ["Company tax", "/company-tax", "Estimate tax on company profit."],
 ];
-export default function TaxToolsPage() { return <PublicPageShell><main className="tool-index tax-tool-index"><header><h1>What do you need help with?</h1></header><div>{tools.map(([title, href, description]) => <a href={href} key={href}><strong>{title}</strong><p>{description}</p><b aria-hidden="true">→</b></a>)}</div></main></PublicPageShell>; }
+export default function TaxToolsPage() { return <PublicPageShell><div className="tool-index tax-tool-index"><header><h1>What do you need help with?</h1></header><div>{tools.map(([title, href, description]) => <a href={href} key={href}><strong>{title}</strong><p>{description}</p><b aria-hidden="true">→</b></a>)}</div></div></PublicPageShell>; }
