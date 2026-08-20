@@ -11,10 +11,10 @@ export function ContributorProgram() {
     window.setTimeout(() => document.getElementById("pilot-rules")?.scrollIntoView({ behavior: "smooth", block: "center" }), 0);
   }
 
-  return <main className="contributor-page salary-reward-page simplified-reward-page">
+  return <div className="contributor-page salary-reward-page simplified-reward-page">
     <header className="contributor-hero">
       <h1>Share your salary. Earn ₦1,000.</h1>
-      <p>Anonymous · About 2 minutes · Only the first 20 approved reports qualify</p>
+      <p>Anonymous in public benchmarks · About 2 minutes · Only the first 20 approved reports qualify</p>
       <div className="contributor-hero-actions">
         <button className="primary-button" onClick={showEligibility} type="button">Check eligibility</button>
       </div>
@@ -39,5 +39,5 @@ export function ContributorProgram() {
         <Link className="primary-button reward-rules-cta" href="/salaries?campaign=salary-pilot-2026#salary-report">Share my salary</Link>
       </div>
     </details>
-  </main>;
+  </div>;
 }

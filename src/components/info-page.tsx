@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand-mark";
 import { BrandWordmark } from "@/components/brand-wordmark";
-import { SiteNavigation } from "@/components/site-navigation";
+import { MobileNavigation, SiteNavigation } from "@/components/site-navigation";
 
 export function InfoHeader() {
   return (
@@ -12,20 +12,7 @@ export function InfoHeader() {
         <BrandWordmark />
       </Link>
       <SiteNavigation />
-      <div className="mobile-nav">
-        <Link href="/#calculator">Take-home pay</Link>
-        <Link href="/payslip-checker">Check PAYE</Link>
-        <details>
-          <summary>Menu</summary>
-          <div>
-            <Link href="/salaries-and-jobs">Salaries & jobs</Link>
-            <Link href="/business">For businesses</Link>
-            <Link href="/paye-guide">Learn about PAYE</Link>
-            <Link href="/contributors">Earn ₦1,000</Link>
-            <Link href="/contact">Contact us</Link>
-          </div>
-        </details>
-      </div>
+      <MobileNavigation />
     </header>
   );
 }
@@ -79,11 +66,11 @@ export function PublicPageShell({
   className?: string;
 }) {
   return (
-    <main className={className}>
+    <div className={`public-page-shell${className ? ` ${className}` : ""}`}>
       <InfoHeader />
-      {children}
+      <main className="public-page-main" id="main-content">{children}</main>
       <InfoFooter />
-    </main>
+    </div>
   );
 }
 

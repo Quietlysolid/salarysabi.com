@@ -1,0 +1,1091 @@
+[
+  {
+    "step": "01-home-entry",
+    "route": "/",
+    "title": "SalarySabi | Nigeria PAYE Calculator 2026",
+    "h1": [
+      "Check your take-home pay"
+    ],
+    "bodyWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false,
+    "unlabeledInputs": [],
+    "missingAltImages": [],
+    "smallTargets": [
+      {
+        "text": "SalarySabi home",
+        "width": 50,
+        "height": 42
+      },
+      {
+        "text": "SalarySabi home",
+        "width": 179,
+        "height": 42
+      },
+      {
+        "text": "Take-home pay",
+        "width": 85,
+        "height": 30
+      },
+      {
+        "text": "Check payslip PAYE",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Other calculators",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Salary benchmarks",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Jobs with salaries",
+        "width": 100,
+        "height": 30
+      },
+      {
+        "text": "Earn rewards",
+        "width": 74,
+        "height": 30
+      },
+      {
+        "text": "Small-team payroll",
+        "width": 106,
+        "height": 30
+      },
+      {
+        "text": "Company tax",
+        "width": 73,
+        "height": 30
+      },
+      {
+        "text": "Post a job",
+        "width": 54,
+        "height": 30
+      },
+      {
+        "text": "PAYE guide",
+        "width": 61,
+        "height": 30
+      },
+      {
+        "text": "About SalarySabi",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Contact us",
+        "width": 59,
+        "height": 30
+      },
+      {
+        "text": "Terms",
+        "width": 34,
+        "height": 18
+      },
+      {
+        "text": "Privacy",
+        "width": 41,
+        "height": 18
+      },
+      {
+        "text": "Disclaimer",
+        "width": 59,
+        "height": 18
+      },
+      {
+        "text": "Security",
+        "width": 46,
+        "height": 18
+      },
+      {
+        "text": "Accessibility",
+        "width": 69,
+        "height": 18
+      }
+    ],
+    "landmarks": {
+      "main": 2,
+      "nav": 6,
+      "header": 2,
+      "footer": 1
+    }
+  },
+  {
+    "step": "02-navigation-open",
+    "route": "/",
+    "title": "SalarySabi | Nigeria PAYE Calculator 2026",
+    "h1": [
+      "Check your take-home pay"
+    ],
+    "bodyWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false,
+    "unlabeledInputs": [],
+    "missingAltImages": [],
+    "smallTargets": [
+      {
+        "text": "SalarySabi home",
+        "width": 50,
+        "height": 42
+      },
+      {
+        "text": "SalarySabi home",
+        "width": 179,
+        "height": 42
+      },
+      {
+        "text": "Take-home pay",
+        "width": 85,
+        "height": 30
+      },
+      {
+        "text": "Check payslip PAYE",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Other calculators",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Salary benchmarks",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Jobs with salaries",
+        "width": 100,
+        "height": 30
+      },
+      {
+        "text": "Earn rewards",
+        "width": 74,
+        "height": 30
+      },
+      {
+        "text": "Small-team payroll",
+        "width": 106,
+        "height": 30
+      },
+      {
+        "text": "Company tax",
+        "width": 73,
+        "height": 30
+      },
+      {
+        "text": "Post a job",
+        "width": 54,
+        "height": 30
+      },
+      {
+        "text": "PAYE guide",
+        "width": 61,
+        "height": 30
+      },
+      {
+        "text": "About SalarySabi",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Contact us",
+        "width": 59,
+        "height": 30
+      },
+      {
+        "text": "Terms",
+        "width": 34,
+        "height": 18
+      },
+      {
+        "text": "Privacy",
+        "width": 41,
+        "height": 18
+      },
+      {
+        "text": "Disclaimer",
+        "width": 59,
+        "height": 18
+      },
+      {
+        "text": "Security",
+        "width": 46,
+        "height": 18
+      },
+      {
+        "text": "Accessibility",
+        "width": 69,
+        "height": 18
+      }
+    ],
+    "landmarks": {
+      "main": 2,
+      "nav": 6,
+      "header": 2,
+      "footer": 1
+    }
+  },
+  {
+    "step": "03-calculator-input",
+    "route": "/",
+    "title": "SalarySabi | Nigeria PAYE Calculator 2026",
+    "h1": [
+      "Check your take-home pay"
+    ],
+    "bodyWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false,
+    "unlabeledInputs": [],
+    "missingAltImages": [],
+    "smallTargets": [
+      {
+        "text": "SalarySabi home",
+        "width": 50,
+        "height": 42
+      },
+      {
+        "text": "Monthly",
+        "width": 162,
+        "height": 34
+      },
+      {
+        "text": "Yearly",
+        "width": 162,
+        "height": 34
+      },
+      {
+        "text": "SalarySabi home",
+        "width": 179,
+        "height": 42
+      },
+      {
+        "text": "Take-home pay",
+        "width": 85,
+        "height": 30
+      },
+      {
+        "text": "Check payslip PAYE",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Other calculators",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Salary benchmarks",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Jobs with salaries",
+        "width": 100,
+        "height": 30
+      },
+      {
+        "text": "Earn rewards",
+        "width": 74,
+        "height": 30
+      },
+      {
+        "text": "Small-team payroll",
+        "width": 106,
+        "height": 30
+      },
+      {
+        "text": "Company tax",
+        "width": 73,
+        "height": 30
+      },
+      {
+        "text": "Post a job",
+        "width": 54,
+        "height": 30
+      },
+      {
+        "text": "PAYE guide",
+        "width": 61,
+        "height": 30
+      },
+      {
+        "text": "About SalarySabi",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Contact us",
+        "width": 59,
+        "height": 30
+      },
+      {
+        "text": "Terms",
+        "width": 34,
+        "height": 18
+      },
+      {
+        "text": "Privacy",
+        "width": 41,
+        "height": 18
+      },
+      {
+        "text": "Disclaimer",
+        "width": 59,
+        "height": 18
+      },
+      {
+        "text": "Security",
+        "width": 46,
+        "height": 18
+      },
+      {
+        "text": "Accessibility",
+        "width": 69,
+        "height": 18
+      }
+    ],
+    "landmarks": {
+      "main": 2,
+      "nav": 6,
+      "header": 2,
+      "footer": 1
+    }
+  },
+  {
+    "step": "04-calculator-result",
+    "route": "/",
+    "title": "SalarySabi | Nigeria PAYE Calculator 2026",
+    "h1": [
+      "Check your take-home pay"
+    ],
+    "bodyWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false,
+    "unlabeledInputs": [],
+    "missingAltImages": [],
+    "smallTargets": [
+      {
+        "text": "SalarySabi home",
+        "width": 50,
+        "height": 42
+      },
+      {
+        "text": "Monthly",
+        "width": 162,
+        "height": 34
+      },
+      {
+        "text": "Yearly",
+        "width": 162,
+        "height": 34
+      },
+      {
+        "text": "SalarySabi home",
+        "width": 179,
+        "height": 42
+      },
+      {
+        "text": "Take-home pay",
+        "width": 85,
+        "height": 30
+      },
+      {
+        "text": "Check payslip PAYE",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Other calculators",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Salary benchmarks",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Jobs with salaries",
+        "width": 100,
+        "height": 30
+      },
+      {
+        "text": "Earn rewards",
+        "width": 74,
+        "height": 30
+      },
+      {
+        "text": "Small-team payroll",
+        "width": 106,
+        "height": 30
+      },
+      {
+        "text": "Company tax",
+        "width": 73,
+        "height": 30
+      },
+      {
+        "text": "Post a job",
+        "width": 54,
+        "height": 30
+      },
+      {
+        "text": "PAYE guide",
+        "width": 61,
+        "height": 30
+      },
+      {
+        "text": "About SalarySabi",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Contact us",
+        "width": 59,
+        "height": 30
+      },
+      {
+        "text": "Terms",
+        "width": 34,
+        "height": 18
+      },
+      {
+        "text": "Privacy",
+        "width": 41,
+        "height": 18
+      },
+      {
+        "text": "Disclaimer",
+        "width": 59,
+        "height": 18
+      },
+      {
+        "text": "Security",
+        "width": 46,
+        "height": 18
+      },
+      {
+        "text": "Accessibility",
+        "width": 69,
+        "height": 18
+      }
+    ],
+    "landmarks": {
+      "main": 2,
+      "nav": 6,
+      "header": 2,
+      "footer": 1
+    }
+  },
+  {
+    "step": "05-payslip-checker",
+    "route": "/payslip-checker?from=calculator",
+    "title": "Check Your Nigerian Payslip | SalarySabi",
+    "h1": [
+      "Check payslip PAYE"
+    ],
+    "bodyWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false,
+    "unlabeledInputs": [],
+    "missingAltImages": [],
+    "smallTargets": [
+      {
+        "text": "SalarySabi home",
+        "width": 50,
+        "height": 42
+      },
+      {
+        "text": "SalarySabi home",
+        "width": 179,
+        "height": 42
+      },
+      {
+        "text": "Take-home pay",
+        "width": 85,
+        "height": 30
+      },
+      {
+        "text": "Check payslip PAYE",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Other calculators",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Salary benchmarks",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Jobs with salaries",
+        "width": 100,
+        "height": 30
+      },
+      {
+        "text": "Earn rewards",
+        "width": 74,
+        "height": 30
+      },
+      {
+        "text": "Small-team payroll",
+        "width": 106,
+        "height": 30
+      },
+      {
+        "text": "Company tax",
+        "width": 73,
+        "height": 30
+      },
+      {
+        "text": "Post a job",
+        "width": 54,
+        "height": 30
+      },
+      {
+        "text": "PAYE guide",
+        "width": 61,
+        "height": 30
+      },
+      {
+        "text": "About SalarySabi",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Contact us",
+        "width": 59,
+        "height": 30
+      },
+      {
+        "text": "Terms",
+        "width": 34,
+        "height": 18
+      },
+      {
+        "text": "Privacy",
+        "width": 41,
+        "height": 18
+      },
+      {
+        "text": "Disclaimer",
+        "width": 59,
+        "height": 18
+      },
+      {
+        "text": "Security",
+        "width": 46,
+        "height": 18
+      },
+      {
+        "text": "Accessibility",
+        "width": 69,
+        "height": 18
+      }
+    ],
+    "landmarks": {
+      "main": 1,
+      "nav": 5,
+      "header": 1,
+      "footer": 1
+    }
+  },
+  {
+    "step": "06-salaries-jobs-hub",
+    "route": "/salaries-and-jobs",
+    "title": "Nigerian Salaries and Jobs with Pay | SalarySabi",
+    "h1": [
+      "Salaries & jobs"
+    ],
+    "bodyWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false,
+    "unlabeledInputs": [],
+    "missingAltImages": [],
+    "smallTargets": [
+      {
+        "text": "SalarySabi home",
+        "width": 50,
+        "height": 42
+      },
+      {
+        "text": "Track applications →",
+        "width": 149,
+        "height": 22
+      },
+      {
+        "text": "Share salary",
+        "width": 89,
+        "height": 26
+      },
+      {
+        "text": "Share job",
+        "width": 67,
+        "height": 26
+      },
+      {
+        "text": "SalarySabi home",
+        "width": 179,
+        "height": 42
+      },
+      {
+        "text": "Take-home pay",
+        "width": 85,
+        "height": 30
+      },
+      {
+        "text": "Check payslip PAYE",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Other calculators",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Salary benchmarks",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Jobs with salaries",
+        "width": 100,
+        "height": 30
+      },
+      {
+        "text": "Earn rewards",
+        "width": 74,
+        "height": 30
+      },
+      {
+        "text": "Small-team payroll",
+        "width": 106,
+        "height": 30
+      },
+      {
+        "text": "Company tax",
+        "width": 73,
+        "height": 30
+      },
+      {
+        "text": "Post a job",
+        "width": 54,
+        "height": 30
+      },
+      {
+        "text": "PAYE guide",
+        "width": 61,
+        "height": 30
+      },
+      {
+        "text": "About SalarySabi",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Contact us",
+        "width": 59,
+        "height": 30
+      },
+      {
+        "text": "Terms",
+        "width": 34,
+        "height": 18
+      },
+      {
+        "text": "Privacy",
+        "width": 41,
+        "height": 18
+      },
+      {
+        "text": "Disclaimer",
+        "width": 59,
+        "height": 18
+      },
+      {
+        "text": "Security",
+        "width": 46,
+        "height": 18
+      },
+      {
+        "text": "Accessibility",
+        "width": 69,
+        "height": 18
+      }
+    ],
+    "landmarks": {
+      "main": 2,
+      "nav": 5,
+      "header": 2,
+      "footer": 1
+    }
+  },
+  {
+    "step": "07-jobs-listing",
+    "route": "/jobs",
+    "title": "Jobs in Nigeria With Salary Information | SalarySabi",
+    "h1": [
+      "Jobs with salaries"
+    ],
+    "bodyWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false,
+    "unlabeledInputs": [],
+    "missingAltImages": [],
+    "smallTargets": [
+      {
+        "text": "SalarySabi home",
+        "width": 50,
+        "height": 42
+      },
+      {
+        "text": "Relationship Manager",
+        "width": 222,
+        "height": 26
+      },
+      {
+        "text": "SalarySabi home",
+        "width": 179,
+        "height": 42
+      },
+      {
+        "text": "Take-home pay",
+        "width": 85,
+        "height": 30
+      },
+      {
+        "text": "Check payslip PAYE",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Other calculators",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Salary benchmarks",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Jobs with salaries",
+        "width": 100,
+        "height": 30
+      },
+      {
+        "text": "Earn rewards",
+        "width": 74,
+        "height": 30
+      },
+      {
+        "text": "Small-team payroll",
+        "width": 106,
+        "height": 30
+      },
+      {
+        "text": "Company tax",
+        "width": 73,
+        "height": 30
+      },
+      {
+        "text": "Post a job",
+        "width": 54,
+        "height": 30
+      },
+      {
+        "text": "PAYE guide",
+        "width": 61,
+        "height": 30
+      },
+      {
+        "text": "About SalarySabi",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Contact us",
+        "width": 59,
+        "height": 30
+      },
+      {
+        "text": "Terms",
+        "width": 34,
+        "height": 18
+      },
+      {
+        "text": "Privacy",
+        "width": 41,
+        "height": 18
+      },
+      {
+        "text": "Disclaimer",
+        "width": 59,
+        "height": 18
+      },
+      {
+        "text": "Security",
+        "width": 46,
+        "height": 18
+      },
+      {
+        "text": "Accessibility",
+        "width": 69,
+        "height": 18
+      }
+    ],
+    "landmarks": {
+      "main": 1,
+      "nav": 5,
+      "header": 1,
+      "footer": 1
+    }
+  },
+  {
+    "step": "08-business-hub",
+    "route": "/business",
+    "title": "Payroll, Company Tax and Salary-Transparent Hiring | SalarySabi",
+    "h1": [
+      "For businesses"
+    ],
+    "bodyWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false,
+    "unlabeledInputs": [],
+    "missingAltImages": [],
+    "smallTargets": [
+      {
+        "text": "SalarySabi home",
+        "width": 50,
+        "height": 42
+      },
+      {
+        "text": "View responsibilities →",
+        "width": 143,
+        "height": 22
+      },
+      {
+        "text": "SalarySabi home",
+        "width": 179,
+        "height": 42
+      },
+      {
+        "text": "Take-home pay",
+        "width": 85,
+        "height": 30
+      },
+      {
+        "text": "Check payslip PAYE",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Other calculators",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Salary benchmarks",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Jobs with salaries",
+        "width": 100,
+        "height": 30
+      },
+      {
+        "text": "Earn rewards",
+        "width": 74,
+        "height": 30
+      },
+      {
+        "text": "Small-team payroll",
+        "width": 106,
+        "height": 30
+      },
+      {
+        "text": "Company tax",
+        "width": 73,
+        "height": 30
+      },
+      {
+        "text": "Post a job",
+        "width": 54,
+        "height": 30
+      },
+      {
+        "text": "PAYE guide",
+        "width": 61,
+        "height": 30
+      },
+      {
+        "text": "About SalarySabi",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Contact us",
+        "width": 59,
+        "height": 30
+      },
+      {
+        "text": "Terms",
+        "width": 34,
+        "height": 18
+      },
+      {
+        "text": "Privacy",
+        "width": 41,
+        "height": 18
+      },
+      {
+        "text": "Disclaimer",
+        "width": 59,
+        "height": 18
+      },
+      {
+        "text": "Security",
+        "width": 46,
+        "height": 18
+      },
+      {
+        "text": "Accessibility",
+        "width": 69,
+        "height": 18
+      }
+    ],
+    "landmarks": {
+      "main": 2,
+      "nav": 5,
+      "header": 2,
+      "footer": 1
+    }
+  },
+  {
+    "step": "09-payroll-workspace",
+    "route": "/payroll",
+    "title": "Small Business Payroll | SalarySabi",
+    "h1": [
+      "Small-team payroll"
+    ],
+    "bodyWidth": 390,
+    "viewportWidth": 390,
+    "overflowX": false,
+    "unlabeledInputs": [],
+    "missingAltImages": [],
+    "smallTargets": [
+      {
+        "text": "SalarySabi home",
+        "width": 50,
+        "height": 42
+      },
+      {
+        "text": "SalarySabi home",
+        "width": 179,
+        "height": 42
+      },
+      {
+        "text": "Take-home pay",
+        "width": 85,
+        "height": 30
+      },
+      {
+        "text": "Check payslip PAYE",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Other calculators",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Salary benchmarks",
+        "width": 107,
+        "height": 30
+      },
+      {
+        "text": "Jobs with salaries",
+        "width": 100,
+        "height": 30
+      },
+      {
+        "text": "Earn rewards",
+        "width": 74,
+        "height": 30
+      },
+      {
+        "text": "Small-team payroll",
+        "width": 106,
+        "height": 30
+      },
+      {
+        "text": "Company tax",
+        "width": 73,
+        "height": 30
+      },
+      {
+        "text": "Post a job",
+        "width": 54,
+        "height": 30
+      },
+      {
+        "text": "PAYE guide",
+        "width": 61,
+        "height": 30
+      },
+      {
+        "text": "About SalarySabi",
+        "width": 96,
+        "height": 30
+      },
+      {
+        "text": "Contact us",
+        "width": 59,
+        "height": 30
+      },
+      {
+        "text": "Terms",
+        "width": 34,
+        "height": 18
+      },
+      {
+        "text": "Privacy",
+        "width": 41,
+        "height": 18
+      },
+      {
+        "text": "Disclaimer",
+        "width": 59,
+        "height": 18
+      },
+      {
+        "text": "Security",
+        "width": 46,
+        "height": 18
+      },
+      {
+        "text": "Accessibility",
+        "width": 69,
+        "height": 18
+      }
+    ],
+    "landmarks": {
+      "main": 1,
+      "nav": 5,
+      "header": 1,
+      "footer": 1
+    }
+  }
+]

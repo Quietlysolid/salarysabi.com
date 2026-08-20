@@ -1,12 +1,11 @@
 import { expect, test } from "@playwright/test";
 
 const tools = [
-  ["Employee PAYE", "/#calculator"],
-  ["Freelancer", "/freelancer-tax"],
-  ["Creator", "/creator-tax"],
+  ["Salary or wages", "/#calculator"],
+  ["Freelance or creator income", "/freelancer-tax"],
   ["Foreign income", "/foreign-income-tax"],
-  ["Company", "/company-tax"],
-  ["Investment", "/investment-tax"],
+  ["Company tax", "/company-tax"],
+  ["Investment income", "/investment-tax"],
 ] as const;
 
 for (const [name, destination] of tools) {
@@ -23,15 +22,15 @@ for (const [name, destination] of tools) {
 }
 
 const payeGuides = [
-  ["How PAYE is calculated", "/how-paye-is-calculated"],
-  ["Eligible deductions", "/eligible-deductions"],
-  ["Nigeria's 2026 tax bands", "/tax-bands"],
+  ["How is PAYE calculated?", "/how-paye-is-calculated"],
+  ["What deductions can I enter?", "/eligible-deductions"],
+  ["Which tax rate applies to me?", "/tax-bands"],
 ] as const;
 
 for (const [name, destination] of payeGuides) {
   test(`${name} guide card opens from its card body`, async ({ page }) => {
     await page.goto("/paye-guide");
-    const card = page.locator(".paye-guide-card", { hasText: name });
+    const card = page.locator(`.paye-guide-question-list a[href="${destination}"]`, { hasText: name });
 
     await expect(card).toHaveAttribute("href", destination);
     await card.click({ position: { x: 40, y: 40 } });

@@ -1,33 +1,65 @@
-# Design QA — compact homepage result
+# Design QA — Option 3 homepage implementation
 
-Final result: passed
+Source visual truth: `design-audit/selected-redesign-option-3.png`
 
-- Reference: user-provided desktop screenshot showing excessive result spacing and repetitive introductory copy.
-- Implementation: local production build at `http://127.0.0.1:3000`.
-- Evidence: `design-audit/clarity-20260819/local-hybrid/18-heading-contrast-final.png` at 1618 × 1000, 1× density, plus the user-provided expanded-result screenshot.
-- Disclosure evidence: `design-audit/clarity-20260819/local-hybrid/19-disclosure-spacing-final.png` at the expanded calculation state.
-- State: monthly salary of ₦1,000,000 after calculation.
-- Browser console and page errors: none.
+Implementation evidence:
 
-## Checks
+- `design-audit/option-3-implementation-final-desktop.png`
+- `design-audit/option-3-implementation-final-mobile.png`
+- Initial-state evidence: `design-audit/option-3-implementation-initial.png`
+
+## Normalization
+
+- Source: 1488 × 1058 pixels.
+- Desktop implementation: 1488 × 1058 pixels at a 1488 × 1058 CSS viewport and device scale factor 1.
+- Mobile implementation: 390 CSS pixels wide at device scale factor 1; full-page capture verifies the responsive continuation of the same product flow.
+- State: successful take-home calculation with the details disclosure collapsed.
+- The source uses illustrative output while leaving the salary input as placeholder text. The implementation uses a real ₦750,000 input and preserves the calculator engine's real ₦632,500 output and the repository's verified review date. These content differences are intentional product-integrity constraints.
+
+## Full-view comparison
+
+The source and final desktop render were opened together at equal pixel dimensions. The implementation now preserves the source's broad header, two equal columns, single central divider, large left-hand heading, control alignment, result-first hierarchy, compact trust line, three plain numbered next-step rows, disclosure link, and isolated contribution prompt. The site footer correctly remains below the reference viewport.
+
+No separate focused crop was required because the equal-size 1488-pixel comparison kept the typography, form borders, statistics, trust copy, row separators, arrows, and navigation treatment legible. Those regions were inspected individually in the full-size images.
+
+## Required fidelity surfaces
+
+- Fonts and typography: passed. Existing Bricolage Grotesque and Source Sans typography is retained; display scale, two-line wrapping, weights, line height, numeric emphasis, and small-label hierarchy closely match the reference.
+- Spacing and layout rhythm: passed. The 54-pixel outer gutters, 690-pixel tracks, central divider, result inset, form widths, action-row rhythm, and contribution divider align with the source. Remaining single-digit differences are P3-level rendering variance.
+- Colors and visual tokens: passed. The paper canvas, dark ink, SalarySabi greens, lime primary step, neutral dividers, and white controls map to the existing design tokens without reintroducing card-heavy surfaces.
+- Image quality and asset fidelity: passed. The supplied vector brand assets remain sharp. Standard interface icons use the repository's existing icon library; there are no placeholder or approximate raster assets.
+- Copy and content: passed. Option 3 labels and sequence are preserved. Real calculated values and the verified 29 July 2026 review date intentionally replace illustrative mock data.
+
+## Interaction and accessibility verification
+
+- Positive salary submission focuses the result region.
+- Empty submission returns focus to the salary field and does not show a convincing ₦0 result.
+- Monthly/yearly controls, optional deductions, all three next steps, and the full-calculation disclosure work.
+- PDF and Excel controls become visible inside the expanded calculation, preserving portability without cluttering the collapsed Option 3 state.
+- Desktop and mobile audience navigation expose current-page semantics.
+- No horizontal overflow at 1488 or 390 pixels.
+- Browser console errors: none.
+
+## Comparison history
+
+- Iteration 1 — P1: implementation used two bordered card panels, a tinted form surface, a large empty-result panel, and icon/description action cards. Fixed by rebuilding the homepage as one flat split workspace and simplifying the action rows.
+- Iteration 2 — P2: heading scale, CTA alignment, duplicate active-nav underline, trust density, and contribution spacing drifted from the source. Fixed and recaptured.
+- Iteration 3 — P2: mobile navigation lost current-page semantics after the structural cleanup, and portability tests expected exports in the collapsed result. Fixed with a dedicated mobile navigation landmark and tests that reveal exports through the intended disclosure.
+- Post-fix evidence: `design-audit/option-3-implementation-final-desktop.png` and `design-audit/option-3-implementation-final-mobile.png`.
+
+## Verification
+
+- Production build: passed.
+- ESLint: passed with two pre-existing generated declaration warnings and no errors.
+- Vitest: 71/71 passed.
+- Playwright: 48/48 passed across desktop and mobile, including all 36 internal destinations across 31 public pages.
+- CSS selector audit: passed.
+
+## Findings
 
 - P0: none.
-- P1: none.
-- P2: none.
-- The three-line introductory message is now one direct heading.
-- The desktop heading fits on one line; mobile retains responsive wrapping.
-- Light-panel values no longer inherit white-on-dark colors; yearly figures, band labels, and amounts now have readable contrast.
-- The closed disclosure header and expanded breakdown use consistent 22px desktop insets and 18px mobile insets.
-- The fixed 220px result area is removed.
-- Take-home pay, monthly PAYE, and PAYE rate form one compact summary.
-- The old pre-2026 comparison copy is removed from the primary result.
-- The expandable label is shortened to “Full calculation,” with “Yearly breakdown and tax bands” as supporting text.
-- Homepage-only secondary result promotions and trust panels are hidden because the homepage already provides next-step navigation below the calculator.
-- Primary calculation interaction works in the production build.
-- Final audit evidence: `design-audit/home-dumb-proof/final-01-start.png`, `final-02-bands.png`, `final-03-deductions.png`, and `final-04-mobile.png`.
-- Unused 21%, 23%, and 25% bands are explicitly labelled “Not reached.”
-- Expanded deductions use a balanced single-column layout on desktop and a label-first stacked layout on mobile.
-- Result values were verified to update live when a deduction changed; browser console and page errors remained empty.
-- Payslip checker evidence: `design-audit/payslip-dumb-proof/final-01-start.png` through `final-04-mobile.png`.
-- Payslip checker empty, optional, result, validation, and mobile states passed visual and interaction checks.
-- Automated verification: 65 tests passed, ESLint passed, and the Next.js production build passed.
+- P1: none remaining.
+- P2: none remaining.
+- P3: the live navigation begins slightly farther right than the mock, and the browser's font rasterization produces minor glyph-width differences. Neither changes hierarchy, wrapping, or task completion.
+
+final result: passed

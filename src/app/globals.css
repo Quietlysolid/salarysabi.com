@@ -7212,7 +7212,7 @@ body {
 }
 
 @media (max-width: 760px) {
-  .info-header > nav {
+  .info-header > nav:not(.mobile-nav) {
     display: none;
   }
 

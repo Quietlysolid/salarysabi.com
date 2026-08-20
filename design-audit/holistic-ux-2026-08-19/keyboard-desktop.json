@@ -1,0 +1,128 @@
+[
+  {
+    "tag": "A",
+    "text": "Skip to main content",
+    "href": "#main-content",
+    "width": 183,
+    "height": 50,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "A",
+    "text": "SalarySabi home",
+    "href": "/",
+    "width": 187,
+    "height": 48,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "A",
+    "text": "Take-home pay",
+    "href": "/#calculator",
+    "width": 92,
+    "height": 44,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "rgb(13, 104, 73) 0px -3px 0px 0px inset"
+  },
+  {
+    "tag": "A",
+    "text": "Check payslip PAYE",
+    "href": "/payslip-checker",
+    "width": 115,
+    "height": 44,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "A",
+    "text": "Salaries & jobs",
+    "href": "/salaries-and-jobs",
+    "width": 88,
+    "height": 44,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "A",
+    "text": "For businesses",
+    "href": "/business",
+    "width": 88,
+    "height": 44,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "A",
+    "text": "Earn rewards",
+    "href": "/contributors",
+    "width": 113,
+    "height": 46,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Monthly salary",
+    "href": null,
+    "width": 293,
+    "height": 44,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "rgba(19, 35, 29, 0.08) 0px 2px 7px 0px"
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Yearly salary",
+    "href": null,
+    "width": 293,
+    "height": 44,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "INPUT",
+    "text": "Salary before deductions",
+    "href": null,
+    "width": 521,
+    "height": 52,
+    "outline": "rgba(0, 122, 77, 0.16) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Optional deductionsAdd",
+    "href": null,
+    "width": 598,
+    "height": 49,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Calculate take-home pay",
+    "href": null,
+    "width": 598,
+    "height": 54,
+    "outline": "rgb(19, 35, 29) solid 3px",
+    "boxShadow": "rgba(0, 91, 62, 0.14) 0px 10px 24px 0px"
+  },
+  {
+    "tag": "A",
+    "text": "Check payslip PAYE",
+    "href": "/payslip-checker",
+    "width": 432,
+    "height": 72,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  },
+  {
+    "tag": "A",
+    "text": "Compare salaries",
+    "href": "/salaries",
+    "width": 432,
+    "height": 72,
+    "outline": "color(srgb 0.0509804 0.407843 0.286275 / 0.32) solid 3px",
+    "boxShadow": "none"
+  }
+]
