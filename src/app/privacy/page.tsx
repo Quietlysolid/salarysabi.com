@@ -46,9 +46,9 @@ const disclosures = [
   },
   {
     title: "Reward access and payout",
-    data: "Sign-in email and, only when you request payment, your payout method and destination",
+    data: "Sign-in email; protected submission signals; and, only when you request payment, your payout method and destination",
     happens:
-      "Your email provides access to the reward claim. Payout details are used to review and process the payment you request. They are not included in public salary comparisons.",
+      "Your email provides access to the reward claim. A human-verification result and keyed, non-readable fingerprints derived from the submission, network and browser installation help detect duplicates and coordinated reward abuse. Raw IP addresses and browser details are not stored in contributor claims. Network and browser fingerprints are cleared after 90 days. Short source excerpts are removed after 180 days. Payout details are used to review and process payment; a protected comparison of normalized destinations helps prevent one person claiming through multiple accounts. None of these details enter public salary comparisons.",
     processor: "SalarySabi administrators; authentication and private records are operated through Supabase.",
     choice: "You can share without claiming a reward, or contact us to request deletion of submitted details.",
   },
@@ -56,7 +56,7 @@ const disclosures = [
     title: "Hosting technical logs",
     data: "IP address, browser type and requested page",
     happens:
-      "Used to deliver, secure and keep the service reliable. We do not copy IP addresses into our analytics database.",
+      "Used to deliver, secure and keep the service reliable. We do not copy raw IP addresses into our analytics database or contributor records.",
     processor: "SalarySabi’s hosting provider, for operational and security purposes.",
     choice: "Essential service logs cannot be disabled.",
   },

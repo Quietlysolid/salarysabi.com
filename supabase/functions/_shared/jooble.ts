@@ -29,20 +29,22 @@ function expandAmount(raw: string) {
 export function parseNgnSalary(rawSalary: string | undefined): SalaryRange | null {
   if (!rawSalary) return null;
   const salary = rawSalary.replace(/\u00a0/g, " ").trim();
-  if (!/(?:₦|\bNGN\b|\bNaira\b)/i.test(salary)) return null;
-  if (/\b(?:hour|day|week|daily|weekly|hourly)\b/i.test(salary)) return null;
+  const amount = String.raw`(\d[\d,]*(?:\.\d+)?(?:\s*[km](?![a-z]))?)`;
+  const currency = String.raw`(?:\u20a6|\bNGN\b|\bNaira\b)`;
+  const separator = String.raw`(?:-|\u2013|\u2014|to)`;
+  const currencyFirst = new RegExp(`${currency}\\s*${amount}(?:\\s*${separator}\\s*(?:${currency}\\s*)?${amount})?`, "i").exec(salary);
+  const currencyLast = new RegExp(`${amount}(?:\\s*${separator}\\s*${amount})?\\s*${currency}`, "i").exec(salary);
+  const match = currencyFirst || currencyLast;
+  if (!match) return null;
 
-  const amounts = [...salary.matchAll(/(?:₦|NGN)?\s*(\d[\d,]*(?:\.\d+)?\s*[km]?)/gi)]
-    .map((match) => expandAmount(match[1]))
-    .filter((value): value is number => value !== null);
-  if (!amounts.length) return null;
+  const minimum = expandAmount(match[1]);
+  const maximum = expandAmount(match[2] || match[1]);
+  if (minimum === null || maximum === null || maximum < minimum) return null;
 
-  const period = /\b(?:year|annual|annum|yearly)\b/i.test(salary) ? "annual" : "monthly";
-  return {
-    minimum: amounts[0],
-    maximum: amounts[1] ?? amounts[0],
-    period,
-  };
+  const context = salary.slice(Math.max(0, match.index - 80), match.index + match[0].length + 80);
+  if (/\b(?:hour|day|week|daily|weekly|hourly)\b/i.test(context)) return null;
+  const period = /\b(?:year|annual|annum|yearly)\b/i.test(context) ? "annual" : "monthly";
+  return { minimum, maximum, period };
 }
 
 export function normalizeEmploymentType(rawType: string | undefined) {

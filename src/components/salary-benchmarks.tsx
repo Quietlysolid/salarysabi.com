@@ -1,7 +1,10 @@
 "use client";
 
-import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { track } from "@/components/analytics";
+import { JourneyNextSteps } from "@/components/journey-next-steps";
+import { contributorDeviceId, TurnstileCheck } from "@/components/turnstile-check";
 import { createBrowserSupabaseClient } from "@/lib/supabase";
 
 type Benchmark = { role:string; industry:string; location:string; experience_band:string; sample_size:number; median_monthly_gross:number; low_monthly_gross:number; high_monthly_gross:number };
@@ -17,10 +20,14 @@ export function SalaryBenchmarks(){
   const [rewardEmail,setRewardEmail]=useState("");
   const [draft,setDraft]=useState({role:"",industry:"",location:""});
   const [showUnpaidForm,setShowUnpaidForm]=useState(false);
+  const [rewardSubmitted,setRewardSubmitted]=useState(false);
+  const [humanToken,setHumanToken]=useState("");
+  const [humanReset,setHumanReset]=useState(0);
   const stepHeadingRef=useRef<HTMLSpanElement>(null);
   const supabase=useMemo(()=>createBrowserSupabaseClient(),[]);
   const endpoint=process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  const receiveHumanToken=useCallback((token:string)=>setHumanToken(token),[]);
 
   useEffect(()=>{if(!endpoint||!key)return; fetch(`${endpoint}/rest/v1/rpc/public_salary_benchmarks`,{method:"POST",headers:{apikey:key,Authorization:`Bearer ${key}`,"Content-Type":"application/json"},body:"{}"}).then(async r=>r.ok?await r.json() as Benchmark[]:[]).then(setBenchmarks).catch(()=>setBenchmarks([])); const requested=new URLSearchParams(window.location.search).get("campaign")||""; if(requested){supabase.rpc("public_active_contribution_campaigns").then(({data})=>{const campaign=(data??[]).find((item:{id:string;slug:string;contribution_type:string})=>item.slug===requested&&item.contribution_type==="salary_report"); if(campaign){setCampaignId(campaign.id);}});supabase.auth.getSession().then(({data})=>setRewardSessionReady(Boolean(data.session)));const {data:listener}=supabase.auth.onAuthStateChange((_event,session)=>setRewardSessionReady(Boolean(session)));return()=>listener.subscription.unsubscribe();}},[endpoint,key,supabase]);
 
@@ -57,11 +64,15 @@ export function SalaryBenchmarks(){
     const payload={p_role:data.get("role"),p_industry:data.get("industry"),p_location:data.get("location"),p_experience_band:data.get("experience"),p_company_size:data.get("size"),p_monthly_gross:Number(data.get("gross")),p_pay_reliability:data.get("reliability")};
     const session=campaignId?(await supabase.auth.getSession()).data.session:null;
     if(campaignId&&!session){setBusy(false);setMessage("Sign in through the contributor programme before claiming a campaign reward.");return;}
-    const functionName=campaignId?"submit_rewarded_salary_report":"submit_salary_report";
-    const response=await fetch(`${endpoint}/rest/v1/rpc/${functionName}`,{method:"POST",headers:{apikey:key,Authorization:`Bearer ${session?.access_token||key}`,"Content-Type":"application/json"},body:JSON.stringify(campaignId?{p_campaign_id:campaignId,...payload}:payload)});
+    if(campaignId&&!humanToken){setBusy(false);setMessage("Complete the human verification before submitting.");return;}
+    setRewardSubmitted(false);
+    if(campaignId)track("reward_submission_started");
+    const response=campaignId
+      ? await fetch(`${endpoint.replace(/\/$/,"")}/functions/v1/submit-rewarded-contribution`,{method:"POST",headers:{apikey:key,Authorization:`Bearer ${session?.access_token}`,"Content-Type":"application/json","x-salarysabi-device":contributorDeviceId()},body:JSON.stringify({type:"salary_report",campaignId,turnstileToken:humanToken,payload:{role:payload.p_role,industry:payload.p_industry,location:payload.p_location,experienceBand:payload.p_experience_band,companySize:payload.p_company_size,monthlyGross:payload.p_monthly_gross,payReliability:payload.p_pay_reliability}})})
+      : await fetch(`${endpoint}/rest/v1/rpc/submit_salary_report`,{method:"POST",headers:{apikey:key,Authorization:`Bearer ${key}`,"Content-Type":"application/json"},body:JSON.stringify(payload)});
     setBusy(false);
-    if(response.ok){form.reset();setStep(1);setMessage(campaignId?"Submitted. Your report and reward claim are awaiting independent review.":"Thank you. Your report is awaiting moderation. It will only appear inside an anonymous group of at least five similar reports.");}
-    else setMessage("We could not save that report. Check the fields and try again.");
+    if(response.ok){form.reset();setStep(1);setRewardSubmitted(Boolean(campaignId));setHumanToken("");setHumanReset((value)=>value+1);setMessage(campaignId?"Submitted. Your reward claim is awaiting review. The salary data stays quarantined until a separate publication check.":"Thank you. Your report is awaiting moderation. It will only appear inside an anonymous group of at least five similar reports.");}
+    else {const errorBody=await response.json().catch(()=>null) as {error?:string;message?:string}|null;setMessage(errorBody?.error||errorBody?.message||"We could not save that report. Check the fields and try again.");}
   }
 
   const showForm=showUnpaidForm||Boolean(campaignId);
@@ -70,8 +81,8 @@ export function SalaryBenchmarks(){
     <header><h1>Compare salaries</h1></header>
     {benchmarks.length > 0 && <aside className="benchmark-launch-status"><strong>{benchmarks.length}</strong><span>{benchmarks.length === 1 ? "public benchmark group" : "public benchmark groups"} available</span></aside>}
     <div className={benchmarks.length?"benchmark-layout":"benchmark-layout benchmark-layout--empty"}>
-      <section>{benchmarks.length?<><div className="benchmark-section-heading"><span>Approved reports only</span></div><div className="benchmark-list">{benchmarks.map(item=><article key={`${item.role}-${item.industry}-${item.location}-${item.experience_band}`}><span>{item.role} · {item.location}</span><strong>{money.format(item.median_monthly_gross)} monthly</strong><p>{money.format(item.low_monthly_gross)}–{money.format(item.high_monthly_gross)} typical range</p><small>{item.industry} · {item.experience_band} years · Based on {item.sample_size} reports</small></article>)}</div></>:<div className="benchmark-empty"><strong>Public comparisons are building.</strong><p>To protect contributors, a salary range appears only after five similar reports are approved.</p><div className="benchmark-empty-actions"><span>While a group is forming, you can:</span><Link href="/jobs">Browse jobs with published pay</Link><Link href="/#calculator">Check your take-home pay</Link></div><small>Submission counts stay private until the five-report threshold is reached.</small></div>}</section>
-      {!showForm&&<section className="benchmark-contribution-choice"><h2>Share your salary</h2><div><Link href="/contributors">Earn ₦1,000</Link><button onClick={()=>setShowUnpaidForm(true)} type="button">Share without a reward</button></div></section>}
+      <section>{benchmarks.length?<><div className="benchmark-section-heading"><span>Approved reports only</span></div><div className="benchmark-list">{benchmarks.map(item=><article key={`${item.role}-${item.industry}-${item.location}-${item.experience_band}`}><span>{item.role} · {item.location}</span><strong>{money.format(item.median_monthly_gross)} monthly</strong><p>{money.format(item.low_monthly_gross)}–{money.format(item.high_monthly_gross)} typical range</p><small>{item.industry} · {item.experience_band} years · Based on {item.sample_size} reports</small></article>)}</div></>:<div className="benchmark-empty"><strong>Public comparisons are building.</strong><p>To protect contributors, a salary range appears only after five similar reports are approved.</p><div className="benchmark-unlock-preview" aria-label="What an approved salary group will show"><span>When a group unlocks, you will see:</span><ul><li>Typical monthly range</li><li>Median gross pay</li><li>Experience band and sample size</li></ul></div><div className="benchmark-empty-actions"><span>While a group is forming, you can:</span><ul><li><Link href="/jobs">Browse jobs with published pay</Link></li><li><Link href="/#calculator">Check your take-home pay</Link></li></ul></div><small>Submission counts stay private until the five-report threshold is reached.</small></div>}</section>
+      {!showForm&&<section className="benchmark-contribution-choice"><span className="eyebrow">Help unlock comparisons</span><h2>Add anonymous salary data</h2><p>SalarySabi reviews every report. Funded rewards are available only when a live offer is open and your contribution is approved.</p><div><Link href="/contributors">See funded offers</Link><button onClick={()=>setShowUnpaidForm(true)} type="button">Share without a reward</button></div></section>}
       {showForm&&<form id="salary-report" onSubmit={submit}>
         {campaignId&&<aside className="reward-campaign-note"><strong>Earn ₦1,000 after approval</strong><span>One reward per person. <Link href="/contributors">View eligibility rules</Link></span>{!rewardSessionReady&&<div className="reward-signin"><label>Email for secure sign-in and reward payment<input autoComplete="email" onChange={event=>setRewardEmail(event.target.value)} placeholder="you@example.com" type="email" value={rewardEmail} /></label><p>Your email is kept separate from the salary information used in public benchmarks. <Link href="/privacy">How we protect your data</Link></p><button onClick={sendRewardSignIn} type="button">Continue by email</button></div>}</aside>}
         {(!campaignId||rewardSessionReady)&&<>
@@ -87,10 +98,18 @@ export function SalaryBenchmarks(){
           <div className="benchmark-draft-summary"><span>Your job details</span><strong>{draft.role}</strong><small>{draft.industry} · {draft.location}</small><button onClick={returnToJobDetails} type="button">Edit</button></div>
           <label>Years of experience<select name="experience" required><option value="0-2">0–2 years</option><option value="3-5">3–5 years</option><option value="6-9">6–9 years</option><option value="10+">10+ years</option></select></label><label>Company size<select name="size" required><option value="1-10">1–10 people</option><option value="11-50">11–50 people</option><option value="51-200">51–200 people</option><option value="201+">201+ people</option></select></label><label>Monthly salary before tax and deductions<div className="benchmark-money-input"><span aria-hidden="true">₦</span><input inputMode="numeric" name="gross" type="number" min="1000" max="100000000" placeholder="e.g. 500,000" required /></div></label><label>Are you usually paid on time?<select name="reliability" required><option value="on-time">Yes, usually on time</option><option value="sometimes-late">Sometimes late</option><option value="frequently-late">Often late</option></select></label>
         </div>
-        <div className="benchmark-form-actions">{step===2&&<button className="secondary-button" onClick={returnToJobDetails} type="button">Back</button>}{step===1?<button className="primary-button" onClick={continueToPay} type="button">Continue</button>:<button className="primary-button" disabled={busy} type="submit">{busy?"Submitting…":"Submit anonymous report"}</button>}</div>
+        {step===2&&campaignId&&<TurnstileCheck action="reward_salary" onToken={receiveHumanToken} resetSignal={humanReset} />}
+        <div className="benchmark-form-actions">{step===2&&<button className="secondary-button" onClick={returnToJobDetails} type="button">Back</button>}{step===1?<button className="primary-button" onClick={continueToPay} type="button">Continue</button>:<button className="primary-button" disabled={busy||Boolean(campaignId&&!humanToken)} type="submit">{busy?"Submitting…":"Submit anonymous report"}</button>}</div>
         {step===2&&<p className="benchmark-privacy-note">Never enter your name or employer. We publish only grouped results.</p>}
-        </>}<p role="status">{message}</p>
+        </>}<p role="status">{message}</p>{rewardSubmitted&&<Link className="submission-tracking-link" href="/contributions">Track this contribution and reward</Link>}
       </form>}
     </div>
+    {benchmarks.length > 0 && <JourneyNextSteps
+      title="Put the range to work"
+      steps={[
+        { href: "/#calculator", title: "Estimate take-home pay", description: "Turn a gross salary into PAYE and net pay." },
+        { href: "/jobs", title: "Find jobs with published pay", description: "Compare current offers before applying." },
+      ]}
+    />}
   </div>;
 }

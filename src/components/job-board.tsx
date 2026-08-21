@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { track } from "./analytics";
 import { ExternalLinkIcon } from "./external-link-icon";
-import { formatJobDate, jobDeadlineLabel, jobMatches, type Job, type WorkMode } from "@/lib/jobs";
+import { formatJobDate, jobDeadlineLabel, jobMatches, salarySourceLabel, verificationLabel, type Job, type WorkMode } from "@/lib/jobs";
 import { ProductState } from "./product-state";
 
 const jobsCacheKey = "salarysabi:jobs-cache:v1";
@@ -140,9 +140,9 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
                 <span>{job.employment_type}</span>
               </div>
               <div className={closesToday(job.expires_at) && job.deadline_status !== "unknown" ? "job-list-closing urgent" : "job-list-closing"}>
-                <strong>{job.employer_verified ? "Employer confirmed" : "Employer confirmation pending"}</strong>
+                <strong>{salarySourceLabel(job)}</strong>
                 <span>{closesToday(job.expires_at) && job.deadline_status !== "unknown" ? "Closes today" : jobDeadlineLabel(job)}</span>
-                <small>{job.source_name || "Listing source"} · Checked {formatJobDate(job.source_verified_at)}</small>
+                <small>{verificationLabel(job)} · Checked {formatJobDate(job.source_verified_at)}</small>
               </div>
               <div className={`job-list-actions ${job.employer_verified ? "is-verified" : "needs-review"}`}><Link href={`/jobs/${job.slug}`}>{job.employer_verified ? "View details" : "Review details first"}</Link><a href={job.application_url} target="_blank" rel="noopener noreferrer" onClick={() => track("job_apply_clicked")}>Apply on {job.source_name||"listing site"} <ExternalLinkIcon /><span className="sr-only"> (opens in a new tab)</span></a></div>
             </article>

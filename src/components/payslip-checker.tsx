@@ -2,8 +2,11 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { ShieldCheck } from "lucide-react";
+import { JourneyNextSteps } from "@/components/journey-next-steps";
 import { checkPayslip } from "@/lib/payslip";
 import { readPayContext } from "@/lib/pay-context";
+import { rulesVerifiedDate } from "@/lib/site";
 import { track } from "./analytics";
 
 type Field = "gross" | "paye" | "pension" | "nhf" | "nhis" | "other";
@@ -93,7 +96,13 @@ export function PayslipChecker() {
   return (
     <div className="payslip-checker">
       <section className="payslip-hero">
+        <span className="eyebrow">Pay &amp; tax</span>
         <h1>Check payslip PAYE</h1>
+        <p>Enter the gross pay and PAYE shown on one monthly payslip. SalarySabi will compare them with an independent estimate.</p>
+        <div className="payslip-trust-row" aria-label="Privacy and calculation freshness">
+          <ShieldCheck aria-hidden="true" />
+          <span><strong>Private in your browser</strong> · Official 2026 rules reviewed {rulesVerifiedDate}</span>
+        </div>
       </section>
       <form onSubmit={submit}>
         {carriedSalary && (
@@ -105,6 +114,7 @@ export function PayslipChecker() {
             </button>
           </div>
         )}
+        <header className="payslip-form-heading"><h2>Enter two numbers from your payslip</h2><p>Use monthly amounts. You can add other deductions after the first check.</p></header>
         <div className="payslip-fields payslip-required-fields">
           <MoneyField label="Monthly gross pay" help="On your payslip: Gross pay or Total earnings." field="gross" value={values.gross} update={update} placeholder="500,000" required />
           <MoneyField label="Monthly PAYE" help="On your payslip: PAYE or Income tax." field="paye" value={values.paye} update={update} placeholder="45,000" required />
@@ -138,6 +148,15 @@ export function PayslipChecker() {
         </dl>
         {result.comparison !== "close" && <p>Check that {money.format(parseMoney(values.paye))} is the monthly PAYE on your payslip. If it is, ask payroll why it is {money.format(Math.abs(result.difference))} {differenceDirection} than our estimate.</p>}
         <Link href="/how-paye-is-calculated">See how PAYE is calculated</Link>
+        <JourneyNextSteps
+          title="Use the comparison"
+          description="Choose the next action that matches what you found."
+          steps={[
+            { href: "/#calculator", title: "Recalculate take-home pay", description: "Adjust salary or eligible deductions." },
+            { href: "/salaries", title: "Compare my salary", description: "See reviewed ranges as public groups become available." },
+            { href: "/jobs", title: "Find jobs with published pay", description: "See the offered salary before applying." },
+          ]}
+        />
       </section>}
     </div>
   );

@@ -114,6 +114,19 @@ JOB_ALERT_FROM=SalarySabi Jobs <jobs@salarysabi.com>
 The database schedules the `send-job-alerts` Edge Function daily at 07:00 UTC.
 Without those Resend settings, alerts can be saved but no email is sent.
 
+### Salary-transparent job ingestion
+
+The jobs pipeline is deliberately review-first:
+
+- employer submissions, Greenhouse, Lever, and the optional Jooble feed enter as drafts;
+- only roles with a positive advertised salary range are accepted from feeds;
+- cross-source identity and canonical-URL checks keep duplicates out of the queue;
+- an administrator must confirm both salary evidence and the live application page before publication;
+- official employer and ATS sources are high confidence, checked community sources are medium confidence, and aggregator-reported salaries are low confidence;
+- daily availability checks expire confirmed 404/410 listings and return repeatedly unreachable listings to draft review.
+
+Greenhouse and Lever boards are registered in the restricted admin workspace using the employer name and the public board key from its careers URL. The database invokes `import-ats-jobs` daily at 06:30 UTC and `check-stale-jobs` daily at 05:15 UTC. Both functions authenticate with the existing job cron secret.
+
 ## Cloudflare production deployment
 
 The repository uses OpenNext on Cloudflare Workers. The Worker renders dynamic

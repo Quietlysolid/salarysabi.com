@@ -27,6 +27,15 @@ export const analyticsEvents = [
   "tax_update_signup_submitted",
   "tax_update_signup_succeeded",
   "paye_result_shared",
+  "reward_offer_viewed",
+  "reward_offer_clicked",
+  "reward_offer_shared",
+  "reward_submission_started",
+  "reward_submission_succeeded",
+  "reward_claim_approved",
+  "reward_claim_rejected",
+  "reward_payout_requested",
+  "reward_payout_completed",
 ] as const;
 
 export type AnalyticsEvent = (typeof analyticsEvents)[number];

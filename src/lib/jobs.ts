@@ -16,12 +16,17 @@ export type Job = {
   source_name: string | null; source_job_id: string | null; canonical_url: string | null;
   source_last_seen_at: string | null; global_remote: boolean;
   engagement_type: "employee" | "contractor" | "unknown";
-  status?: "draft" | "published" | "expired" | "filled" | "rejected";
-  filled_at?: string | null; updated_at?: string;
+  status?: "draft" | "published" | "expired" | "filled" | "rejected" | "archived";
+  filled_at?: string | null; archived_at?: string | null; updated_at?: string;
   deadline_status?: "employer_provided" | "verified" | "estimated" | "unknown" | "rolling";
   transparency_score?: number;
   transparency_notes?: string[];
   verification_status?: "verified" | "pending" | "unverified";
+  source_confidence?: "high" | "medium" | "low";
+  salary_verified_at?: string | null;
+  application_verified_at?: string | null;
+  stale_check_failures?: number;
+  last_availability_check_at?: string | null;
 };
 
 export function jobDeadlineLabel(job: Pick<Job, "deadline_status" | "expires_at">) {

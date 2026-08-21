@@ -1,0 +1,178 @@
+[
+  {
+    "name": "01-home-initial",
+    "route": "/",
+    "title": "SalarySabi | Nigeria PAYE, Salaries and Jobs",
+    "h1": [
+      "Check your take-home pay"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "03-jobs-salaries-hub",
+    "route": "/salaries-and-jobs",
+    "title": "Nigerian Salaries and Jobs with Pay | SalarySabi",
+    "h1": [
+      "Jobs & salaries"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "04-salary-comparison",
+    "route": "/salaries",
+    "title": "Anonymous Nigerian Salary Data | SalarySabi",
+    "h1": [
+      "Compare salaries"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "05-jobs",
+    "route": "/jobs",
+    "title": "Jobs in Nigeria With Salary Information | SalarySabi",
+    "h1": [
+      "Jobs with salaries"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "06-payslip",
+    "route": "/payslip-checker",
+    "title": "Check Your Nigerian Payslip | SalarySabi",
+    "h1": [
+      "Check payslip PAYE"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "07-employers",
+    "route": "/business",
+    "title": "Payroll, Company Tax and Salary-Transparent Hiring | SalarySabi",
+    "h1": [
+      "Hire transparently and pay people correctly."
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "08-payroll",
+    "route": "/payroll",
+    "title": "Small Business Payroll | SalarySabi",
+    "h1": [
+      "Small-team payroll"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "09-paye-guide",
+    "route": "/paye-guide",
+    "title": "Nigeria PAYE Guide 2026 | SalarySabi",
+    "h1": [
+      "Understand your PAYE"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "10-contributors",
+    "route": "/contributors",
+    "title": "Help Make Nigerian Pay Transparent | SalarySabi",
+    "h1": [
+      "Help make Nigerian pay transparent."
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "11-about",
+    "route": "/about",
+    "title": "About SalarySabi | Clearer Pay Decisions in Nigeria",
+    "h1": [
+      "Clearer pay decisions for everyone."
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "02-home-result",
+    "route": "/",
+    "title": "SalarySabi | Nigeria PAYE, Salaries and Jobs",
+    "h1": [
+      "Check your take-home pay"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "12-mobile-home-initial",
+    "route": "/",
+    "title": "SalarySabi | Nigeria PAYE, Salaries and Jobs",
+    "h1": [
+      "Check your take-home pay"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "14-mobile-jobs-salaries",
+    "route": "/salaries-and-jobs",
+    "title": "Nigerian Salaries and Jobs with Pay | SalarySabi",
+    "h1": [
+      "Jobs & salaries"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "15-mobile-payslip",
+    "route": "/payslip-checker",
+    "title": "Check Your Nigerian Payslip | SalarySabi",
+    "h1": [
+      "Check payslip PAYE"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "16-mobile-contributors",
+    "route": "/contributors",
+    "title": "Help Make Nigerian Pay Transparent | SalarySabi",
+    "h1": [
+      "Help make Nigerian pay transparent."
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  },
+  {
+    "name": "13-mobile-home-result",
+    "route": "/",
+    "title": "SalarySabi | Nigeria PAYE, Salaries and Jobs",
+    "h1": [
+      "Check your take-home pay"
+    ],
+    "mains": 1,
+    "duplicateMainIds": 1,
+    "horizontalOverflow": false
+  }
+]

@@ -17,9 +17,9 @@ describe("shared product contracts", () => {
       "src/app/privacy/page.tsx",
     ].map(read).join("\n");
     expect(rulesVerifiedDate).toBe("29 July 2026");
-    expect(legalContentUpdatedDate).toBe("8 August 2026");
+    expect(legalContentUpdatedDate).toBe("21 August 2026");
     expect(consumers).not.toContain("29 July 2026");
-    expect(consumers).not.toContain("8 August 2026");
+    expect(consumers).not.toContain("21 August 2026");
   });
 
   it("uses the public shell on core public routes", () => {
@@ -110,19 +110,123 @@ describe("shared product contracts", () => {
     expect(migration).toContain("-request.amount_kobo");
   });
 
-  it("keeps the funded salary pilot bounded and job sourcing separate", () => {
+  it("keeps both funded contributor pilots explicit and independently verified", () => {
     const page = read("src/components/contributor-program.tsx");
-    const jobPage = read("src/app/contributors/job-sourcing/page.tsx");
+    const campaignSource = read("src/lib/active-contribution-campaigns.ts");
+    const jobProgramme = read("src/components/job-scout-program.tsx");
+    const jobForm = read("src/components/job-suggestion-form.tsx");
+    const admin = read("src/components/admin-contributor-program.tsx");
+    const safeguards = read("supabase/migrations/202608200003_connect_job_scout_campaign.sql");
     const migration = read("supabase/migrations/202608120003_activate_salary_report_pilot.sql");
     const rewardIncrease = read("supabase/migrations/202608190001_raise_salary_report_pilot_reward.sql");
-    expect(page).toContain("Get ₦1,000");
-    expect(page).toContain("first 20 approved reports");
-    expect(jobPage).toContain("Reward TBD");
+    expect(campaignSource).toContain("campaign.budget_remaining_kobo >= campaign.reward_kobo");
+    expect(page).toContain("Funded offers currently pay");
+    expect(page).toContain("track every review decision");
+    expect(page).toContain("Only one paid salary report is allowed per person");
+    expect(page).toContain("/contributors/job-sourcing");
+    expect(jobProgramme).toContain("Find a salary-transparent job");
+    expect(jobProgramme).not.toContain("Reward TBD");
+    expect(jobForm).toContain("item.slug === requested || item.id === requested");
+    expect(jobForm).toContain("No reward claim was created");
+    expect(admin).toContain("admin_set_contribution_campaign_status");
+    expect(admin).toContain("Complete checks to approve");
+    expect(safeguards).toContain("Closed campaigns cannot be reopened");
+    expect(safeguards).toContain("Complete all four source checks");
+    expect(safeguards).toContain("update public.salary_reports set approved = true");
     expect(migration).toContain("target_approved=20");
     expect(migration).toContain("budget_kobo=1000000");
     expect(migration).toContain("Minimum payout is NGN 500");
     expect(rewardIncrease).toContain("reward_kobo = 100000");
     expect(rewardIncrease).toContain("budget_kobo = 2000000");
+  });
+
+  it("gives contributors a private, abuse-resistant path from claim to payout", () => {
+    const migration = read("supabase/migrations/202608210003_contributor_accounts.sql");
+    const riskArrayFix = read("supabase/migrations/202608210005_fix_contributor_risk_array.sql");
+    const lifecycleFix = read("supabase/migrations/202608210006_fix_reward_lifecycle_analytics.sql");
+    const dashboard = read("src/components/contributor-dashboard.tsx");
+    const terms = read("src/app/terms/page.tsx");
+    expect(migration).toContain("function public.contributor_claim_history");
+    expect(migration).toContain("available_to_request_kobo");
+    expect(migration).toContain("add column if not exists payout_destination text");
+    expect(migration).toContain("payout_destination is not null");
+    expect(migration).toContain("payout_destination_fingerprint");
+    expect(migration).toContain("pg_advisory_xact_lock");
+    expect(migration).toContain("payout destination is already linked to another contributor");
+    expect(riskArrayFix).toContain("reasons text[] := '{}'::text[]");
+    expect(lifecycleFix).toContain("lifecycle_event_name");
+    expect(lifecycleFix).not.toContain("declare event_name text");
+    for (const event of ["reward_submission_succeeded", "reward_claim_approved", "reward_claim_rejected", "reward_payout_requested", "reward_payout_completed"]) {
+      expect(migration).toContain(`'${event}'`);
+    }
+    expect(dashboard).toContain("Rewards and review status");
+    expect(dashboard).toContain("Review note");
+    expect(dashboard).toContain("Pilot target: reviewed within 5 business days");
+    expect(dashboard).toContain("Request a payout");
+    expect(terms).toContain("Contributor rewards");
+    expect(terms).toContain("ask for a review within 14 days");
+  });
+
+  it("separates rewarded submission, payment and benchmark publication", () => {
+    const migration = read("supabase/migrations/202608210004_contributor_integrity.sql");
+    const edge = read("supabase/functions/submit-rewarded-contribution/index.ts");
+    const salaryForm = read("src/components/salary-benchmarks.tsx");
+    const jobForm = read("src/components/job-suggestion-form.tsx");
+    const admin = read("src/components/admin-contributor-program.tsx");
+    expect(migration).toContain("service_submit_rewarded_salary_report");
+    expect(migration).toContain("service_submit_rewarded_job_source");
+    expect(migration).toContain("revoke all on function public.submit_rewarded_salary_report");
+    expect(migration).toContain("publication_status='quarantined'");
+    expect(migration).toContain("approved and publication_status='published'");
+    expect(migration).toContain("admin_release_salary_report");
+    expect(migration).toContain("available_at");
+    expect(migration).toContain("contributor_admin_audit_log");
+    expect(migration).toContain("purge_expired_contribution_risk_data");
+    expect(edge).toContain("challenges.cloudflare.com/turnstile/v0/siteverify");
+    expect(edge).toContain("assertPublicHost");
+    expect(edge).toContain("service_consume_contribution_rate_limit");
+    expect(edge).toContain("RISK_FINGERPRINT_SECRET");
+    expect(edge).toContain('"message" in error');
+    expect(salaryForm).toContain("/functions/v1/submit-rewarded-contribution");
+    expect(jobForm).toContain("/functions/v1/submit-rewarded-contribution");
+    expect(salaryForm).not.toContain('functionName=campaignId?"submit_rewarded_salary_report"');
+    expect(jobForm).not.toContain("/rest/v1/rpc/submit_rewarded_job_source");
+    expect(admin).toContain("Benchmark quarantine");
+    expect(admin).toContain("Protected risk review required");
+  });
+
+  it("makes funded contribution offers shareable and trackable", () => {
+    const programme = read("src/components/contributor-program.tsx");
+    const share = read("src/components/contributor-share.tsx");
+    const navigation = read("src/components/site-navigation.tsx");
+    expect(programme).toContain("ContributorShare");
+    expect(share).toContain("Share on WhatsApp");
+    expect(share).toContain('track("reward_offer_shared")');
+    expect(navigation).toContain("My contributions");
+  });
+
+  it("keeps manual ATS imports admin-only and source-scoped", () => {
+    const importer = read("supabase/functions/import-ats-jobs/index.ts");
+    const dashboard = read("src/components/admin-dashboard.tsx");
+    expect(importer).toContain("isAdminRequest");
+    expect(importer).toContain('.from("admin_users")');
+    expect(importer).toContain("adminAuthorized && !sourceId");
+    expect(importer).toContain("sourceResults");
+    expect(dashboard).toContain("Test & import now");
+    expect(dashboard).toContain('body: { sourceId: source.id }');
+  });
+
+  it("keeps permanent job deletion admin-only, archive-first and explicitly confirmed", () => {
+    const migration = read("supabase/migrations/202608210001_admin_job_lifecycle.sql");
+    const dashboard = read("src/components/admin-dashboard.tsx");
+    expect(migration).toContain("'archived'");
+    expect(migration).toContain("if not public.is_current_user_admin()");
+    expect(migration).toContain("Archive or expire this job before deleting it permanently");
+    expect(migration).toContain("p_confirmation");
+    expect(migration).toContain("delete from public.jobs");
+    expect(dashboard).toContain("Archive selected");
+    expect(dashboard).toContain("Type <strong>{selectedManagedJob.title}</strong> to confirm");
+    expect(dashboard).toContain('supabase.rpc("admin_delete_job"');
   });
 });
 

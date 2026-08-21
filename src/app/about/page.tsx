@@ -4,8 +4,8 @@ import { InfoPage } from "@/components/info-page";
 import { founderGitHubUrl, founderLinkedInUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About SalarySabi | Nigerian PAYE Calculator",
-  description: "Learn what SalarySabi does, who built it and how its PAYE calculations are checked.",
+  title: "About SalarySabi | Clearer Pay Decisions in Nigeria",
+  description: "Learn how SalarySabi connects Nigerian pay calculations, salary comparisons, published-pay jobs and responsible employer tools.",
   alternates: { canonical: "/about" },
 };
 
@@ -13,21 +13,22 @@ const tools = [
   ["Calculate take-home pay", "/#calculator"],
   ["Check payslip PAYE", "/payslip-checker"],
   ["Compare salaries", "/salaries"],
-  ["Find jobs with salaries", "/jobs"],
+  ["Find jobs with published pay", "/jobs"],
+  ["Use employer tools", "/business"],
+  ["Understand PAYE", "/paye-guide"],
 ] as const;
 
 const checks = [
-  ["Official sources", "Rules come from Nigerian legislation and official guidance."],
-  ["Automated tests", "Tests cover tax bands, deductions, reliefs and rounding."],
-  ["Published updates", "Important calculation changes are recorded publicly."],
+  ["Official rules and tests", "PAYE logic is tied to Nigerian legislation and guidance, covered by automated tests and recorded in a public update history."],
+  ["Anonymous salary groups", "Individual salary reports stay private and only contribute to a public range after at least five similar reports are approved."],
+  ["Original job evidence", "Job salaries and application links are checked against a named source, labelled by confidence and removed when stale."],
 ] as const;
 
 export default function AboutPage() {
   return (
     <InfoPage
-      eyebrow="About SalarySabi"
-      title="Pay and tax, explained clearly."
-      intro="Know what you earn, what you owe and what you keep."
+      title="Clearer pay decisions for everyone."
+      intro="SalarySabi helps Nigerians understand pay, compare salaries, find jobs with published pay and use responsible employer tools."
     >
       <div className="about-simple">
         <section className="about-simple-section" aria-labelledby="about-tools-title">
@@ -52,7 +53,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="about-simple-section" aria-labelledby="about-checks-title">
+        <section className="about-simple-section" id="checks" aria-labelledby="about-checks-title">
           <h2 id="about-checks-title">How we check the numbers</h2>
           <div className="about-checks">
             {checks.map(([title, description]) => (

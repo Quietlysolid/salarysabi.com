@@ -189,7 +189,8 @@ export function PayrollWorkspace() {
 
   if (!checked) return <section className="payroll-shell"><p>Checking your account…</p></section>;
   if (!session) return <section className="payroll-shell payroll-access payroll-entry">
-    <div className="payroll-entry-intro"><h1>Small-team payroll</h1><p>Calculate PAYE and create payslips for up to 20 employees.</p>
+    <div className="payroll-entry-intro"><span className="eyebrow">For employers</span><h1>Small-team payroll</h1><p>Sign in to calculate PAYE, review payroll and create payslips for up to 20 employees.</p>
+      <strong className="payroll-feature-heading">Inside your private workspace</strong>
       <ul className="payroll-feature-preview"><li>Add employees</li><li>Review payroll</li><li>Export records</li></ul>
       <aside className="payroll-boundary">SalarySabi does not make payments or remit taxes.</aside>
     </div>
