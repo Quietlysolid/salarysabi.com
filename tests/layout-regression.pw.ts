@@ -10,17 +10,18 @@ test("public pages expose one main landmark inside the shared shell", async ({ p
   }
 });
 
-test("primary navigation is organised around three audience intents", async ({ page }) => {
+test("primary navigation uses four clear task destinations", async ({ page }) => {
   await page.goto("/");
   const mobile = (page.viewportSize()?.width ?? 0) <= 760;
   const nav = page.getByRole("navigation", { name: mobile ? "Mobile navigation" : "Primary navigation" });
-  if (!mobile) await expect(nav.getByRole("link")).toHaveCount(3);
-  await expect(nav.getByRole("link", { name: "For me" })).toHaveAttribute("aria-current", "page");
+  if (!mobile) await expect(nav.getByRole("link")).toHaveCount(4);
+  await expect(nav.getByRole("link", { name: "Pay & tax" })).toHaveAttribute("aria-current", "page");
   await page.goto("/business");
-  await expect(nav.getByRole("link", { name: mobile ? "For business" : "For my business" })).toHaveAttribute("aria-current", "page");
+  if (mobile) await nav.getByText("More").click();
+  await expect(nav.getByRole("link", { name: "For employers" })).toHaveAttribute("aria-current", "page");
   await page.goto("/paye-guide");
-  if (mobile) await nav.getByText("Menu").click();
-  await expect(nav.getByRole("link", { name: "Learn about PAYE" })).toHaveAttribute("aria-current", "page");
+  if (mobile) await nav.getByText("More").click();
+  await expect(nav.getByRole("link", { name: "Learn" })).toHaveAttribute("aria-current", "page");
 });
 
 test("calculator requires salary before showing a result", async ({ page }) => {
@@ -47,8 +48,9 @@ test("calculator result prioritises trust, action and portable records", async (
 test("mobile keeps descriptions and avoids horizontal overflow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/salaries-and-jobs");
-  await expect(page.getByText("See what similar roles pay.")).toBeVisible();
-  await expect(page.getByText("See salaries before applying.")).toBeVisible();
+  await expect(page.getByText(/See reviewed ranges for similar roles/i)).toBeVisible();
+  await expect(page.getByText(/See the offered salary and source before you apply/i)).toBeVisible();
+  await expect(page.getByText(/Save jobs and keep your application progress/i)).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
   await page.goto("/");
   expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
@@ -64,8 +66,8 @@ test("salary empty state explains the privacy threshold and offers immediate val
 
 test("contributor reward copy distinguishes public anonymity from private processing", async ({ page }) => {
   await page.goto("/contributors");
-  await expect(page.getByText(/Anonymous in public benchmarks/i)).toBeVisible();
-  await page.getByRole("button", { name: "Check eligibility" }).click();
+  await expect(page.getByText(/individual salary stays out of public view/i)).toBeVisible();
+  await page.getByRole("button", { name: "Check salary-report eligibility" }).click();
   await expect(page.getByText(/individual salary is never published/i)).toBeVisible();
   await expect(page.getByText(/benchmark needs five similar approved reports/i)).toBeVisible();
 });

@@ -7,6 +7,7 @@ import {
   stripHtml,
   type JoobleJob,
 } from "../_shared/jooble.ts";
+import { canonicalizeJobUrl, jobDedupeKey } from "../_shared/job-source.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -75,7 +76,7 @@ Deno.serve(async (request) => {
     const company = stripHtml(job.company);
     const location = stripHtml(job.location) || "Nigeria";
     const description = stripHtml(job.snippet);
-    const link = job.link?.startsWith("https://") ? job.link : null;
+    const link = canonicalizeJobUrl(job.link);
     if (!salary || !title || !company || !link || description.length < 80) {
       skipped += 1;
       failures.push({ id: String(job.id), reason: !salary ? "salary_not_supported" : "missing_required_detail" });
@@ -83,12 +84,8 @@ Deno.serve(async (request) => {
     }
 
     const sourceId = String(job.id);
-    const { data: existing, error: lookupError } = await supabase
-      .from("jobs")
-      .select("id")
-      .eq("source_name", "Jooble")
-      .eq("source_job_id", sourceId)
-      .maybeSingle();
+    const dedupeKey = jobDedupeKey(title, company, location);
+    const { data: existing, error: lookupError } = await supabase.from("jobs").select("id").eq("source_name", "Jooble").eq("source_job_id", sourceId).maybeSingle();
     if (lookupError) {
       failures.push({ id: sourceId, reason: lookupError.message });
       continue;
@@ -102,6 +99,9 @@ Deno.serve(async (request) => {
       else refreshed += 1;
       continue;
     }
+    const { data: duplicates, error: duplicateError } = await supabase.rpc("find_job_duplicate", { p_dedupe_key: dedupeKey, p_canonical_url: link });
+    if (duplicateError) { failures.push({ id: sourceId, reason: duplicateError.message }); continue; }
+    if (duplicates?.length) { skipped += 1; failures.push({ id: sourceId, reason: "cross_source_duplicate" }); continue; }
 
     const record = {
       slug: slugifyJob(job),
@@ -126,6 +126,9 @@ Deno.serve(async (request) => {
       source_kind: "licensed_feed",
       source_name: "Jooble",
       source_job_id: sourceId,
+      dedupe_key: dedupeKey,
+      source_confidence: "low",
+      verification_status: "pending",
       global_remote: false,
       engagement_type: "unknown",
       published_at: now.toISOString(),

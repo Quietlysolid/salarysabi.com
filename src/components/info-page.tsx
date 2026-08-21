@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand-mark";
 import { BrandWordmark } from "@/components/brand-wordmark";
+import { CampaignAnnouncement } from "@/components/campaign-announcement";
 import { MobileNavigation, SiteNavigation } from "@/components/site-navigation";
 
 export function InfoHeader() {
@@ -25,29 +26,29 @@ export function InfoFooter() {
           <BrandMark />
           <BrandWordmark />
         </Link>
-        <p>Know what you earn,<br />what you owe and what you keep.</p>
       </div>
       <div className="footer-links">
         <nav aria-labelledby="footer-pay-tools">
-          <h2 id="footer-pay-tools">Calculate</h2>
+          <h2 id="footer-pay-tools">Pay &amp; tax</h2>
           <Link href="/#calculator">Take-home pay</Link>
           <Link href="/payslip-checker">Check payslip PAYE</Link>
           <Link href="/tax-tools">Other calculators</Link>
         </nav>
         <nav aria-labelledby="footer-jobs">
-          <h2 id="footer-jobs">Salaries & jobs</h2>
+          <h2 id="footer-jobs">Jobs &amp; salaries</h2>
           <Link href="/salaries">Salary benchmarks</Link>
           <Link href="/jobs">Jobs with salaries</Link>
-          <Link href="/contributors">Earn rewards</Link>
+          <Link href="/contributors">Contribute pay data</Link>
+          <Link href="/contributions">My contributions</Link>
         </nav>
         <nav aria-labelledby="footer-salarysabi">
-          <h2 id="footer-salarysabi">For businesses</h2>
+          <h2 id="footer-salarysabi">For employers</h2>
           <Link href="/payroll">Small-team payroll</Link>
           <Link href="/company-tax">Company tax</Link>
           <Link href="/post-a-job">Post a job</Link>
         </nav>
         <nav aria-labelledby="footer-learn">
-          <h2 id="footer-learn">Learn & trust</h2>
+          <h2 id="footer-learn">Learn</h2>
           <Link href="/paye-guide">PAYE guide</Link>
           <Link href="/about">About SalarySabi</Link>
           <Link href="/contact">Contact us</Link>
@@ -68,7 +69,8 @@ export function PublicPageShell({
   return (
     <div className={`public-page-shell${className ? ` ${className}` : ""}`}>
       <InfoHeader />
-      <main className="public-page-main" id="main-content">{children}</main>
+      <CampaignAnnouncement />
+      <main className="public-page-main" id="main-content" tabIndex={-1}>{children}</main>
       <InfoFooter />
     </div>
   );

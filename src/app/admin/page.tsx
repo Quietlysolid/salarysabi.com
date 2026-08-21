@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 export default async function AdminPage({ searchParams }: { searchParams: Promise<{ fixture?: string }> }) {
   const params = await searchParams;
   const fixtureMode = process.env.NODE_ENV !== "production" && params.fixture === "1";
-  return <main className="admin-page"><AdminDashboard fixtureMode={fixtureMode} /></main>;
+  return <main className="admin-page" id="main-content" tabIndex={-1}><AdminDashboard fixtureMode={fixtureMode} /></main>;
 }

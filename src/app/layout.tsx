@@ -19,30 +19,32 @@ const bricolageGrotesque = Bricolage_Grotesque({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "SalarySabi | Nigeria PAYE Calculator 2026",
+  title: "SalarySabi | Nigeria PAYE, Salaries and Jobs",
   description:
-    "Calculate Nigerian PAYE under the Nigeria Tax Act 2025, effective 2026. See monthly tax, rent relief, eligible deductions and every tax band.",
+    "Calculate Nigerian PAYE and take-home pay, compare salaries, find jobs with published pay, and earn rewards for approved pay information.",
   keywords: [
     "Nigeria PAYE calculator 2026",
     "Nigerian salary calculator",
     "gross to net salary Nigeria",
     "PAYE tax calculator Nigeria",
+    "jobs with salaries Nigeria",
+    "Nigeria salary benchmarks",
   ],
   icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
     locale: "en_NG",
-    title: "SalarySabi | Nigeria PAYE Calculator 2026",
+    title: "SalarySabi | Nigeria PAYE, Salaries and Jobs",
     description:
-      "Calculate monthly and annual Nigerian PAYE with transparent 2026 tax bands and eligible deductions.",
+      "Understand your pay, compare salaries and find Nigerian jobs that publish pay.",
     url: "/",
     siteName: "SalarySabi",
   },
   twitter: {
-    card: "summary",
-    title: "SalarySabi | Nigeria PAYE Calculator 2026",
+    card: "summary_large_image",
+    title: "SalarySabi | Nigeria PAYE, Salaries and Jobs",
     description:
-      "Free, transparent Nigerian PAYE calculations based on the 2026 rules.",
+      "Understand your pay, compare salaries and find Nigerian jobs that publish pay.",
   },
 };
 
@@ -81,7 +83,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteIdentity) }}
         />
         <Analytics />
-        <div id="main-content" tabIndex={-1}>{children}</div>
+        <div id="app-root">{children}</div>
       </body>
     </html>
   );

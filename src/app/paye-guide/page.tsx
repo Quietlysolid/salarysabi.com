@@ -21,8 +21,9 @@ export default function PayeGuidePage() {
     <PublicPageShell>
       <article className="paye-guide-page paye-guide-simple">
         <header className="paye-guide-simple-hero">
+          <span className="eyebrow">Pay &amp; tax guide</span>
           <h1>Understand your PAYE</h1>
-          <p>Choose a topic.</p>
+          <p>Start with the question you need answered, then return to your calculation with clearer information.</p>
         </header>
 
         <nav className="paye-guide-question-list" aria-label="PAYE guide topics">

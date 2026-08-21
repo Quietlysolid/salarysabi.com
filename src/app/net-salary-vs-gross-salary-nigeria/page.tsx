@@ -27,7 +27,7 @@ export default function NetSalaryGuidePage() {
 
       <section className="simple-guide-section" aria-labelledby="gross-net-steps"><h2 id="gross-net-steps">How gross pay becomes take-home pay</h2><ol className="simple-step-list compact">{steps.map((step, index) => <li key={step}><span>{index + 1}</span><div><h3>{step}</h3></div></li>)}</ol></section>
 
-      <section className="simple-guide-section" aria-labelledby="common-deductions"><h2 id="common-deductions">Common deductions</h2><div className="simple-chip-list"><span>PAYE</span><span>Pension</span><span>NHF</span><span>Health insurance</span><span>Loans and other deductions</span></div><p>Not every payslip deduction reduces PAYE. Use only eligible amounts in a PAYE calculation.</p><Link href="/eligible-deductions">See which deductions count</Link></section>
+      <section className="simple-guide-section" aria-labelledby="common-deductions"><h2 id="common-deductions">Common deductions</h2><div className="simple-chip-list"><span>PAYE</span><span>Pension</span><span>NHF</span><span>Health insurance</span><span>Loans and other deductions</span></div><p>Not every payslip deduction reduces PAYE. Use only eligible amounts in a PAYE calculation.</p><Link className="simple-guide-inline-link" href="/eligible-deductions">See which deductions count</Link></section>
 
       <details className="simple-guide-details"><summary>Official sources</summary><div><p><a href={taxActUrl} rel="noreferrer" target="_blank">Nigeria Tax Act 2025 ↗</a><br /><a href={pitGuidelinesUrl} rel="noreferrer" target="_blank">JRB Personal Income Tax Guidelines 2026 ↗</a></p></div></details>
     </article>

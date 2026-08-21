@@ -9,6 +9,8 @@ import {
   formatJobSalary,
   jobDeadlineLabel,
   monthlyGrossRange,
+  salarySourceLabel,
+  verificationLabel,
   type Job,
 } from "@/lib/jobs";
 import { getPublishedJobBySlug } from "@/lib/supabase";
@@ -58,7 +60,6 @@ export default async function JobPage({
   if (!job) notFound();
   const gross = monthlyGrossRange(job);
   const sourceName = job.source_name || "listing source";
-  const employerStatus = job.employer_verified ? "Employer confirmed" : "Employer confirmation pending";
   const descriptionParts = job.description.split(/(?<=[.!?])\s+(?=[A-Z])/).map((part) => part.trim()).filter(Boolean);
   const overview = descriptionParts[0];
   const keyDetails = descriptionParts.slice(1);
@@ -101,7 +102,7 @@ export default async function JobPage({
   };
 
   return (
-    <main>
+    <main id="main-content" tabIndex={-1}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -146,9 +147,9 @@ export default async function JobPage({
         </section>
         <section className="job-source-panel">
           <div>
-            <span>Listing status</span>
-            <strong>{sourceName} · Checked {formatJobDate(job.source_verified_at)}</strong>
-            <p>{employerStatus} · {jobDeadlineLabel(job)}</p>
+            <span>Source and confidence</span>
+            <strong>{salarySourceLabel(job)}</strong>
+            <p>{verificationLabel(job)} · {sourceName} · Checked {formatJobDate(job.source_verified_at)} · {jobDeadlineLabel(job)}</p>
           </div>
           <a
             className="primary-button"

@@ -257,6 +257,7 @@ export function Calculator() {
         <header className="simple-home-intro">
           <p className="simple-home-slogan">Know what you earn, what you owe and what you keep.</p>
           <h1>Check your take-home pay</h1>
+          <p className="simple-home-platform-intro">Start with your take-home pay, then verify your payslip, compare salaries and find jobs that publish what they pay.</p>
         </header>
 
         <div className="tax-review-byline calculator-review-byline">
@@ -397,7 +398,7 @@ export function Calculator() {
             </>
           ) : (
             <div className="result-empty">
-              <h2>Your result appears here</h2>
+              <h2>See your take-home pay, PAYE and effective tax rate.</h2>
             </div>
           )}
         </div>

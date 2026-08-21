@@ -18,6 +18,10 @@ describe("launch input validation", () => {
 
   it("allows only known analytics events", () => {
     expect(isAnalyticsEvent("paye_calculated")).toBe(true);
+    expect(isAnalyticsEvent("reward_offer_viewed")).toBe(true);
+    expect(isAnalyticsEvent("reward_offer_clicked")).toBe(true);
+    expect(isAnalyticsEvent("reward_submission_succeeded")).toBe(true);
+    expect(isAnalyticsEvent("reward_payout_completed")).toBe(true);
     expect(isAnalyticsEvent("salary_value")).toBe(false);
   });
 

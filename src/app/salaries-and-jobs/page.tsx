@@ -8,8 +8,9 @@ export const metadata = {
 };
 
 const paths = [
-  ["Compare salaries", "See what similar roles pay.", "/salaries"],
-  ["Find jobs", "See salaries before applying.", "/jobs"],
+  ["01", "Compare salaries", "See reviewed ranges for similar roles as the public dataset grows.", "/salaries"],
+  ["02", "Find jobs with published pay", "See the offered salary and source before you apply.", "/jobs"],
+  ["03", "Track applications", "Save jobs and keep your application progress in one workspace.", "/account"],
 ];
 
 export default function Page() {
@@ -17,23 +18,28 @@ export default function Page() {
     <PublicPageShell>
       <div className="product-hub product-hub--salary-jobs">
         <header>
-          <h1>Salaries &amp; jobs</h1>
+          <span className="eyebrow">Compare. Apply. Keep track.</span>
+          <h1>Jobs &amp; salaries</h1>
+          <p>Understand what roles pay, find openings that publish salary information and organise your next move.</p>
         </header>
         <section className="product-hub-paths" aria-label="Salary and job tools">
-          {paths.map(([title, description, href]) => (
+          {paths.map(([number, title, description, href]) => (
             <Link href={href} key={href}>
+              <span>{number}</span>
               <h2>{title}</h2>
               <p>{description} <span aria-hidden="true">→</span></p>
             </Link>
           ))}
         </section>
-        <p className="product-hub-secondary">
-          <Link href="/account">Track applications <span aria-hidden="true">→</span></Link>
-        </p>
         <aside className="product-hub-note product-hub-note--compact">
-          <Link href="/salaries">Share salary</Link>
-          <span aria-hidden="true">·</span>
-          <Link href="/suggest-a-job">Share job</Link>
+          <div>
+            <span className="eyebrow">Help the public data grow</span>
+            <strong>Share genuine pay information for SalarySabi to review.</strong>
+          </div>
+          <div>
+            <Link href="/contributors">See funded offers</Link>
+            <Link href="/suggest-a-job">Suggest a job</Link>
+          </div>
         </aside>
       </div>
     </PublicPageShell>
