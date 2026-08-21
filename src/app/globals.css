@@ -10663,7 +10663,7 @@ body .footer-legal-line a { text-decoration: underline; }
   .trust-contact,
   .tax-planner-result,
   .jobs-employer-callout,
-  .product-hub-note,
+  .product-hub-note:not(.product-hub-note--compact),
   .paye-guide-card.is-primary,
   .paye-guide-actions,
   .deductions-next-step,
@@ -11439,6 +11439,7 @@ body .job-list-actions.is-verified a:first-child { color: var(--green-dark); bac
 .product-hub--business .product-hub-paths > a:first-child,
 .product-hub--salary-jobs .product-hub-paths > a:first-child { background: var(--ss-surface-accent); }
 .product-hub-note--compact { color: var(--ink); background: var(--ss-surface-accent); }
+.product-hub-note--compact .eyebrow { color: var(--green-dark); }
 .product-hub-note--compact > span { color: var(--ss-text-muted); }
 .product-hub-note--compact a,
 .product-hub-note--compact a:first-child { color: var(--green-dark); }

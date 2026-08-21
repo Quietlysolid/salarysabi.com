@@ -18,7 +18,7 @@ export function HomepageContributions() {
       <div>
         <span className="eyebrow">Community-powered transparency</span>
         <h2 id="home-contributions-title">Help make Nigerian pay clearer.</h2>
-        <p>SalarySabi reviews anonymous salary reports and genuine job leads before they can improve public comparisons or listings. Rewards are for approved evidence—not clicks or referrals.</p>
+        <p>SalarySabi reviews anonymous salary reports and genuine job leads before they can improve public comparisons or listings. Rewards are for approved evidence, not clicks or referrals.</p>
       </div>
       <aside>
         {status === "loading" && <p role="status">Checking funded offers…</p>}
