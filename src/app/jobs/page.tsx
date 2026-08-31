@@ -29,7 +29,7 @@ export default async function JobsPage() {
       <JourneyNextSteps
         title="Use the salary before you apply"
         steps={[
-          { href: "/#calculator", title: "Estimate take-home pay", description: "See what an advertised gross salary may leave after PAYE." },
+          { href: "/payslip-checker", title: "Estimate take-home pay", description: "See what an advertised gross salary may leave after PAYE." },
           { href: "/salaries", title: "Compare the salary", description: "Check reviewed ranges as public groups become available." },
           { href: "/account", title: "Track applications", description: "Save jobs and keep your progress together." },
         ]}

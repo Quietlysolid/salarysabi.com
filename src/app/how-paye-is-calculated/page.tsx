@@ -28,7 +28,7 @@ export default function MethodologyPage() {
         <span className="eyebrow">PAYE calculation</span>
         <h1>How PAYE is calculated</h1>
         <p>Yearly pay − eligible deductions = taxable income. Tax bands are then applied, and the yearly tax is divided by 12.</p>
-        <Link className="primary-button" href="/#calculator">Calculate take-home pay</Link>
+        <Link className="primary-button" href="/payslip-checker">Calculate take-home pay</Link>
       </header>
       <section className="simple-guide-section" aria-labelledby="steps-title">
         <h2 id="steps-title">The five steps</h2>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const tools = [
-  ["Calculate take-home pay", "/#calculator"],
+  ["Calculate take-home pay", "/payslip-checker"],
   ["Check payslip PAYE", "/payslip-checker"],
   ["Compare salaries", "/salaries"],
   ["Find jobs with published pay", "/jobs"],
@@ -35,7 +35,7 @@ export default function AboutPage() {
           <h2 id="about-tools-title">What SalarySabi helps you do</h2>
           <div className="about-tool-links">
             {tools.map(([label, href]) => (
-              <Link href={href} key={href}><span>{label}</span><span aria-hidden="true">→</span></Link>
+              <Link href={href} key={`${href}-${label}`}><span>{label}</span><span aria-hidden="true">→</span></Link>
             ))}
           </div>
         </section>

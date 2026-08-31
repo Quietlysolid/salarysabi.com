@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const tools = [
-  ["Salary or wages", "/#calculator"],
+  ["Salary or wages", "/payslip-checker"],
   ["Freelance or creator income", "/freelancer-tax"],
   ["Foreign income", "/foreign-income-tax"],
   ["Company tax", "/company-tax"],
@@ -14,10 +14,13 @@ for (const [name, destination] of tools) {
     const card = page.locator(".tool-index > div > a", { hasText: name });
 
     await expect(card).toHaveAttribute("href", destination);
-    await card.click({ position: { x: 40, y: 40 } });
-
     const [pathname, hash = ""] = destination.split("#");
-    await expect(page).toHaveURL(new RegExp(`${pathname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?:#${hash})?$`));
+    const destinationPattern = new RegExp(`${pathname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?:#${hash})?$`);
+    await card.scrollIntoViewIfNeeded();
+    await Promise.all([
+      page.waitForURL(destinationPattern, { timeout: 10_000 }),
+      card.click({ position: { x: 40, y: 40 } }),
+    ]);
   });
 }
 
@@ -33,7 +36,10 @@ for (const [name, destination] of payeGuides) {
     const card = page.locator(`.paye-guide-question-list a[href="${destination}"]`, { hasText: name });
 
     await expect(card).toHaveAttribute("href", destination);
-    await card.click({ position: { x: 40, y: 40 } });
-    await expect(page).toHaveURL(new RegExp(`${destination}$`));
+    await card.scrollIntoViewIfNeeded();
+    await Promise.all([
+      page.waitForURL(new RegExp(`${destination}$`), { timeout: 10_000 }),
+      card.click({ position: { x: 40, y: 40 } }),
+    ]);
   });
 }

@@ -26,7 +26,7 @@ export default function TaxBandsPage() {
     <ArticleStructuredData headline="Nigeria Tax Bands 2026" description="See Nigeria's 2026 PAYE rates and how marginal bands work." path="/tax-bands" about={["Nigeria tax bands", "PAYE"]} />
     <PayeGuideTrail current="bands" />
     <article className="simple-guide tax-bands-page">
-      <header className="simple-guide-hero"><span className="eyebrow">2026 PAYE rates</span><h1>Nigeria tax bands</h1><p>A higher rate applies only to the part of taxable income inside that band—not your whole salary.</p><Link className="primary-button" href="/#calculator">Calculate take-home pay</Link></header>
+      <header className="simple-guide-hero"><span className="eyebrow">2026 PAYE rates</span><h1>Nigeria tax bands</h1><p>A higher rate applies only to the part of taxable income inside that band—not your whole salary.</p><Link className="primary-button" href="/payslip-checker">Calculate take-home pay</Link></header>
 
       <section className="simple-guide-section simple-example" aria-labelledby="band-example-title">
         <div><span className="eyebrow">Example</span><h2 id="band-example-title">₦6 million taxable income</h2><p>The income is split across three bands.</p></div>

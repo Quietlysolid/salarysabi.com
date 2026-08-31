@@ -1,20 +1,21 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { BrandMark } from "@/components/brand-mark";
 import { BrandWordmark } from "@/components/brand-wordmark";
 import { CampaignAnnouncement } from "@/components/campaign-announcement";
-import { MobileNavigation, SiteNavigation } from "@/components/site-navigation";
+import { AudienceNavigation, MobileNavigation, SiteNavigation } from "@/components/site-navigation";
 
 export function InfoHeader() {
   return (
-    <header className="site-header info-header">
-      <Link aria-label="SalarySabi home" className="brand" href="/">
-        <BrandMark />
-        <BrandWordmark />
-      </Link>
-      <SiteNavigation />
-      <MobileNavigation />
-    </header>
+    <>
+      <header className="site-header info-header">
+        <Link aria-label="SalarySabi home" className="brand" href="/">
+          <BrandWordmark />
+        </Link>
+        <SiteNavigation />
+        <MobileNavigation />
+      </header>
+      <AudienceNavigation />
+    </>
   );
 }
 
@@ -23,38 +24,48 @@ export function InfoFooter() {
     <footer className="info-footer">
       <div className="footer-identity">
         <Link aria-label="SalarySabi home" className="brand footer-brand" href="/">
-          <BrandMark />
           <BrandWordmark />
         </Link>
+        <p>From salary promise to take-home reality.</p>
       </div>
       <div className="footer-links">
-        <nav aria-labelledby="footer-pay-tools">
-          <h2 id="footer-pay-tools">Pay &amp; tax</h2>
-          <Link href="/#calculator">Take-home pay</Link>
+        <nav aria-labelledby="footer-talent">
+          <h2 id="footer-talent">For talent</h2>
+          <Link href="/payslip-checker">Take-home pay</Link>
           <Link href="/payslip-checker">Check payslip PAYE</Link>
-          <Link href="/tax-tools">Other calculators</Link>
-        </nav>
-        <nav aria-labelledby="footer-jobs">
-          <h2 id="footer-jobs">Jobs &amp; salaries</h2>
           <Link href="/salaries">Salary benchmarks</Link>
           <Link href="/jobs">Jobs with salaries</Link>
-          <Link href="/contributors">Contribute pay data</Link>
-          <Link href="/contributions">My contributions</Link>
         </nav>
-        <nav aria-labelledby="footer-salarysabi">
-          <h2 id="footer-salarysabi">For employers</h2>
+        <nav aria-labelledby="footer-employers">
+          <h2 id="footer-employers">For employers</h2>
           <Link href="/payroll">Small-team payroll</Link>
           <Link href="/company-tax">Company tax</Link>
           <Link href="/post-a-job">Post a job</Link>
         </nav>
+        <nav aria-labelledby="footer-community">
+          <h2 id="footer-community">Contribute</h2>
+          <Link href="/contributors">Contribute pay data</Link>
+          <Link href="/suggest-a-job">Share a paid role</Link>
+          <Link href="/contributions">My contributions</Link>
+        </nav>
         <nav aria-labelledby="footer-learn">
           <h2 id="footer-learn">Learn</h2>
           <Link href="/paye-guide">PAYE guide</Link>
+          <Link href="/tax-updates">Calculation rules</Link>
           <Link href="/about">About SalarySabi</Link>
           <Link href="/contact">Contact us</Link>
         </nav>
       </div>
-      <p className="footer-legal-line"><span>© 2026 SalarySabi.</span><span><Link href="/terms">Terms</Link><Link href="/privacy">Privacy</Link><Link href="/disclaimer">Disclaimer</Link><Link href="/security">Security</Link><Link href="/accessibility">Accessibility</Link></span></p>
+      <p className="footer-legal-line">
+        <span>© 2026 SalarySabi.</span>
+        <span>
+          <Link href="/terms">Terms</Link>
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/disclaimer">Disclaimer</Link>
+          <Link href="/security">Security</Link>
+          <Link href="/accessibility">Accessibility</Link>
+        </span>
+      </p>
     </footer>
   );
 }

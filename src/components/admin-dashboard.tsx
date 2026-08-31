@@ -750,7 +750,7 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
     return (
       <section className="admin-entry">
         <header className="admin-entry-brand">
-          <Link aria-label="SalarySabi home" className="brand" href="/"><BrandMark /><BrandWordmark /></Link>
+          <Link aria-label="SalarySabi home" className="brand" href="/"><BrandWordmark /></Link>
           <span>Internal operations</span>
         </header>
         <div className="admin-entry-grid">
@@ -800,7 +800,7 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
   return (
     <section className="admin-shell">
       <header className="admin-topbar">
-        <Link aria-label="SalarySabi home" className="brand" href="/"><BrandMark /><BrandWordmark /></Link>
+        <Link aria-label="SalarySabi home" className="brand" href="/"><BrandWordmark /></Link>
         <nav aria-label="Administration sections">
           {([['review', 'Review'], ['jobs', 'Jobs'], ['reports', 'Reports'], ['analytics', 'Analytics']] as const).map(([view, label]) => (
             <button aria-current={activeView === view ? "page" : undefined} className={activeView === view ? "is-active" : ""} key={view} onClick={() => setActiveView(view)} type="button">{label}{view === "review" && reviewQueue.length ? <span>{reviewQueue.length}</span> : null}</button>

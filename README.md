@@ -95,8 +95,8 @@ NEXT_PUBLIC_SITE_URL=https://YOUR_PUBLIC_HOST
 The Supabase anonymous key is designed for browser use. The migration enables
 Row Level Security so browsers can insert signups and increment aggregate
 analytics but cannot read either table. Never use a service-role key here.
-Without the Supabase values, calculations remain functional, analytics fail
-silently, and the early-access form returns a temporary-unavailable message.
+Without the Supabase values, the public information pages remain available,
+but analytics and database-backed features are unavailable.
 
 The production artifact must be built in an environment where the public
 Supabase values are present. Configure the Supabase Auth site URL as

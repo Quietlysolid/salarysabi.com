@@ -28,7 +28,7 @@ export default function DisclaimerPage() {
         </section>
         <nav className="disclaimer-ledger-actions disclaimer-plain-actions" aria-label="Disclaimer next steps">
           <Link className="primary-button" href="/how-paye-is-calculated">See how we calculate</Link>
-          <Link href="/#calculator">Calculate again</Link>
+          <Link href="/payslip-checker">Check pay again</Link>
           <Link className="disclaimer-privacy-link" href="/privacy">Privacy</Link>
         </nav>
       </article>

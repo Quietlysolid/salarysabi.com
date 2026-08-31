@@ -7,6 +7,8 @@ export const dynamic = "force-static";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages = [
     { path: "", lastModified: siteContentUpdatedIso },
+    { path: "/talent", lastModified: siteContentUpdatedIso },
+    { path: "/employers", lastModified: siteContentUpdatedIso },
     { path: "/paye-guide", lastModified: siteContentUpdatedIso },
     { path: "/tax-tools", lastModified: rulesVerifiedIso },
     { path: "/salaries-and-jobs", lastModified: siteContentUpdatedIso },

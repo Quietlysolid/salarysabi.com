@@ -32,7 +32,7 @@ export default function DeductionsPage() {
         </div>
       </section>
       <aside className="simple-guide-note"><strong>Keep your records.</strong><span>Keep the payslip, statement or receipt supporting every amount.</span></aside>
-      <div className="simple-guide-actions"><Link className="primary-button" href="/?restore=deduction#calculator">Back to my calculation</Link><Link href="/how-paye-is-calculated">How PAYE is calculated</Link></div>
+      <div className="simple-guide-actions"><Link className="primary-button" href="/payslip-checker">Back to my pay check</Link><Link href="/how-paye-is-calculated">How PAYE is calculated</Link></div>
     </article>
   </PublicPageShell>;
 }

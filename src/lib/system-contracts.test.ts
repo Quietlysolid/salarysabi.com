@@ -11,7 +11,6 @@ describe("shared product contracts", () => {
   it("keeps trust dates in the site metadata source", () => {
     const consumers = [
       "src/app/page.tsx",
-      "src/components/calculator.tsx",
       "src/components/payslip-checker.tsx",
       "src/app/disclaimer/page.tsx",
       "src/app/privacy/page.tsx",
@@ -22,8 +21,11 @@ describe("shared product contracts", () => {
     expect(consumers).not.toContain("21 August 2026");
   });
 
-  it("uses the public shell on core public routes", () => {
-    for (const route of ["src/app/page.tsx", "src/app/jobs/page.tsx", "src/app/payslip-checker/page.tsx", "src/app/account/page.tsx", "src/app/post-a-job/page.tsx", "src/app/suggest-a-job/page.tsx", "src/app/paye-guide/page.tsx", "src/app/disclaimer/page.tsx", "src/app/privacy/page.tsx", "src/app/eligible-deductions/page.tsx", "src/app/how-paye-is-calculated/page.tsx", "src/app/salaries-and-jobs/page.tsx", "src/app/business/page.tsx"]) {
+  it("uses the split gateway home and the public shell on core public routes", () => {
+    expect(read("src/app/page.tsx")).toContain("SplitGatewayHome");
+    expect(read("src/app/talent/page.tsx")).toContain('audience="talent"');
+    expect(read("src/app/employers/page.tsx")).toContain('audience="employer"');
+    for (const route of ["src/app/jobs/page.tsx", "src/app/payslip-checker/page.tsx", "src/app/account/page.tsx", "src/app/post-a-job/page.tsx", "src/app/suggest-a-job/page.tsx", "src/app/paye-guide/page.tsx", "src/app/disclaimer/page.tsx", "src/app/privacy/page.tsx", "src/app/eligible-deductions/page.tsx", "src/app/how-paye-is-calculated/page.tsx", "src/app/salaries-and-jobs/page.tsx", "src/app/business/page.tsx"]) {
       expect(read(route)).toContain("PublicPageShell");
     }
   });
@@ -57,7 +59,7 @@ describe("shared product contracts", () => {
     const grossNetGuide = read("src/app/net-salary-vs-gross-salary-nigeria/page.tsx");
     const taxBandsGuide = read("src/app/tax-bands/page.tsx");
     const payeGuide = read("src/app/how-paye-is-calculated/page.tsx");
-    const calculator = read("src/components/calculator.tsx");
+    const payslipChecker = read("src/components/payslip-checker.tsx");
 
     expect(salaryTerms.grossSalary).toContain("before employee deductions");
     expect(salaryTerms.grossSalary).toContain("basic salary and taxable allowances");
@@ -67,7 +69,7 @@ describe("shared product contracts", () => {
     expect(grossNetGuide).toContain("salaryTerms.netSalary");
     expect(taxBandsGuide).toContain("salaryTerms.chargeableIncome");
     expect(payeGuide).toContain("salaryTerms.chargeableIncome");
-    expect(calculator).toContain("Taxable income");
+    expect(payslipChecker).toContain("Monthly gross pay");
   });
 
   it("keeps the analytics allow-list synchronized with the database migration", () => {

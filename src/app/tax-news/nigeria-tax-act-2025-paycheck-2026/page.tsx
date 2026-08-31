@@ -74,7 +74,7 @@ export default function TaxActPaycheckExplainerPage() {
           <section>
             <h2>What does this mean for take-home pay?</h2>
             <p>There is no single answer for every worker. PAYE changes with income and eligible deductions. Net pay can also include pension, housing, health and other payroll deductions outside the PAYE figure.</p>
-            <div className="tax-news-actions"><Link className="primary-button" href="/#calculator">Calculate your 2026 PAYE</Link><Link className="secondary-button" href="/payslip-checker">Check your payslip</Link></div>
+            <div className="tax-news-actions"><Link className="primary-button" href="/payslip-checker">Calculate your 2026 PAYE</Link><Link className="secondary-button" href="/paye-guide">Understand the rules</Link></div>
           </section>
           <section className="tax-news-sources">
             <span className="eyebrow">Official sources</span>

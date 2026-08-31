@@ -18,14 +18,16 @@ function rewardLabel(campaigns: ActiveContributionCampaign[]) {
 
 export function CampaignAnnouncement() {
   const pathname = usePathname();
-  const enabled = !pathname.startsWith("/contributors") && pathname !== "/contributions";
+  const enabled = ["/salaries", "/salaries-and-jobs", "/jobs"].some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
   const { campaigns } = useActiveContributionCampaigns(enabled);
 
   useEffect(() => {
     if (enabled && campaigns.length > 0) track("reward_offer_viewed");
   }, [campaigns.length, enabled]);
 
-  if (pathname.startsWith("/contributors") || campaigns.length === 0) return null;
+  if (!enabled || campaigns.length === 0) return null;
 
   const types = new Set(campaigns.map((campaign) => campaign.contribution_type));
   const task = types.size > 1

@@ -203,7 +203,6 @@ export function JobSuggestionForm() {
       <label className="wide job-source-declaration"><input name="source_confirmed" required type="checkbox" /><span>I opened the original vacancy and confirmed it is active, Nigeria-relevant, and shows this offered salary. I did not estimate or convert the amount.</span></label>
       <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
     </div>
-    <p className="job-form-note">Submit the employer’s own careers or ATS page—not an aggregator, salary estimate, or screenshot without a verifiable URL.</p>
     {campaign && <TurnstileCheck action="reward_job" onToken={receiveHumanToken} resetSignal={humanReset} />}
     <button className="primary-button" disabled={busy || Boolean(campaign && !humanToken)}>{busy ? "Submitting…" : campaign ? "Verify source and submit" : "Send job tip"}</button>
     <p role="status">{message}</p>

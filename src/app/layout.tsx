@@ -4,6 +4,8 @@ import { Analytics } from "@/components/analytics";
 import { founderGitHubUrl, founderLinkedInUrl, siteUrl } from "@/lib/site";
 import "./globals.css";
 import "./redesign.css";
+import "./split-gateway.css";
+import "./audience-system.css";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",

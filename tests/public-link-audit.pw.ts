@@ -15,6 +15,7 @@ test("every unique public internal link completes a browser navigation", async (
   const links = new Map<string, string>();
 
   for (const source of publicPages) {
+    if (source === "/") await page.context().clearCookies();
     await page.goto(source, { waitUntil: "domcontentloaded" });
     for (const href of await page.locator('a[href]').evaluateAll((nodes) => nodes.map((node) => node.getAttribute("href") || ""))) {
       if (!href.startsWith("/") || href.startsWith("//")) continue;
@@ -29,6 +30,7 @@ test("every unique public internal link completes a browser navigation", async (
     const response = await request.get(href.split("#")[0]);
     expect(response.status(), `${source} links to ${href}`).toBeLessThan(400);
 
+    if (source === "/") await page.context().clearCookies();
     await page.goto(source, { waitUntil: "domcontentloaded" });
     const link = page.locator(`a[href="${href.replaceAll('"', '\\"')}"]`).first();
     await expect(link, `${source} should render ${href}`).toBeAttached();

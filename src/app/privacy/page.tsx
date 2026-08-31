@@ -145,7 +145,7 @@ export default function PrivacyPage() {
           <p>Last updated: <strong>{legalContentUpdatedDate}</strong></p>
           <div>
             <a className="privacy-request-action" href="mailto:privacy@salarysabi.com?subject=Privacy%20request">Request an update or deletion</a>
-            <Link className="privacy-return-action" href="/#calculator">Return to calculator</Link>
+            <Link className="privacy-return-action" href="/payslip-checker">Return to pay checker</Link>
           </div>
         </footer>
       </article>

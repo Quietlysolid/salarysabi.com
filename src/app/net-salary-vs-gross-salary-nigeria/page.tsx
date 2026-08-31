@@ -19,7 +19,7 @@ export default function NetSalaryGuidePage() {
     <ArticleStructuredData headline="Gross Salary vs Take-Home Pay in Nigeria" description="See the difference between gross salary and take-home pay." path="/net-salary-vs-gross-salary-nigeria" about={["Gross salary", "Take-home pay", "PAYE"]} />
     <PayeGuideTrail current="gross-net" />
     <article className="simple-guide salary-article">
-      <header className="simple-guide-hero"><span className="eyebrow">Salary explained</span><h1>Gross pay vs take-home pay</h1><p>Gross pay is your salary before deductions. Take-home pay is what remains after deductions.</p><Link className="primary-button" href="/#calculator">Calculate take-home pay</Link></header>
+      <header className="simple-guide-hero"><span className="eyebrow">Salary explained</span><h1>Gross pay vs take-home pay</h1><p>Gross pay is your salary before deductions. Take-home pay is what remains after deductions.</p><Link className="primary-button" href="/payslip-checker">Calculate take-home pay</Link></header>
 
       <section className="simple-definition-grid" aria-label="Gross and take-home pay definitions"><article><span>Gross pay</span><h2>Before deductions</h2><p>{salaryTerms.grossSalary}</p></article><article><span>Take-home pay</span><h2>After deductions</h2><p>{salaryTerms.netSalary}</p></article></section>
 

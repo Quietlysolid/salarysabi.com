@@ -152,7 +152,7 @@ export function PayslipChecker() {
           title="Use the comparison"
           description="Choose the next action that matches what you found."
           steps={[
-            { href: "/#calculator", title: "Recalculate take-home pay", description: "Adjust salary or eligible deductions." },
+            { href: "/paye-guide", title: "Understand the PAYE rules", description: "Review the rules behind the estimate." },
             { href: "/salaries", title: "Compare my salary", description: "See reviewed ranges as public groups become available." },
             { href: "/jobs", title: "Find jobs with published pay", description: "See the offered salary before applying." },
           ]}

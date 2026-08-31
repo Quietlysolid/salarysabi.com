@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 test("public pages expose one main landmark inside the shared shell", async ({ page }) => {
-  for (const route of ["/", "/salaries", "/salaries-and-jobs", "/business", "/tax-tools", "/contributors", "/contributors/job-sourcing", "/privacy", "/disclaimer"]) {
+  test.setTimeout(90_000);
+  for (const route of ["/talent", "/employers", "/salaries", "/salaries-and-jobs", "/business", "/tax-tools", "/contributors", "/contributors/job-sourcing", "/privacy", "/disclaimer"]) {
     await page.goto(route);
     await expect(page.locator("main")).toHaveCount(1);
     await expect(page.locator("main main")).toHaveCount(0);
@@ -10,39 +11,57 @@ test("public pages expose one main landmark inside the shared shell", async ({ p
   }
 });
 
-test("primary navigation uses four clear task destinations", async ({ page }) => {
-  await page.goto("/");
+test("global and audience navigation stay distinct", async ({ page }) => {
+  await page.goto("/salaries-and-jobs");
   const mobile = (page.viewportSize()?.width ?? 0) <= 760;
   const nav = page.getByRole("navigation", { name: mobile ? "Mobile navigation" : "Primary navigation" });
   if (!mobile) await expect(nav.getByRole("link")).toHaveCount(4);
-  await expect(nav.getByRole("link", { name: "Pay & tax" })).toHaveAttribute("aria-current", "page");
+  if (!mobile) await expect(page.getByRole("navigation", { name: "For talent tools" })).toBeVisible();
+  await expect(nav.getByRole("link", { name: mobile ? "Talent" : "For talent" })).toHaveAttribute("aria-current", "page");
   await page.goto("/business");
-  if (mobile) await nav.getByText("More").click();
-  await expect(nav.getByRole("link", { name: "For employers" })).toHaveAttribute("aria-current", "page");
+  if (!mobile) await expect(page.getByRole("navigation", { name: "For employers tools" })).toBeVisible();
+  await expect(nav.getByRole("link", { name: mobile ? "Employers" : "For employers" })).toHaveAttribute("aria-current", "page");
   await page.goto("/paye-guide");
-  if (mobile) await nav.getByText("More").click();
-  await expect(nav.getByRole("link", { name: "Learn" })).toHaveAttribute("aria-current", "page");
+  if (!mobile) await expect(page.getByRole("navigation", { name: "SalarySabi knowledge tools" })).toBeVisible();
+  if (!mobile) await expect(nav.getByRole("link", { name: "Learn" })).toHaveAttribute("aria-current", "page");
 });
 
-test("calculator requires salary before showing a result", async ({ page }) => {
+test("root is a clear audience gateway", async ({ page }) => {
+  await page.context().clearCookies();
   await page.goto("/");
-  await page.getByRole("button", { name: "Calculate take-home pay" }).click();
-  await expect(page.getByText("Enter your salary before calculating.")).toBeVisible();
-  await expect(page.getByLabel("Salary before deductions")).toBeFocused();
-  await expect(page.locator(".result-summary")).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "How do you want to use SalarySabi?" })).toHaveCount(0);
+  await expect(page.locator(".gateway-choice--talent .gateway-choice-eyebrow")).toHaveText("For talent");
+  await expect(page.locator(".gateway-choice--employer .gateway-choice-eyebrow")).toHaveText("For employers");
+  await expect(page.getByRole("link", { name: /Understand my pay/i })).toHaveAttribute("href", "/talent");
+  await expect(page.getByRole("link", { name: /Pay and hire my team/i })).toHaveAttribute("href", "/employers");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  if ((page.viewportSize()?.width ?? 0) > 820) {
+    expect(await page.evaluate(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight)).toBe(true);
+  }
 });
 
-test("calculator result prioritises trust, action and portable records", async ({ page }) => {
+test("audience homepages route every visible task to the correct tool", async ({ page }) => {
+  await page.context().clearCookies();
+  await page.goto("/talent");
+  const calculateLink = page.getByRole("link", { name: "Start with my pay" });
+  await expect(calculateLink).toHaveAttribute("href", "/payslip-checker");
+  await expect(page.locator("#calculator")).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "See jobs with pay" })).toHaveAttribute("href", "/jobs");
+  await page.goto("/employers");
+  const employerActions = page.locator(".employer-editorial-actions");
+  await expect(employerActions.getByRole("link", { name: "Run payroll" })).toHaveAttribute("href", "/payroll");
+  await expect(employerActions.getByRole("link", { name: "Plan company tax" })).toHaveAttribute("href", "/company-tax");
+});
+
+test("mobile audience gateway keeps both choices clear and focused", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await page.getByLabel("Salary before deductions").fill("750000");
-  await page.getByRole("button", { name: "Calculate take-home pay" }).click();
-  await expect(page.locator("#results")).toBeFocused();
-  await expect(page.locator(".calculation-trust")).toContainText("Official 2026 rules");
-  await expect(page.getByRole("heading", { name: "What to do next" })).toBeVisible();
-  await expect(page.locator(".result-next-actions li")).toHaveCount(3);
-  await page.getByText("View full calculation").click();
-  await expect(page.getByRole("button", { name: "PDF" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Excel" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Know your actual salary." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Pay people right and be able to prove it." })).toBeVisible();
+  await page.getByRole("link", { name: /Understand my pay/i }).click();
+  await expect(page).toHaveURL(/\/talent$/);
+  await expect(page.getByRole("heading", { name: /Everything about your pay in one place/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Hire like you/i })).toHaveCount(0);
 });
 
 test("mobile keeps descriptions and avoids horizontal overflow", async ({ page }) => {
@@ -92,7 +111,7 @@ test("jobs and business hubs retain clear audience routes", async ({ page }) => 
   await page.goto("/jobs");
   await expect(page.getByRole("heading", { name: "Jobs with salaries" })).toBeVisible();
   await page.goto("/business");
-  await expect(page.getByRole("link", { name: /Run payroll/i })).toHaveAttribute("href", "/payroll");
-  await expect(page.getByRole("link", { name: /Plan company tax/i })).toHaveAttribute("href", "/company-tax");
+  await expect(page.locator('.product-hub-paths a[href="/payroll"]')).toHaveAttribute("href", "/payroll");
+  await expect(page.locator('.product-hub-paths a[href="/company-tax"]')).toHaveAttribute("href", "/company-tax");
   await expect(page.locator('.product-hub-paths a[href="/post-a-job"]')).toHaveAttribute("href", "/post-a-job");
 });

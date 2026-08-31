@@ -35,7 +35,7 @@ export default function PayeGuidePage() {
           ))}
         </nav>
 
-        <Link className="primary-button paye-guide-simple-action" href="/#calculator">Calculate take-home pay</Link>
+        <Link className="primary-button paye-guide-simple-action" href="/payslip-checker">Calculate take-home pay</Link>
 
         <details className="paye-guide-simple-sources">
           <summary><span>Sources and updates</span><span aria-hidden="true">+</span></summary>
