@@ -51,7 +51,7 @@ function GatewayHeader() {
 
 function AudienceChoice({ audience }: { audience: Audience }) {
   const content = audienceContent[audience];
-  const href = audience === "talent" ? "/talent" : "/employers";
+  const href = audience === "talent" ? "/talent" : "/payroll";
 
   return (
     <article className={`gateway-choice gateway-choice--${audience}`}>
@@ -64,12 +64,12 @@ function AudienceChoice({ audience }: { audience: Audience }) {
       />
       <div className="gateway-choice-content">
         <span className="gateway-choice-eyebrow">{content.eyebrow}</span>
-        <h2>{audience === "talent" ? "Know your actual salary." : "Pay people right and be able to prove it."}</h2>
+        <h2>{audience === "talent" ? "Know your actual salary." : "Pay people right. Prove it."}</h2>
         <p>{audience === "talent" ? "Salary na promise. Take-home na reality." : "Hire like you have nothing to hide."}</p>
       </div>
-      {audience === "talent" ? <PayPreview /> : <PayrollPreview />}
+      {audience === "talent" ? <PayPreview /> : <PayrollPreview compact />}
       <a className="gateway-choice-action" href={href}>
-        {audience === "talent" ? "Understand my pay" : "Pay and hire my team"} <ArrowRight aria-hidden="true" />
+        {audience === "talent" ? "Understand my pay" : "Run my payroll"} <ArrowRight aria-hidden="true" />
       </a>
     </article>
   );
@@ -107,12 +107,22 @@ function PayPreview() {
   );
 }
 
-function PayrollPreview() {
+function PayrollPreview({ compact = false }: { compact?: boolean }) {
   const rows = [
     ["Adaeze M.", "500,000", "72,500", "427,500"],
     ["Tunde O.", "350,000", "45,500", "304,500"],
     ["Ngozi I.", "280,000", "32,900", "247,100"],
   ];
+
+  if (compact) return (
+    <div className="gateway-payroll-preview gateway-payroll-preview--compact" aria-label="Example August 2026 payroll summary" role="group">
+      <header><strong>August payroll ready</strong><span>Aug 2026</span></header>
+      <div className="gateway-payroll-summary">
+        <strong>3 employees</strong>
+        <span>PAYE calculated · Net pay confirmed</span>
+      </div>
+    </div>
+  );
 
   return (
     <div className="gateway-payroll-preview" aria-label="Example August 2026 payroll record" role="table">
@@ -134,49 +144,44 @@ function TalentStory() {
     <div className="talent-story">
       <div className="talent-story-inner">
         <header className="talent-story-heading">
-          <span>From offer letter to bank alert</span>
+          <span>From offer letter to bank alert.</span>
           <h1>Everything about your pay in one place.</h1>
+          <p>SalarySabi helps you calculate your take-home pay, compare salaries, and find jobs that publish the pay.</p>
+          <Link className="talent-primary-link" href="/payslip-checker">Calculate my pay <ArrowRight aria-hidden="true" /></Link>
         </header>
 
         <div className="talent-story-paths">
           <article>
             <span className="talent-story-icon"><Calculator aria-hidden="true" /></span>
             <div>
-              <h3>Calculate &amp; verify pay</h3>
-              <p>Enter your salary and see your PAYE, deductions and net pay. Then hold your payslip against it and find out whether your employer agrees.</p>
-              <Link className="talent-primary-link" href="/payslip-checker">Start with my pay <ArrowRight aria-hidden="true" /></Link>
+              <h2>Calculate your pay</h2>
+              <p>See your PAYE, deductions, and take-home pay.</p>
+              <Link href="/payslip-checker">Calculate pay <ArrowRight aria-hidden="true" /></Link>
             </div>
           </article>
           <article>
             <span className="talent-story-icon"><ChartNoAxesCombined aria-hidden="true" /></span>
             <div>
-              <h3>Find roles and the market rates</h3>
-              <p>Review salary ranges by role, industry and location, plus live jobs that publish the number before you apply. Walk into the negotiation already knowing what the room pays.</p>
-              <div className="talent-story-links">
-                <Link href="/salaries">See salary ranges <ArrowRight aria-hidden="true" /></Link>
-                <Link href="/jobs">See jobs with pay <ArrowRight aria-hidden="true" /></Link>
-              </div>
+              <h2>Compare salaries</h2>
+              <p>See verified salary ranges for roles like yours.</p>
+              <Link href="/salaries">Compare salaries <ArrowRight aria-hidden="true" /></Link>
+            </div>
+          </article>
+          <article>
+            <span className="talent-story-icon"><BriefcaseBusiness aria-hidden="true" /></span>
+            <div>
+              <h2>Find jobs with published pay</h2>
+              <p>Know the salary and original source before applying.</p>
+              <Link href="/jobs">Explore jobs <ArrowRight aria-hidden="true" /></Link>
             </div>
           </article>
         </div>
 
-        <div className="talent-story-closing">
-          <article className="talent-value-panel">
-            <span>Know your worth</span>
-            <h2>Know the value of your skill. Stop leaving money on the table.</h2>
-            <p>Get verified numbers and details for your role.</p>
-            <Link href="/salaries">Compare salary ranges <ArrowRight aria-hidden="true" /></Link>
-          </article>
-          <article className="talent-rules-panel">
-            <ShieldCheck aria-hidden="true" />
-            <div>
-              <span>Trust the number</span>
-              <h2>Official calculation rules</h2>
-              <p>PAYE estimates show the active ruleset, review date and source history.</p>
-              <Link href="/tax-updates">Inspect the rules <ArrowRight aria-hidden="true" /></Link>
-            </div>
-          </article>
-        </div>
+        <aside className="talent-trust-strip">
+          <ShieldCheck aria-hidden="true" />
+          <strong>Built on Nigeria&apos;s official tax rules.</strong>
+          <Link href="/tax-updates">Inspect the rules <ArrowRight aria-hidden="true" /></Link>
+        </aside>
       </div>
     </div>
   );

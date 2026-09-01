@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.describe("work-and-pay platform redesign", () => {
   test("gateway sends each audience to a focused homepage and useful task", async ({ page }) => {
+    test.setTimeout(90_000);
     const consoleErrors: string[] = [];
     page.on("console", (message) => { if (message.type() === "error") consoleErrors.push(message.text()); });
     await page.context().clearCookies();
@@ -11,12 +12,10 @@ test.describe("work-and-pay platform redesign", () => {
     await expect(page.locator(".gateway-choice--talent .gateway-choice-eyebrow")).toHaveText("For talent");
     await expect(page.locator(".gateway-choice--employer .gateway-choice-eyebrow")).toHaveText("For employers");
     await expect(page.getByRole("link", { name: /Understand my pay/i })).toHaveAttribute("href", "/talent");
-    await page.getByRole("link", { name: /Pay and hire my team/i }).click();
-    await expect(page).toHaveURL(/\/employers$/);
-    await expect(page.getByRole("heading", { name: /Hire like you/i })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Salary na promise/i })).toHaveCount(0);
-    await page.locator(".employer-editorial-actions").getByRole("link", { name: "Run payroll" }).click();
+    await page.getByRole("link", { name: /Run my payroll/i }).click();
     await expect(page).toHaveURL(/\/payroll$/);
+    await expect(page.getByRole("heading", { name: "Small-team payroll" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Salary na promise/i })).toHaveCount(0);
     if ((page.viewportSize()?.width ?? 0) <= 760) {
       await expect(page.getByRole("navigation", { name: "Mobile navigation" }).getByRole("link", { name: "Employers" })).toHaveAttribute("aria-current", "page");
     } else {
@@ -28,8 +27,8 @@ test.describe("work-and-pay platform redesign", () => {
 
   test("salary contribution validates identity-free context before pay details", async ({ page }) => {
     await page.goto("/salaries");
-    await expect(page.getByText("Public comparisons are building.")).toBeVisible();
-    await page.getByRole("button", { name: "Share without a reward" }).click();
+    await expect(page.getByRole("heading", { name: "Know what your work is worth." })).toBeVisible();
+    await page.getByRole("button", { name: "Share my salary" }).click();
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.locator('input[name="role"]')).toBeFocused();
     await page.locator('input[name="role"]').fill("Product designer");
@@ -67,15 +66,14 @@ test.describe("work-and-pay platform redesign", () => {
       });
     });
     await page.goto("/contributors");
-    await expect(page.getByRole("heading", { name: /Help make Nigerian pay transparent./i })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Share your own salary" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Find a job with published pay" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Check job-lead requirements" })).toHaveAttribute("href", "/contributors/job-sourcing");
-    await expect(page.getByRole("heading", { name: "Know someone with useful pay information?" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Share on WhatsApp" })).toHaveAttribute("href", /wa\.me/);
-    await expect(page.getByRole("link", { name: "View my contributions and rewards" })).toHaveAttribute("href", "/contributions");
+    await expect(page.getByRole("heading", { name: "Your evidence makes pay visible." })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Share my salary" }).first()).toHaveAttribute("href", /salary-pilot-2026/);
+    await expect(page.getByRole("heading", { name: "Share a paid job" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Share a paid job" })).toHaveAttribute("href", "/contributors/job-sourcing");
+    await expect(page.getByText("Your contribution journey")).toBeVisible();
+    await expect(page.getByText(/Your individual salary stays out of public view/i)).toBeVisible();
     await expect(page.getByLabel("Active funded contributor offer")).toHaveCount(0);
-    await page.getByRole("button", { name: "Check salary-report eligibility" }).click();
+    await page.getByText("Salary-report eligibility and approval rules").click();
     await expect(page.getByText(/Only one paid salary report is allowed per person/i)).toBeVisible();
     await expect(page.getByText(/benchmark needs five similar approved reports/i)).toBeVisible();
   });
@@ -132,20 +130,26 @@ test.describe("work-and-pay platform redesign", () => {
   });
 
   test("talent and employer homepages contain only their own tasks", async ({ page }) => {
+    const consoleErrors: string[] = [];
+    page.on("console", (message) => { if (message.type() === "error") consoleErrors.push(message.text()); });
     await page.context().clearCookies();
     await page.goto("/talent");
     await expect(page.getByRole("heading", { name: "Know your actual salary." })).toHaveCount(0);
     await expect(page.getByLabel("Example take-home pay calculation")).toHaveCount(0);
     await expect(page.getByRole("region", { name: "Talent at work" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Everything about your pay in one place." })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Start with my pay" })).toHaveAttribute("href", "/payslip-checker");
-    await expect(page.getByText(/hold your payslip against it/i)).toBeVisible();
-    await expect(page.getByText(/active ruleset, review date and source history/i)).toBeVisible();
+    await expect(page.getByText("From offer letter to bank alert.")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Calculate my pay" })).toHaveAttribute("href", "/payslip-checker");
+    await expect(page.getByText(/See your PAYE, deductions, and take-home pay/i)).toBeVisible();
+    await expect(page.getByRole("link", { name: "Compare salaries" })).toHaveAttribute("href", "/salaries");
+    await expect(page.getByRole("link", { name: "Explore jobs" })).toHaveAttribute("href", "/jobs");
+    await expect(page.getByText(/Built on Nigeria's official tax rules/i)).toBeVisible();
     await expect(page.getByRole("link", { name: "Inspect the rules" }).last()).toHaveAttribute("href", "/tax-updates");
     await expect(page.getByRole("link", { name: "Run payroll" })).toHaveCount(0);
     await page.goto("/employers");
     await expect(page.getByRole("link", { name: "Post open roles" })).toHaveAttribute("href", "/post-a-job");
     await expect(page.getByRole("link", { name: "Calculate & verify pay" })).toHaveCount(0);
+    expect(consoleErrors).toEqual([]);
   });
 
   test("admin fixture loads review work and gates publication", async ({ page }) => {

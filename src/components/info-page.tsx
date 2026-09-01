@@ -125,6 +125,7 @@ export function InfoPage({
   eyebrow,
   title,
   intro,
+  heroAction,
   children,
   contents,
   trail,
@@ -132,6 +133,7 @@ export function InfoPage({
   eyebrow?: string;
   title: string;
   intro?: string;
+  heroAction?: ReactNode;
   children: ReactNode;
   contents?: { href: string; label: string }[];
   trail?: ReactNode;
@@ -144,6 +146,7 @@ export function InfoPage({
           {eyebrow && <span className="eyebrow">{eyebrow}</span>}
           <h1>{title}</h1>
           {intro && <p>{intro}</p>}
+          {heroAction}
         </div>
         {contents && contents.length > 0 && (
           <nav className="info-contents" aria-label="On this page">

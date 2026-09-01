@@ -33,7 +33,8 @@ test("root is a clear audience gateway", async ({ page }) => {
   await expect(page.locator(".gateway-choice--talent .gateway-choice-eyebrow")).toHaveText("For talent");
   await expect(page.locator(".gateway-choice--employer .gateway-choice-eyebrow")).toHaveText("For employers");
   await expect(page.getByRole("link", { name: /Understand my pay/i })).toHaveAttribute("href", "/talent");
-  await expect(page.getByRole("link", { name: /Pay and hire my team/i })).toHaveAttribute("href", "/employers");
+  await expect(page.getByRole("link", { name: /Run my payroll/i })).toHaveAttribute("href", "/payroll");
+  await expect(page.getByText("PAYE calculated · Net pay confirmed")).toBeVisible();
   await expect(page.locator(".gateway-utility-links").getByRole("link", { name: "Contribute" })).toHaveAttribute("href", "/contributors");
   await expect(page.locator(".gateway-utility-links").getByRole("link", { name: "Community" })).toHaveCount(0);
   await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -45,10 +46,10 @@ test("root is a clear audience gateway", async ({ page }) => {
 test("audience homepages route every visible task to the correct tool", async ({ page }) => {
   await page.context().clearCookies();
   await page.goto("/talent");
-  const calculateLink = page.getByRole("link", { name: "Start with my pay" });
+  const calculateLink = page.getByRole("link", { name: "Calculate my pay" });
   await expect(calculateLink).toHaveAttribute("href", "/payslip-checker");
   await expect(page.locator("#calculator")).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "See jobs with pay" })).toHaveAttribute("href", "/jobs");
+  await expect(page.getByRole("link", { name: "Explore jobs" })).toHaveAttribute("href", "/jobs");
   await page.goto("/employers");
   const employerActions = page.locator(".employer-editorial-actions");
   await expect(employerActions.getByRole("link", { name: "Run payroll" })).toHaveAttribute("href", "/payroll");
@@ -59,11 +60,12 @@ test("mobile audience gateway keeps both choices clear and focused", async ({ pa
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Know your actual salary." })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Pay people right and be able to prove it." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Pay people right. Prove it." })).toBeVisible();
   await page.getByRole("link", { name: /Understand my pay/i }).click();
   await expect(page).toHaveURL(/\/talent$/);
   await expect(page.getByRole("heading", { name: /Everything about your pay in one place/i })).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Hire like you/i })).toHaveCount(0);
+  await page.setViewportSize({ width: 320, height: 844 });
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
 test("mobile keeps descriptions and avoids horizontal overflow", async ({ page }) => {
@@ -77,7 +79,33 @@ test("mobile keeps descriptions and avoids horizontal overflow", async ({ page }
   expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
-test("mobile wordmarks stay on one line in the header and footer", async ({ page }) => {
+test("mobile campaign announcement keeps its message readable", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.route("**/rest/v1/rpc/public_active_contribution_campaigns", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify([{
+        contribution_type: "salary_report",
+        reward_kobo: 100000,
+        budget_remaining_kobo: 2000000,
+      }]),
+    });
+  });
+  await page.goto("/salaries");
+
+  const announcement = page.getByLabel("Active funded contributor offer");
+  await expect(announcement.getByText("Help make Nigerian pay clearer.")).toBeVisible();
+  await expect(announcement.getByRole("link", { name: /See funded offers/ })).toBeVisible();
+  const stacked = await announcement.evaluate((node) => {
+    const message = node.querySelector("p")?.getBoundingClientRect();
+    const action = node.querySelector("a")?.getBoundingClientRect();
+    return Boolean(message && action && action.top >= message.bottom);
+  });
+  expect(stacked).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+});
+
+test("mobile wordmarks keep a clear seam between the mark and text", async ({ page }) => {
   await page.setViewportSize({ width: 400, height: 914 });
   await page.goto("/contributors");
   await expect(page.locator(".audience-navigation-home")).toHaveText("Contribute");
@@ -87,24 +115,37 @@ test("mobile wordmarks stay on one line in the header and footer", async ({ page
     await wordmark.scrollIntoViewIfNeeded();
     expect(await wordmark.evaluate((node) => getComputedStyle(node).display)).toMatch(/^(inline-)?flex$/);
 
-    const aligned = await wordmark.evaluate((node) => {
-      const mark = node.querySelector(".brand-wordmark-mark")?.getBoundingClientRect();
+    const geometry = await wordmark.evaluate((node) => {
+      const mark = node.querySelector(".brand-wordmark-mark");
       const text = node.querySelector(".brand-wordmark-text")?.getBoundingClientRect();
-      if (!mark || !text) return false;
-      const markCenter = mark.top + mark.height / 2;
+      const paths = Array.from(mark?.querySelectorAll("path") ?? []).map((path) => path.getBoundingClientRect());
+      if (!mark || !text || paths.length === 0) return null;
+      const markBounds = mark.getBoundingClientRect();
+      const markCenter = markBounds.top + markBounds.height / 2;
       const textCenter = text.top + text.height / 2;
-      return text.left > mark.left && Math.abs(markCenter - textCenter) < 8;
+      return {
+        aligned: Math.abs(markCenter - textCenter) < 8,
+        seam: text.left - Math.max(...paths.map((path) => path.right)),
+      };
     });
-    expect(aligned).toBe(true);
+    expect(geometry).not.toBeNull();
+    expect(geometry?.aligned).toBe(true);
+    expect(geometry?.seam).toBeGreaterThanOrEqual(2);
+    expect(geometry?.seam).toBeLessThanOrEqual(8);
   }
 });
 
 test("salary empty state explains the privacy threshold and offers immediate value", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 844 });
   await page.goto("/salaries");
-  await expect(page.getByText("Public comparisons are building.")).toBeVisible();
-  await expect(page.getByText(/five similar reports are approved/i)).toBeVisible();
+  const emptyState = page.locator(".benchmark-empty");
+  await expect(page.getByRole("heading", { name: "Know what your work is worth." })).toBeVisible();
+  await expect(emptyState.getByText(/five similar, anonymous reports are approved/i)).toBeVisible();
+  await expect(emptyState.getByRole("button", { name: "Share my salary" })).toBeVisible();
+  await expect(emptyState.getByText("Your individual salary is never published.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Browse jobs with published pay" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Check your take-home pay" })).toBeVisible();
+  await expect(emptyState.getByText("Check your take-home pay")).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });
 
 test("contributor reward copy distinguishes public anonymity from private processing", async ({ page }) => {
@@ -136,15 +177,19 @@ test("PAYE guide offers four question-led routes", async ({ page }) => {
 test("pay experiences explain the numbers live", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".gateway-motion-step--3")).toBeVisible();
-  await expect(page.locator(".gateway-payroll-row--3")).toBeVisible();
+  await expect(page.getByText("PAYE calculated · Net pay confirmed")).toBeVisible();
   await expect(page.locator(".gateway-motion-step--2")).toHaveCSS("animation-name", "gateway-result-in");
 
   await page.goto("/payslip-checker");
-  await page.getByLabel("Monthly gross pay").fill("500000");
-  await expect(page.locator(".payslip-live-equation")).toContainText("₦72,500");
-  await page.getByLabel("Monthly PAYE").fill("45000");
-  await page.getByRole("button", { name: "Check my pay" }).click();
-  await expect(page.locator(".payslip-live-status")).toContainText("lower than our estimate");
+  await expect(page.locator(".payslip-live-result")).toHaveCount(0);
+  await page.getByLabel("Gross pay").fill("500000");
+  await expect(page.locator(".payslip-live-result")).toHaveCount(0);
+  await page.getByLabel("PAYE deducted").fill("45000");
+  await page.getByRole("button", { name: "Check my PAYE" }).click();
+  await expect(page.getByRole("heading", { name: "Your PAYE is ₦27,500 lower." })).toBeVisible();
+  await expect(page.locator(".payslip-result-comparison")).toContainText("₦72,500");
+  await expect(page.locator(".payslip-result-equation")).toContainText("₦427,500");
+  await expect(page.locator(".payslip-live-status")).toContainText("ask payroll to explain the difference");
 
   await page.goto("/paye-guide");
   await page.getByRole("textbox", { name: "Monthly gross salary" }).fill("600000");
@@ -152,10 +197,48 @@ test("pay experiences explain the numbers live", async ({ page }) => {
 });
 
 test("jobs and business hubs retain clear audience routes", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 844 });
   await page.goto("/jobs");
-  await expect(page.getByRole("heading", { name: "Jobs with salaries" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "A job should tell you what it pays." })).toBeVisible();
+  if (await page.locator(".job-card").count() === 0) {
+    await expect(page.getByText("New salary-transparent jobs are coming.")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Share a job lead" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Hiring? Post a role" })).toBeVisible();
+    await expect(page.getByText("0 jobs available")).toHaveCount(0);
+    await expect(page.getByText("Use the salary before you apply")).toHaveCount(0);
+    await expect(page.locator(".jobs-next-actions, .journey-next-steps")).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+  }
   await page.goto("/business");
   await expect(page.locator('.product-hub-paths a[href="/payroll"]')).toHaveAttribute("href", "/payroll");
   await expect(page.locator('.product-hub-paths a[href="/company-tax"]')).toHaveAttribute("href", "/company-tax");
   await expect(page.locator('.product-hub-paths a[href="/post-a-job"]')).toHaveAttribute("href", "/post-a-job");
+});
+
+test("mobile about page gives both audiences equal paths and concise proof", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.goto("/about");
+
+  await expect(page.getByRole("heading", { name: "Pay should be clear." })).toBeVisible();
+  await expect(page.getByText(/helps people understand what they earn/i)).toBeVisible();
+  await expect(page.getByText(/while helping employers calculate, explain and document/i)).toBeVisible();
+  await expect(page.getByRole("link", { name: /Understand my pay/ })).toHaveAttribute("href", "/talent");
+  await expect(page.getByRole("link", { name: /Manage my team's pay/ })).toHaveAttribute("href", "/employers");
+  await expect(page.getByRole("heading", { name: "Both sides of pay." })).toBeVisible();
+  await expect(page.locator(".about-audience-panel")).toHaveCount(2);
+  await expect(page.getByRole("heading", { name: "Know what reaches your bank." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Pay people right. Prove it." })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Explore talent tools/ })).toHaveAttribute("href", "/talent");
+  await expect(page.getByRole("link", { name: /Explore employer tools/ })).toHaveAttribute("href", "/employers");
+  await expect(page.getByRole("heading", { name: "Our numbers have receipts." })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Inspect the rules/ })).toHaveAttribute("href", "/tax-updates");
+  await expect(page.getByRole("heading", { name: "Meet the team." })).toBeVisible();
+  await expect(page.getByText("Ozichi Nwosu")).toBeVisible();
+  await expect(page.getByText("Victoria Green")).toBeVisible();
+  await expect(page.getByText("Veno Green")).toBeVisible();
+  await expect(page.getByText("Built in Nigeria.")).toHaveCount(0);
+  await expect(page.getByText(/does not replace professional tax advice/i)).toHaveCount(0);
+  await expect(page.getByText("What SalarySabi helps you do")).toHaveCount(0);
+  await expect(page.getByText("Three answers that move you forward.")).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
 });

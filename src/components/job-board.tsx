@@ -119,7 +119,15 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
         {state === "loading" && <ProductState kind="loading" title="Loading current jobs" detail="Your filters will remain available." />}
         {state === "error" && <ProductState kind="error" title="We could not load the jobs" detail="Your filters are still here. Retry now or check back shortly." action={<button type="button" onClick={() => { setState("loading"); setReloadKey((value) => value + 1); }}>Try again</button>} links={<><Link href="/account">Open job workspace</Link><Link href="/suggest-a-job">Share an existing job</Link></>} />}
         {state === "cached" && <ProductState compact kind="cached" title="Showing recently saved listings" detail="We are reconnecting. Application links may have changed." action={<button type="button" onClick={() => setReloadKey((value) => value + 1)}>Refresh</button>} />}
-        {(state === "ready" || state === "cached") && visible.length === 0 && <ProductState kind="empty" title="No matching jobs yet" detail="Try another search or clear the filters." action={<button type="button" onClick={clearFilters}>Clear filters</button>} />}
+        {(state === "ready" || state === "cached") && visible.length === 0 && (jobs.length === 0
+          ? <ProductState
+              kind="empty"
+              title="New salary-transparent jobs are coming."
+              detail="SalarySabi verifies the pay and original source before publishing each role."
+              action={<Link href="/suggest-a-job">Share a job lead</Link>}
+              links={<Link href="/post-a-job">Hiring? Post a role</Link>}
+            />
+          : <ProductState kind="empty" title="No jobs match your filters." detail="Try a broader role or location." action={<button type="button" onClick={clearFilters}>Clear filters</button>} />)}
 
         <div className="job-list">
           {visible.map((job) => (

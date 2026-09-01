@@ -167,6 +167,7 @@ body .site-header.info-header > .primary-navigation a[aria-current="page"]::afte
   margin-inline: auto;
 }
 
+.campaign-announcement strong,
 .campaign-announcement a { color: #06251a; }
 
 .public-page-main {
@@ -333,6 +334,24 @@ body .info-footer .footer-legal-line {
 }
 
 @media (max-width: 640px) {
+  .campaign-announcement-inner {
+    min-height: 0;
+    padding-block: 16px;
+    display: grid;
+    align-items: start;
+    justify-content: stretch;
+    gap: 8px;
+  }
+  .campaign-announcement p {
+    max-width: none;
+    font-size: .9rem;
+    text-align: left;
+  }
+  .campaign-announcement a {
+    width: max-content;
+    min-height: 36px;
+    font-size: .85rem;
+  }
   .product-hub--business .product-hub-paths > a { min-height: 190px; }
   .product-hub--business .product-hub-paths p { display: block; }
 }

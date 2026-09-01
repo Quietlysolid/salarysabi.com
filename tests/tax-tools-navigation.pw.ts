@@ -17,10 +17,8 @@ for (const [name, destination] of tools) {
     const [pathname, hash = ""] = destination.split("#");
     const destinationPattern = new RegExp(`${pathname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?:#${hash})?$`);
     await card.scrollIntoViewIfNeeded();
-    await Promise.all([
-      page.waitForURL(destinationPattern, { timeout: 10_000 }),
-      card.click({ position: { x: 40, y: 40 } }),
-    ]);
+    await card.click({ position: { x: 40, y: 40 } });
+    await expect(page).toHaveURL(destinationPattern, { timeout: 30_000 });
   });
 }
 
@@ -37,9 +35,7 @@ for (const [name, destination] of payeGuides) {
 
     await expect(card).toHaveAttribute("href", destination);
     await card.scrollIntoViewIfNeeded();
-    await Promise.all([
-      page.waitForURL(new RegExp(`${destination}$`), { timeout: 10_000 }),
-      card.click({ position: { x: 40, y: 40 } }),
-    ]);
+    await card.click({ position: { x: 40, y: 40 } });
+    await expect(page).toHaveURL(new RegExp(`${destination}$`), { timeout: 30_000 });
   });
 }

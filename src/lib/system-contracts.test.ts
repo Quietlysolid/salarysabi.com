@@ -35,6 +35,15 @@ describe("shared product contracts", () => {
     expect(read("src/components/job-seeker-account.tsx")).toContain("ProductState");
   });
 
+  it("keeps filtered and market-empty job recovery paths distinct", () => {
+    const board = read("src/components/job-board.tsx");
+    const page = read("src/app/jobs/page.tsx");
+    expect(board).toContain("jobs.length === 0");
+    expect(board).toContain("New salary-transparent jobs are coming.");
+    expect(board).toContain("No jobs match your filters.");
+    expect(page).toContain("initialJobs.length > 0");
+  });
+
   it("keeps analytics events free of sensitive financial and credential properties", () => {
     const analytics = read("src/components/analytics.tsx");
     expect(analytics).toContain("analyticsOptOutKey");
@@ -69,7 +78,8 @@ describe("shared product contracts", () => {
     expect(grossNetGuide).toContain("salaryTerms.netSalary");
     expect(taxBandsGuide).toContain("salaryTerms.chargeableIncome");
     expect(payeGuide).toContain("salaryTerms.chargeableIncome");
-    expect(payslipChecker).toContain("Monthly gross pay");
+    expect(payslipChecker).toContain('label="Gross pay"');
+    expect(payslipChecker).toContain('label="PAYE deducted"');
   });
 
   it("keeps the analytics allow-list synchronized with the database migration", () => {
@@ -100,8 +110,7 @@ describe("shared product contracts", () => {
 
   it("credits all three SalarySabi stakeholders as the product team", () => {
     const about = read("src/app/about/page.tsx");
-    expect(about).toContain("Built by the SalarySabi team");
-    expect(about).toContain("three-person Nigerian stakeholder team");
+    expect(about).toContain("Meet the team.");
     expect(about).toContain("Ozichi Nwosu");
     expect(about).toContain("Victoria Green");
     expect(about).toContain("https://www.linkedin.com/in/victoria-green1/");

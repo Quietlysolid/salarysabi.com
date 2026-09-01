@@ -498,11 +498,35 @@ body .payslip-trust-row strong { color: var(--ink); }
 .payslip-result .journey-next-steps > header h2 { font-size: 1.6rem; }
 .payslip-result .journey-next-steps .eyebrow { color: var(--green); }
 
-.benchmark-unlock-preview { margin: 22px 0; padding: 18px 20px; background: var(--ss-surface-accent); }
-.benchmark-unlock-preview > span { color: var(--ink); font-weight: 800; }
-.benchmark-unlock-preview ul { margin: 10px 0 0; padding-left: 20px; color: var(--muted); line-height: 1.6; }
+.salary-benchmark > .salary-benchmark-hero { max-width: 760px; margin-bottom: clamp(28px, 5vw, 48px); }
+.salary-benchmark-hero > .eyebrow { color: var(--green); }
+.salary-benchmark-hero > p { margin-bottom: 0; }
+.benchmark-layout--empty { gap: 0; }
+.benchmark-layout--empty > .benchmark-empty {
+  max-width: 720px;
+  padding: 0;
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.benchmark-empty > h2 { max-width: 18ch; margin: 0; font-size: clamp(1.65rem, 4vw, 2.2rem); line-height: 1.05; letter-spacing: var(--ss-tracking-section); }
+.benchmark-empty > p { max-width: 48ch; color: var(--muted); line-height: 1.55; }
+.benchmark-empty > .primary-button { min-width: 220px; margin-top: 6px; }
+.benchmark-empty > small { margin: 0; color: var(--muted); font-size: .82rem; }
+.benchmark-empty > a { margin-top: 12px; color: var(--green-dark); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
 .benchmark-contribution-choice > .eyebrow { display: block; margin-bottom: 8px; }
 .benchmark-contribution-choice > p { max-width: 65ch; margin: 0 0 20px; color: var(--muted); line-height: 1.55; }
+.benchmark-contribution-choice > div > button { color: white; background: var(--green-dark); }
+.benchmark-contribution-choice > div > a { color: var(--green-dark); background: white; }
+
+@media (max-width: 560px) {
+  .salary-benchmark > .salary-benchmark-hero { margin-bottom: 32px; }
+  .benchmark-empty > .primary-button { width: 100%; min-width: 0; }
+  .benchmark-empty > a { margin-top: 8px; }
+}
 
 .product-hub--salary-jobs .product-hub-paths { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .product-hub--salary-jobs .product-hub-paths > a { min-height: 270px; align-items: flex-start; justify-content: flex-start; text-align: left; }
@@ -518,6 +542,43 @@ body .payslip-trust-row strong { color: var(--ink); }
 .jobs-next-actions > a span { display: grid; gap: 4px; }
 .jobs-next-actions > a small { color: var(--muted); font-weight: 400; line-height: 1.4; }
 .jobs-board + .jobs-next-actions { margin-top: 26px; }
+.jobs-hero > .eyebrow { color: var(--green); }
+body .jobs-results-layout .product-state-empty {
+  max-width: 620px;
+  min-height: 0;
+  margin: 12px 0 0;
+  padding: 0;
+  grid-template-columns: 1fr;
+  justify-items: start;
+  gap: 14px;
+  border: 0;
+  background: transparent;
+}
+body .jobs-results-layout .product-state-empty .product-state-marker { display: none; }
+body .jobs-results-layout .product-state-empty .product-state-copy { gap: 8px; }
+body .jobs-results-layout .product-state-empty .product-state-copy > strong { font-size: clamp(1.45rem, 3vw, 1.9rem); line-height: 1.08; }
+body .jobs-results-layout .product-state-empty .product-state-copy > span { max-width: 50ch; line-height: 1.55; }
+body .jobs-results-layout .product-state-empty :is(.product-state-action, .product-state-links) { grid-column: auto; }
+body .jobs-results-layout .product-state-empty .product-state-action :is(a, button) {
+  min-height: 48px;
+  padding: 12px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--green-dark);
+  color: white;
+  background: var(--green-dark);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+body .jobs-results-layout .product-state-empty .product-state-links { margin-top: 4px; }
+body .jobs-results-layout .product-state-empty .product-state-links a { font-weight: 700; }
+
+@media (max-width: 560px) {
+  body .jobs-results-layout .product-state-empty .product-state-action,
+  body .jobs-results-layout .product-state-empty .product-state-action :is(a, button) { width: 100%; }
+}
 
 .payroll-feature-heading { margin-top: 28px; display: block; color: var(--ink); font-size: .9rem; }
 
