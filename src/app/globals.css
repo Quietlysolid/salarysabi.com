@@ -3914,6 +3914,640 @@ body .info-footer .footer-links a { color: #46574f; font-weight: 600; }
   }
 }
 
+/* Admin focus pass: one clear task, progressive disclosure, calmer mobile review. */
+.admin-shell > header.admin-topbar {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) auto;
+}
+
+.admin-topbar nav button {
+  min-width: 88px;
+}
+
+.admin-topbar-actions {
+  gap: 10px;
+}
+
+.admin-more-menu {
+  position: relative;
+}
+
+.admin-more-menu > summary {
+  min-width: 78px;
+  min-height: 44px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: white;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+.admin-more-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-more-menu.is-active > summary,
+.admin-more-menu[open] > summary {
+  border-color: var(--green);
+  color: var(--green-dark);
+  background: #f3f8ed;
+}
+
+.admin-more-menu > div {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 190px;
+  padding: 7px;
+  display: grid;
+  border: 1px solid var(--line);
+  background: white;
+  box-shadow: 0 18px 45px rgb(8 76 56 / 14%);
+}
+
+.admin-more-menu > div > :is(button, a) {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border: 0;
+  color: var(--ink);
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.admin-more-menu > div > :is(button, a):hover {
+  background: #f3f8ed;
+}
+
+.admin-more-add-job {
+  display: none !important;
+}
+
+.admin-review-intro {
+  min-height: 170px;
+  padding: 30px 34px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  background: var(--green-dark);
+  color: white;
+}
+
+.admin-review-intro > div {
+  max-width: 760px;
+}
+
+.admin-review-intro .eyebrow {
+  color: var(--lime);
+}
+
+.admin-review-intro h1 {
+  margin: 7px 0 8px;
+  color: white;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  line-height: .98;
+}
+
+.admin-review-intro p {
+  margin: 0;
+  color: rgb(255 255 255 / 78%);
+  font-size: 1rem;
+}
+
+body .admin-review-intro .primary-button {
+  width: auto;
+  min-width: 190px;
+  margin: 0;
+  justify-content: center;
+  border-color: var(--lime);
+  color: var(--green-dark);
+  background: var(--lime);
+  text-decoration: none;
+}
+
+.admin-mobile-queue-toggle {
+  display: none;
+}
+
+.admin-review-match {
+  padding: 28px 34px;
+  border-bottom: 1px solid var(--line);
+  background: white;
+}
+
+.admin-review-match > div:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.admin-review-match h2 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.admin-review-match p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.admin-review-snapshot {
+  margin: 22px 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.admin-review-snapshot > div {
+  min-width: 0;
+  padding: 15px;
+  display: grid;
+  gap: 5px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-review-snapshot dt {
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.admin-review-snapshot dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 800;
+}
+
+details.admin-review-fields {
+  margin-top: 14px;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: #fbfcf9;
+}
+
+.admin-review-fields > summary {
+  min-height: 60px;
+  padding: 12px 15px;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  color: var(--green-dark);
+  cursor: pointer;
+}
+
+.admin-review-fields > summary span {
+  font-weight: 800;
+}
+
+.admin-review-fields > summary small {
+  color: var(--muted);
+}
+
+.admin-review-fields > .admin-source-disclosure {
+  margin: 16px 16px 0;
+}
+
+.admin-review-fields > .job-form-grid {
+  margin: 0;
+  padding: 18px 16px;
+}
+
+.admin-review-actions {
+  position: static;
+  z-index: 12;
+  bottom: 0;
+  box-shadow: 0 -12px 32px rgb(8 76 56 / 8%);
+}
+
+.admin-review-actions.is-sticky {
+  position: sticky;
+}
+
+.admin-attention {
+  padding-top: 36px;
+}
+
+.admin-attention header h1 {
+  margin: 7px 0 24px;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  line-height: .98;
+}
+
+.admin-attention-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.admin-attention-grid > :is(button, article) {
+  min-height: 148px;
+  padding: 22px;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 5px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  background: white;
+  font: inherit;
+  text-align: left;
+}
+
+.admin-attention-grid > button {
+  cursor: pointer;
+}
+
+.admin-attention-grid > button:hover {
+  background: #f3f8ed;
+}
+
+.admin-attention-grid strong {
+  color: var(--green-dark);
+  font-size: 2rem;
+}
+
+.admin-attention-grid span {
+  font-weight: 800;
+}
+
+.admin-attention-grid small {
+  color: var(--muted);
+}
+
+.admin-add-heading {
+  max-width: 760px;
+  margin-bottom: 24px;
+}
+
+.admin-add-heading h2 {
+  margin: 7px 0 8px;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1;
+}
+
+.admin-add-heading p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.admin-add-paths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.admin-add-paths button {
+  min-height: 104px;
+  padding: 18px;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 5px;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  background: white;
+  text-align: left;
+}
+
+.admin-add-paths button span {
+  color: var(--muted);
+  font-size: .84rem;
+}
+
+.admin-add-paths button.is-active {
+  box-shadow: inset 0 4px 0 var(--lime);
+  color: white;
+  background: var(--green-dark);
+}
+
+.admin-add-paths button.is-active span {
+  color: rgb(255 255 255 / 76%);
+}
+
+.admin-source-first {
+  margin-top: 22px;
+  padding: clamp(26px, 5vw, 52px);
+  display: grid;
+  grid-template-columns: minmax(260px, .8fr) minmax(320px, 1.2fr);
+  align-items: end;
+  gap: 26px;
+  border: 1px solid var(--line);
+  background: white;
+}
+
+.admin-source-first h3 {
+  margin: 7px 0 8px;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+}
+
+.admin-source-first p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.admin-source-first label {
+  display: grid;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.admin-source-first input {
+  width: 100%;
+  min-height: 52px;
+  padding: 11px 13px;
+  border: 1px solid #b7c5bb;
+  color: var(--ink);
+  background: white;
+  font: inherit;
+}
+
+body .admin-source-first .primary-button {
+  width: 100%;
+  margin: 0;
+  justify-content: center;
+}
+
+.admin-job-editor,
+.admin-import-sources {
+  margin-top: 22px;
+}
+
+.admin-job-lifecycle-actions .admin-primary-action {
+  border-color: var(--green);
+  color: white;
+  background: var(--green);
+}
+
+.admin-job-more-actions {
+  position: relative;
+  margin-left: auto;
+}
+
+.admin-job-more-actions > summary {
+  min-height: 42px;
+  padding: 9px 13px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #b7c5bb;
+  color: var(--green-dark);
+  background: white;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+.admin-job-more-actions > summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-job-more-actions > div {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 7px);
+  right: 0;
+  width: 190px;
+  padding: 7px;
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  background: white;
+  box-shadow: 0 16px 36px rgb(8 76 56 / 14%);
+}
+
+.admin-job-more-actions > div button {
+  width: 100%;
+  justify-content: flex-start;
+  border-color: transparent;
+}
+
+.admin-job-more-actions > div .admin-danger-link {
+  margin: 0;
+}
+
+.admin-reports-heading {
+  display: grid;
+  gap: 7px;
+}
+
+.admin-reports-heading h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.admin-reports-clear {
+  margin-top: 24px;
+  padding: clamp(28px, 5vw, 52px);
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  border: 1px solid var(--line);
+  background: white;
+}
+
+.admin-reports-clear strong {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+}
+
+.admin-reports-clear p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.admin-reports-clear button {
+  min-height: 46px;
+  margin-top: 16px;
+  padding: 10px 16px;
+  border: 1px solid var(--green);
+  color: white;
+  background: var(--green);
+  font-weight: 800;
+}
+
+@media (max-width: 980px) {
+  .admin-topbar-actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .admin-review-snapshot {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-source-first {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .admin-shell > header.admin-topbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .admin-topbar nav {
+    width: 100%;
+    justify-content: stretch;
+    overflow: visible;
+  }
+
+  .admin-topbar nav button {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .admin-topbar-actions .admin-add-job {
+    display: none;
+  }
+
+  .admin-more-add-job {
+    display: flex !important;
+  }
+
+  .admin-review-intro {
+    min-height: 0;
+    padding: 26px 20px;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .admin-review-intro h1 {
+    font-size: clamp(2.2rem, 11vw, 3rem);
+  }
+
+  body .admin-review-intro .primary-button {
+    width: 100%;
+  }
+
+  .admin-mobile-queue-toggle {
+    width: 100%;
+    min-height: 58px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    background: #f3f8ed;
+    font-weight: 800;
+    text-align: left;
+  }
+
+  .admin-mobile-queue-toggle strong {
+    color: var(--green-dark);
+    font-size: .78rem;
+  }
+
+  .admin-review-queue {
+    display: none;
+  }
+
+  .admin-review-queue.is-mobile-open {
+    display: block;
+  }
+
+  .admin-review-match {
+    padding: 24px 20px;
+  }
+
+  .admin-review-snapshot {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-review-snapshot > div {
+    padding: 12px;
+  }
+
+  .admin-review-actions {
+    position: static;
+    bottom: 0;
+    min-height: 0;
+    padding: 10px 12px;
+    grid-template-columns: 116px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+  }
+
+  .admin-review-actions.is-sticky {
+    position: sticky;
+  }
+
+  .admin-review-actions .admin-publication-status {
+    text-align: left;
+  }
+
+  .admin-review-actions .admin-publication-status span {
+    display: none;
+  }
+
+  .admin-review-action-buttons {
+    gap: 6px;
+  }
+
+  .admin-review-actions button,
+  body .admin-review-actions .primary-button {
+    min-height: 40px;
+    padding-inline: 9px;
+    font-size: .76rem;
+  }
+
+  .admin-attention-grid,
+  .admin-add-paths {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-add-paths button {
+    min-height: 82px;
+  }
+
+  .admin-source-first {
+    padding: 24px 20px;
+  }
+
+  .admin-job-more-actions {
+    margin-left: 0;
+  }
+
+  .admin-job-more-actions > div {
+    right: auto;
+    left: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-review-snapshot {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* About page type and contrast must win over the shared prose contract. */
 #main-content .about-section-heading h2,
 #main-content .about-trust h2 {

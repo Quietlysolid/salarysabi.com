@@ -66,6 +66,7 @@ type ProductAnalytics = {
 };
 type ReviewChecks = { application: boolean; salary: boolean; source: boolean };
 type JobLifecycle = "live" | "review" | "expired" | "filled" | "archived";
+type AddJobMode = "source" | "manual" | "ats";
 
 const jobLifecycleLabels: Record<JobLifecycle, string> = {
   live: "Live",
@@ -207,6 +208,11 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
   const [sessionStatus, setSessionStatus] = useState<"checking" | "ready" | "error">(() => fixtureMode ? "ready" : "checking");
   const [dashboardStatus, setDashboardStatus] = useState<"idle" | "loading" | "ready" | "error" | "forbidden">("idle");
   const [activeView, setActiveView] = useState<"review" | "jobs" | "reports" | "analytics" | "add">("review");
+  const [addJobMode, setAddJobMode] = useState<AddJobMode>("source");
+  const [sourceUrlDraft, setSourceUrlDraft] = useState("");
+  const [mobileQueueOpen, setMobileQueueOpen] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const [reviewActionsSticky, setReviewActionsSticky] = useState(false);
   const [selectedReviewId, setSelectedReviewId] = useState("");
   const [jobLifecycleFilter, setJobLifecycleFilter] = useState<JobLifecycle>("live");
   const [selectedManagedJobId, setSelectedManagedJobId] = useState("");
@@ -234,6 +240,26 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
     );
     return () => data.subscription.unsubscribe();
   }, [fixtureMode, supabase]);
+
+  useEffect(() => {
+    if (activeView !== "review") {
+      return;
+    }
+
+    const updateStickyState = () => {
+      const checklist = document.querySelector(".admin-verification-confirmations");
+      setReviewActionsSticky(Boolean(checklist && checklist.getBoundingClientRect().top < window.innerHeight * 0.88));
+    };
+
+    const initialFrame = window.requestAnimationFrame(updateStickyState);
+    window.addEventListener("scroll", updateStickyState, { passive: true });
+    window.addEventListener("resize", updateStickyState);
+    return () => {
+      window.cancelAnimationFrame(initialFrame);
+      window.removeEventListener("scroll", updateStickyState);
+      window.removeEventListener("resize", updateStickyState);
+    };
+  }, [activeView, dashboardStatus, selectedReviewId]);
 
   const loadDashboard = useCallback(async () => {
     setDashboardStatus("loading");
@@ -802,33 +828,47 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
       <header className="admin-topbar">
         <Link aria-label="SalarySabi home" className="brand" href="/"><BrandWordmark /></Link>
         <nav aria-label="Administration sections">
-          {([['review', 'Review'], ['jobs', 'Jobs'], ['reports', 'Reports'], ['analytics', 'Analytics']] as const).map(([view, label]) => (
-            <button aria-current={activeView === view ? "page" : undefined} className={activeView === view ? "is-active" : ""} key={view} onClick={() => setActiveView(view)} type="button">{label}{view === "review" && reviewQueue.length ? <span>{reviewQueue.length}</span> : null}</button>
+          {([['review', 'Review'], ['jobs', 'Jobs'], ['reports', 'Reports']] as const).map(([view, label]) => (
+            <button aria-current={activeView === view ? "page" : undefined} className={activeView === view ? "is-active" : ""} key={view} onClick={() => { setMoreMenuOpen(false); setActiveView(view); }} type="button">{label}{view === "review" && reviewQueue.length ? <span>{reviewQueue.length}</span> : null}</button>
           ))}
-          <button aria-current={activeView === "add" ? "page" : undefined} className={`admin-nav-add${activeView === "add" ? " is-active" : ""}`} onClick={() => setActiveView("add")} type="button">Add job</button>
         </nav>
-        <div className="admin-topbar-actions"><Link href="/admin/contributors">Rewards</Link><button className="admin-add-job" onClick={() => setActiveView("add")} type="button">Add job</button><button type="button" onClick={() => supabase.auth.signOut()}>Sign out</button></div>
+        <div className="admin-topbar-actions">
+          <button className="admin-add-job" onClick={() => { setMoreMenuOpen(false); setAddJobMode("source"); setActiveView("add"); }} type="button">Add job</button>
+          <details className={`admin-more-menu${activeView === "analytics" ? " is-active" : ""}`} onToggle={(event) => setMoreMenuOpen(event.currentTarget.open)} open={moreMenuOpen}>
+            <summary>More</summary>
+            <div>
+              <button className="admin-more-add-job" onClick={() => { setMoreMenuOpen(false); setAddJobMode("source"); setActiveView("add"); }} type="button">Add job</button>
+              <button onClick={() => { setMoreMenuOpen(false); setActiveView("analytics"); }} type="button">Analytics</button>
+              <Link href="/admin/contributors" onClick={() => setMoreMenuOpen(false)}>Rewards</Link>
+              <button onClick={() => { setMoreMenuOpen(false); void supabase.auth.signOut(); }} type="button">Sign out</button>
+            </div>
+          </details>
+        </div>
       </header>
       <div className={`admin-dashboard-status is-${dashboardStatus}${message ? " has-message" : ""}`} role="status">
         <span>{dashboardStatus === "loading" ? "Loading the latest administration data..." : message}</span>
         {dashboardStatus === "error" && <button type="button" onClick={() => void loadDashboard()}>Try again</button>}
         {dashboardStatus === "forbidden" && <button type="button" onClick={() => supabase.auth.signOut()}>Use another account</button>}
       </div>
-      {activeView === "analytics" && metrics && (
-        <section className="admin-metrics" aria-label="Job platform report">
-          {Object.entries(metrics).map(([label, value]) => (
-            <div key={label}>
-              <strong>{Number(value).toLocaleString()}</strong>
-              <span>{label.replaceAll("_", " ")}</span>
-            </div>
-          ))}
-        </section>
-      )}
+      {activeView === "review" && reviewQueue.length > 0 && <section className="admin-review-intro">
+        <div><span className="eyebrow">Today&apos;s work</span><h1>{reviewQueue.length} {reviewQueue.length === 1 ? "job needs" : "jobs need"} your review.</h1><p>Start with the oldest listing and publish only when the evidence matches.</p></div>
+        <a className="primary-button" href="#review-title">Review next job</a>
+      </section>}
+
+      {activeView === "analytics" && metrics && <section className="admin-attention" aria-labelledby="admin-attention-title">
+        <header><span className="eyebrow">At a glance</span><h1 id="admin-attention-title">What needs attention.</h1></header>
+        <div className="admin-attention-grid">
+          <button onClick={() => setActiveView("review")} type="button"><strong>{reviewQueue.length}</strong><span>Jobs need review</span><small>Start with the oldest</small></button>
+          <button onClick={() => { setJobLifecycleFilter("expired"); setActiveView("jobs"); }} type="button"><strong>{metrics.expired_jobs.toLocaleString()}</strong><span>Expired jobs</span><small>Republish or archive</small></button>
+          <article><strong>{metrics.apply_clicks_30d.toLocaleString()}</strong><span>Application clicks</span><small>In the last 30 days</small></article>
+        </div>
+      </section>}
 
       {activeView === "review" && <section className="admin-review-workspace" aria-labelledby="review-title">
-        <aside className="admin-review-queue">
+        <button aria-controls="admin-review-queue" aria-expanded={mobileQueueOpen} className="admin-mobile-queue-toggle" onClick={() => setMobileQueueOpen(current => !current)} type="button"><span>{reviewQueue.length} {reviewQueue.length === 1 ? "job" : "jobs"} in queue</span><strong>{mobileQueueOpen ? "Hide queue" : "Choose a job"}</strong></button>
+        <aside className={`admin-review-queue${mobileQueueOpen ? " is-mobile-open" : ""}`} id="admin-review-queue">
           <header><div><span className="eyebrow">Review queue</span><strong>{reviewQueue.length}</strong></div><small>Oldest first</small></header>
-          {dashboardStatus === "loading" ? <div className="admin-review-empty"><strong>Loading review queue…</strong><p>Checking submissions and imported jobs.</p></div> : dashboardStatus === "error" ? <div className="admin-review-empty is-error"><strong>Review queue unavailable.</strong><p>This is not an empty queue. Reload the dashboard before reviewing or publishing jobs.</p><button onClick={() => void loadDashboard()} type="button">Try again</button></div> : reviewQueue.length ? reviewQueue.map((item) => <button className={item.id === effectiveReviewId ? "is-selected" : ""} key={`${item.kind}-${item.id}`} onClick={() => { setSelectedReviewId(item.id); setReviewChecks({ application: false, salary: false, source: false }); }} type="button"><strong>{item.title}</strong><span>{item.company}</span><small>{item.location} · {item.salary}</small></button>) : <div className="admin-review-empty"><strong>Queue clear.</strong><p>No jobs need review right now.</p><small>{activeImportSources.length} active ATS {activeImportSources.length === 1 ? "source" : "sources"} · Next import daily at 06:30 UTC</small></div>}
+          {dashboardStatus === "loading" ? <div className="admin-review-empty"><strong>Loading review queue…</strong><p>Checking submissions and imported jobs.</p></div> : dashboardStatus === "error" ? <div className="admin-review-empty is-error"><strong>Review queue unavailable.</strong><p>This is not an empty queue. Reload the dashboard before reviewing or publishing jobs.</p><button onClick={() => void loadDashboard()} type="button">Try again</button></div> : reviewQueue.length ? reviewQueue.map((item) => <button className={item.id === effectiveReviewId ? "is-selected" : ""} key={`${item.kind}-${item.id}`} onClick={() => { setSelectedReviewId(item.id); setReviewChecks({ application: false, salary: false, source: false }); setMobileQueueOpen(false); }} type="button"><strong>{item.title}</strong><span>{item.company}</span><small>{item.location} · {item.salary}</small></button>) : <div className="admin-review-empty"><strong>Queue clear.</strong><p>No jobs need review right now.</p><small>{activeImportSources.length} active ATS {activeImportSources.length === 1 ? "source" : "sources"} · Next import daily at 06:30 UTC</small></div>}
         </aside>
         <section className="admin-review-canvas">
           <header><div><span className="eyebrow">Reviewing</span><h1 id="review-title">{selectedDraft?.title || selectedSubmission?.title || "Nothing waiting"}</h1><p>{selectedDraft?.company_name || selectedSubmission?.company_name || "New submissions and imported jobs will appear here."}</p></div>{(selectedDraft || selectedSubmission) && <strong className="admin-review-salary">{formatJobSalary((selectedDraft || selectedSubmission)!)}</strong>}</header>
@@ -840,18 +880,25 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
               <div><span className="eyebrow">Step 1</span><h2>Open and check the original listing</h2><p>Confirm that applications are open and the advertised salary is visible.</p></div>
               {selectedDraft.source_url ? <a className="primary-button" href={selectedDraft.source_url} rel="noopener noreferrer" target="_blank">Open original listing <ExternalLinkIcon /></a> : <strong>Source link missing</strong>}
             </section>
-            <section className="admin-review-fields">
-              <div className="admin-review-fields-heading">
-                <div><span className="eyebrow">Step 2</span><h2>Confirm the listing details</h2><p>Correct anything that does not match the original page.</p></div>
+            <section className="admin-review-match">
+              <div><span className="eyebrow">Step 2</span><h2>Check the captured details</h2><p>The essentials are shown first. Edit only when something does not match the source.</p></div>
+              <dl className="admin-review-snapshot">
+                <div><dt>Location</dt><dd>{selectedDraft.location}</dd></div>
+                <div><dt>Deadline</dt><dd>{new Date(`${selectedDraft.expires_at}T12:00:00`).toLocaleDateString("en-NG", { dateStyle: "medium" })}</dd></div>
+                <div><dt>Source</dt><dd>{selectedDraft.source_name || "Not named"}</dd></div>
+                <div><dt>Last checked</dt><dd>{selectedDraft.source_last_seen_at?.slice(0, 10) || selectedDraft.source_verified_at.slice(0, 10)}</dd></div>
+              </dl>
+              <details className="admin-review-fields">
+                <summary><span>Edit listing details</span><small>Open only if the source and captured listing differ.</small></summary>
                 <details className="admin-source-disclosure">
                   <summary>View source details</summary>
                   <dl><div><dt>Source</dt><dd>{selectedDraft.source_name || "Not named"}</dd></div><div><dt>Type</dt><dd>{selectedDraft.source_kind.replaceAll('_', ' ')}</dd></div><div><dt>Salary evidence</dt><dd>{selectedDraft.salary_source.replaceAll('_', ' ')}</dd></div><div><dt>Last checked</dt><dd>{selectedDraft.source_last_seen_at?.slice(0, 10) || selectedDraft.source_verified_at.slice(0, 10)}</dd></div></dl>
                 </details>
-              </div>
-              <div className="job-form-grid"><label>Job title<input name="title" defaultValue={selectedDraft.title} required /></label><label>Company<input name="company_name" defaultValue={selectedDraft.company_name} required /></label><label>Location<input name="location" defaultValue={selectedDraft.location} required /></label><label>Deadline<input name="expires_at" type="date" defaultValue={selectedDraft.expires_at} required /></label><label>Minimum salary<input name="salary_min" type="number" min="1" defaultValue={selectedDraft.salary_min} required /></label><label>Maximum salary<input name="salary_max" type="number" min="1" defaultValue={selectedDraft.salary_max} required /></label><label>Salary period<select name="salary_period" defaultValue={selectedDraft.salary_period}><option value="monthly">Monthly</option><option value="annual">Annual</option></select></label></div>
+                <div className="job-form-grid"><label>Job title<input name="title" defaultValue={selectedDraft.title} required /></label><label>Company<input name="company_name" defaultValue={selectedDraft.company_name} required /></label><label>Location<input name="location" defaultValue={selectedDraft.location} required /></label><label>Deadline<input name="expires_at" type="date" defaultValue={selectedDraft.expires_at} required /></label><label>Minimum salary<input name="salary_min" type="number" min="1" defaultValue={selectedDraft.salary_min} required /></label><label>Maximum salary<input name="salary_max" type="number" min="1" defaultValue={selectedDraft.salary_max} required /></label><label>Salary period<select name="salary_period" defaultValue={selectedDraft.salary_period}><option value="monthly">Monthly</option><option value="annual">Annual</option></select></label></div>
+              </details>
             </section>
             <VerificationChecklist checks={reviewChecks} onChange={(check, checked) => setReviewChecks(current => ({ ...current, [check]: checked }))} />
-            <footer className="admin-review-actions">
+            <footer className={`admin-review-actions${reviewActionsSticky ? " is-sticky" : ""}`}>
               <div className={reviewReadyToPublish ? "admin-publication-status is-ready" : "admin-publication-status"}>
                 <strong>{reviewReadyToPublish ? "Ready to publish" : "Publication locked"}</strong>
                 <span>{reviewReadyToPublish ? "All source checks are complete." : `${remainingReviewChecks} ${remainingReviewChecks === 1 ? "check remains" : "checks remain"}.`}</span>
@@ -870,15 +917,15 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
             </section>
             <details className="admin-submission-disclosure"><summary>View submission details</summary><div><strong>Submitted by</strong><span>{selectedSubmission.contact_email}</span><strong>Deadline</strong><span>{selectedSubmission.expires_at}</span><strong>No-fee declaration</strong><span>{selectedSubmission.no_candidate_fees_confirmed ? "Confirmed" : "Missing"}</span><p>{selectedSubmission.description}</p></div></details>
             <VerificationChecklist checks={reviewChecks} onChange={(check, checked) => setReviewChecks(current => ({ ...current, [check]: checked }))} sourceDescription="The submitter identity and source confidence are acceptable." stepLabel="Step 2 · final checks" />
-            <footer className="admin-review-actions"><div className={reviewReadyToPublish ? "admin-publication-status is-ready" : "admin-publication-status"}><strong>{reviewReadyToPublish ? "Ready to approve" : "Publication locked"}</strong><span>{reviewReadyToPublish ? "All source checks are complete." : `${remainingReviewChecks} ${remainingReviewChecks === 1 ? "check remains" : "checks remain"}.`}</span></div><div className="admin-review-action-buttons"><button className="admin-reject-button" disabled={busy === selectedSubmission.id} onClick={() => review(selectedSubmission.id, "reject_job_submission")} type="button">Reject</button><button className="primary-button" disabled={busy === selectedSubmission.id || !reviewReadyToPublish} onClick={() => review(selectedSubmission.id, "approve_verified_job_submission")} type="button">{reviewReadyToPublish ? "Approve verified job" : lockedPublishLabel}</button></div></footer>
+            <footer className={`admin-review-actions${reviewActionsSticky ? " is-sticky" : ""}`}><div className={reviewReadyToPublish ? "admin-publication-status is-ready" : "admin-publication-status"}><strong>{reviewReadyToPublish ? "Ready to approve" : "Publication locked"}</strong><span>{reviewReadyToPublish ? "All source checks are complete." : `${remainingReviewChecks} ${remainingReviewChecks === 1 ? "check remains" : "checks remain"}.`}</span></div><div className="admin-review-action-buttons"><button className="admin-reject-button" disabled={busy === selectedSubmission.id} onClick={() => review(selectedSubmission.id, "reject_job_submission")} type="button">Reject</button><button className="primary-button" disabled={busy === selectedSubmission.id || !reviewReadyToPublish} onClick={() => review(selectedSubmission.id, "approve_verified_job_submission")} type="button">{reviewReadyToPublish ? "Approve verified job" : lockedPublishLabel}</button></div></footer>
           </div>}
-          {!selectedDraft && !selectedSubmission && dashboardStatus === "ready" && <section className="admin-empty-operations" aria-labelledby="empty-operations-title"><div><span className="eyebrow">System ready</span><h2 id="empty-operations-title">Nothing needs review.</h2><p>New employer submissions and salary-bearing ATS jobs will appear here automatically as drafts.</p></div><dl><div><dt>Active ATS sources</dt><dd>{activeImportSources.length}</dd></div><div><dt>Last successful sync</dt><dd>{lastSuccessfulSync ? new Date(lastSuccessfulSync).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" }) : "Not synced yet"}</dd></div><div><dt>Next scheduled import</dt><dd>Daily at 06:30 UTC</dd></div></dl><div><button className="primary-button" onClick={() => setActiveView("add")} type="button">Add an ATS source</button><button onClick={() => setActiveView("add")} type="button">Add a job manually</button></div></section>}
+          {!selectedDraft && !selectedSubmission && dashboardStatus === "ready" && <section className="admin-empty-operations" aria-labelledby="empty-operations-title"><div><span className="eyebrow">System ready</span><h2 id="empty-operations-title">Nothing needs review.</h2><p>New employer submissions and salary-bearing ATS jobs will appear here automatically as drafts.</p></div><dl><div><dt>Active ATS sources</dt><dd>{activeImportSources.length}</dd></div><div><dt>Last successful sync</dt><dd>{lastSuccessfulSync ? new Date(lastSuccessfulSync).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" }) : "Not synced yet"}</dd></div><div><dt>Next scheduled import</dt><dd>Daily at 06:30 UTC</dd></div></dl><div><button className="primary-button" onClick={() => { setAddJobMode("ats"); setActiveView("add"); }} type="button">Connect an ATS source</button><button onClick={() => { setAddJobMode("manual"); setActiveView("add"); }} type="button">Add a job manually</button></div></section>}
         </section>
       </section>}
 
       {activeView === "analytics" && <section className="admin-analytics" aria-labelledby="admin-analytics-title">
         <header>
-          <div><span className="eyebrow">Last 30 days</span><h2 id="admin-analytics-title">Product analytics</h2><p>First-party counts exclude salary figures, deductions, payslip values, passwords and form text.</p></div>
+          <div><span className="eyebrow">Last 30 days</span><h2 id="admin-analytics-title">Understand what people use</h2><p>Privacy-safe product activity, without salary figures, deductions, payslip values, passwords or form text.</p></div>
           <span className="admin-analytics-setup">First-party analytics</span>
         </header>
         {productAnalytics ? <>
@@ -901,16 +948,24 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
             <section><h3>Most visited pages</h3>{productAnalytics.top_pages.length ? <ol>{productAnalytics.top_pages.map((item) => <li key={item.path}><span>{item.path}</span><strong>{item.views.toLocaleString()}</strong></li>)}</ol> : <p>No page views recorded yet.</p>}</section>
             <section><h3>Traffic sources</h3>{productAnalytics.referrers.length ? <ol>{productAnalytics.referrers.map((item) => <li key={item.source}><span>{item.source}</span><strong>{item.views.toLocaleString()}</strong></li>)}</ol> : <p>No referral data recorded yet.</p>}</section>
           </div>
-        </> : <div className="admin-analytics-empty"><strong>Analytics summary is ready for its database migration.</strong><p>Apply the new local migration to preview real first-party counts. Event collection remains safe when this panel is unavailable.</p></div>}
+        </> : <div className="admin-analytics-empty"><strong>Detailed analytics are not live yet.</strong><p>The operational summary above is available now. Detailed privacy-safe trends will appear here once enough activity has been recorded.</p></div>}
       </section>}
 
       <section className={`admin-section ${activeView === "add" ? "" : "admin-view-hidden"}`}>
-        <h2>Curate a salary-transparent job</h2>
-        <p>
-          Paste the source, record only supported facts, and write an original
-          summary. Save uncertain listings as drafts until the evidence is checked.
-        </p>
-        <form
+        <div className="admin-add-heading"><span className="eyebrow">Add jobs</span><h2>Choose the simplest path.</h2><p>Start with the source. SalarySabi will keep every listing in review until its evidence is checked.</p></div>
+        <div className="admin-add-paths" role="tablist" aria-label="Choose how to add jobs">
+          <button aria-selected={addJobMode === "source"} className={addJobMode === "source" ? "is-active" : ""} onClick={() => setAddJobMode("source")} role="tab" type="button"><strong>Start with a job URL</strong><span>Best for one published listing</span></button>
+          <button aria-selected={addJobMode === "manual"} className={addJobMode === "manual" ? "is-active" : ""} onClick={() => setAddJobMode("manual")} role="tab" type="button"><strong>Add manually</strong><span>Enter every verified detail</span></button>
+          <button aria-selected={addJobMode === "ats"} className={addJobMode === "ats" ? "is-active" : ""} onClick={() => setAddJobMode("ats")} role="tab" type="button"><strong>Connect an ATS</strong><span>Import salary-bearing jobs as drafts</span></button>
+        </div>
+
+        {addJobMode === "source" && <form className="admin-source-first" onSubmit={(event) => { event.preventDefault(); setAddJobMode("manual"); }}>
+          <div><span className="eyebrow">Recommended</span><h3>Paste the job URL.</h3><p>We will carry the source into the review form. Add only the facts you can verify on that page.</p></div>
+          <label>Original job URL<input autoFocus onChange={(event) => setSourceUrlDraft(event.target.value)} placeholder="https://company.com/careers/role" type="url" value={sourceUrlDraft} required /></label>
+          <button className="primary-button" type="submit">Continue with this source</button>
+        </form>}
+
+        {addJobMode === "manual" && <form
           className="moderation-card admin-job-editor"
           onSubmit={createOfficialJob}
         >
@@ -1007,7 +1062,7 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
             </label>
             <label className="wide">
               Source URL
-              <input name="source_url" type="url" required />
+              <input defaultValue={sourceUrlDraft} name="source_url" type="url" required />
             </label>
             <label>
               Source type
@@ -1063,9 +1118,9 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
             <button disabled={busy === "official-job"} value="draft">Save review draft</button>
             <button className="primary-button" disabled={busy === "official-job"} value="publish">Publish checked listing</button>
           </div>
-        </form>
-        <section className="admin-import-sources" aria-labelledby="import-sources-title">
-          <h2 id="import-sources-title">Direct ATS sources</h2>
+        </form>}
+        {addJobMode === "ats" && <section className="admin-import-sources" aria-labelledby="import-sources-title">
+          <h2 id="import-sources-title">Connect an ATS source</h2>
           <p>Add the public board key from an employer&apos;s Greenhouse or Lever careers URL. Imports remain drafts until you verify salary and application evidence.</p>
           <form className="admin-import-source-form" onSubmit={createImportSource}>
             <label>Provider<select name="provider" required><option value="greenhouse">Greenhouse</option><option value="lever">Lever</option></select></label>
@@ -1092,7 +1147,7 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
               </article>
             ))}
           </div>
-        </section>
+        </section>}
       </section>
 
       <section className="admin-section admin-view-hidden">
@@ -1230,12 +1285,18 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
             {selectedManagedJob ? <>
               <header><div><span className={`admin-job-status status-${getJobLifecycle(selectedManagedJob, today)}`}>{jobLifecycleLabels[getJobLifecycle(selectedManagedJob, today)]}</span><h3>{selectedManagedJob.title}</h3><p>{selectedManagedJob.company_name} · {selectedManagedJob.location}</p></div><strong>{formatJobSalary(selectedManagedJob)}</strong></header>
               <div className="admin-job-lifecycle-actions">
-                {getJobLifecycle(selectedManagedJob, today) === "live" && <><Link href={`/jobs/${selectedManagedJob.slug}`} target="_blank">View live job <ExternalLinkIcon /></Link><button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "expired")} type="button">Expire</button><button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "filled")} type="button">Mark filled</button></>}
-                {getJobLifecycle(selectedManagedJob, today) === "review" && <button onClick={() => { setSelectedReviewId(selectedManagedJob.id); setActiveView("review"); }} type="button">Open review checklist</button>}
-                {getJobLifecycle(selectedManagedJob, today) === "expired" && <><button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "published")} type="button">Republish</button><button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "filled")} type="button">Mark filled</button></>}
-                {getJobLifecycle(selectedManagedJob, today) === "archived" && <button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "draft")} type="button">Restore to review</button>}
-                {getJobLifecycle(selectedManagedJob, today) !== "archived" && <button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "archived")} type="button">Archive</button>}
-                {["expired", "filled", "archived"].includes(getJobLifecycle(selectedManagedJob, today)) && <button className="admin-danger-link" onClick={() => { setDeleteConfirmJobId(selectedManagedJob.id); setDeleteConfirmation(""); }} type="button">Delete permanently</button>}
+                {getJobLifecycle(selectedManagedJob, today) === "live" && <><Link className="admin-primary-action" href={`/jobs/${selectedManagedJob.slug}`} target="_blank">View live job <ExternalLinkIcon /></Link><button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "filled")} type="button">Mark filled</button></>}
+                {getJobLifecycle(selectedManagedJob, today) === "review" && <button className="admin-primary-action" onClick={() => { setSelectedReviewId(selectedManagedJob.id); setActiveView("review"); }} type="button">Open review checklist</button>}
+                {getJobLifecycle(selectedManagedJob, today) === "expired" && <><button className="admin-primary-action" disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "published")} type="button">Republish</button><button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "filled")} type="button">Mark filled</button></>}
+                {getJobLifecycle(selectedManagedJob, today) === "archived" && <button className="admin-primary-action" disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "draft")} type="button">Restore to review</button>}
+                {getJobLifecycle(selectedManagedJob, today) !== "review" && <details className="admin-job-more-actions">
+                  <summary>More</summary>
+                  <div>
+                    {getJobLifecycle(selectedManagedJob, today) === "live" && <button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "expired")} type="button">Expire</button>}
+                    {getJobLifecycle(selectedManagedJob, today) !== "archived" && <button disabled={busy === selectedManagedJob.id} onClick={() => void setJobStatus(selectedManagedJob.id, "archived")} type="button">Archive</button>}
+                    {["expired", "filled", "archived"].includes(getJobLifecycle(selectedManagedJob, today)) && <button className="admin-danger-link" onClick={() => { setDeleteConfirmJobId(selectedManagedJob.id); setDeleteConfirmation(""); }} type="button">Delete permanently</button>}
+                  </div>
+                </details>}
               </div>
 
               <form className="admin-managed-job-form" key={selectedManagedJob.id} onSubmit={(event) => saveJob(event, selectedManagedJob.id)}>
@@ -1274,8 +1335,8 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
       </section>
 
       <section className={`admin-section ${activeView === "reports" ? "" : "admin-view-hidden"}`}>
-        <h2>Open job reports</h2>
-        {!reports.length && <p>No open reports.</p>}
+        <div className="admin-reports-heading"><span className="eyebrow">Trust and safety</span><h2>Open job reports</h2></div>
+        {!reports.length && <section className="admin-reports-clear"><strong>No open reports.</strong><p>All published jobs are clear. Reports are checked whenever this workspace loads.</p><button onClick={() => { setJobLifecycleFilter("live"); setActiveView("jobs"); }} type="button">View published jobs</button></section>}
         <div className="moderation-list">
           {reports.map((report) => (
             <article className="moderation-card" key={report.id}>

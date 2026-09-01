@@ -167,7 +167,7 @@ test.describe("work-and-pay platform redesign", () => {
 
   test("admin fixture loads review work and gates publication", async ({ page }) => {
     await page.goto("/admin?fixture=1");
-    await expect(page.getByText("Senior DevOps Engineer").first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Senior DevOps Engineer" })).toBeVisible();
     await expect(page.locator(".admin-review-queue > header strong")).toHaveText("3");
     const publish = page.getByRole("button", { name: "Complete 3 checks to publish" });
     await expect(publish).toBeDisabled();
@@ -176,11 +176,16 @@ test.describe("work-and-pay platform redesign", () => {
     await page.getByRole("checkbox", { name: /salary matches the source/i }).check();
     await page.getByRole("checkbox", { name: /source confidence is acceptable/i }).check();
     await expect(page.getByText("3 of 3 complete")).toBeVisible();
+    await expect(page.locator(".admin-review-actions")).toHaveCSS("position", "sticky");
     await expect(page.getByRole("button", { name: "Publish verified job" })).toBeEnabled();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     expect(overflow).toBe(false);
 
+    if ((page.viewportSize()?.width ?? 1000) <= 720) {
+      await page.locator(".admin-more-menu > summary").click();
+    }
     await page.getByRole("button", { name: "Add job" }).click();
+    await page.getByRole("tab", { name: /Connect an ATS/i }).click();
     await page.getByRole("button", { name: "Edit Kuda ATS source" }).click();
     const editSource = page.locator(".admin-import-source-edit-form");
     await editSource.getByLabel("Employer name").fill("Kuda Nigeria");
@@ -207,6 +212,7 @@ test.describe("work-and-pay platform redesign", () => {
 
     await page.getByRole("tab", { name: /Expired 1/ }).click();
     await expect(page.getByText("Operations Manager", { exact: true }).first()).toBeVisible();
+    await page.locator(".admin-job-more-actions > summary").click();
     await page.locator(".admin-job-detail").getByRole("button", { name: "Delete permanently" }).click();
     const confirmation = page.getByLabel(/Type Operations Manager to confirm/);
     const deleteButton = page.locator(".admin-delete-confirmation").getByRole("button", { name: "Delete permanently" });
