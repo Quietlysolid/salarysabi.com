@@ -4,8 +4,8 @@ import { InfoPage } from "@/components/info-page";
 import { pitGuidelinesReleaseUrl, pitGuidelinesUrl, rulesetVersion, taxActUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Tax Rules Changelog | SalarySabi",
-  description: "A dated record of tax-rule and PAYE calculator changes made by SalarySabi.",
+  title: "PAYE Tax Rule Updates | SalarySabi",
+  description: "See the current SalarySabi PAYE ruleset, independent review status and official Nigerian tax sources.",
   alternates: { canonical: "/tax-updates" },
 };
 
@@ -26,7 +26,7 @@ const updates = [
     previous: "Initial SalarySabi implementation of the 2026 PAYE rules.",
     current: "Confirmed the graduated bands, eligible deductions, rent relief and minimum-wage exemption against official JRB guidance.",
     effective: "1 January 2026",
-    source: "Nigeria Tax Act 2025, sections 30, 58 and 163(1)(t), and Fourth Schedule; JRB Guidelines 2026, paragraphs 8–9 and Appendices 1 and 4.",
+    source: "Nigeria Tax Act 2025, sections 30, 58 and 163(1)(t), and Fourth Schedule; JRB Guidelines 2026, paragraphs 8 to 9 and Appendices 1 and 4.",
   },
   {
     date: "7 April 2026",
@@ -39,15 +39,93 @@ const updates = [
   },
 ];
 
-export default function TaxUpdatesPage() {
+function SourceDetails({ index, source }: { index: number; source: string }) {
+  if (index === 0) {
+    return (
+      <>
+        {source}{" "}
+        <a href={taxActUrl} rel="noreferrer" target="_blank">Nigeria Tax Act</a>
+        <span aria-hidden="true"> · </span>
+        <a href={pitGuidelinesUrl} rel="noreferrer" target="_blank">JRB PAYE Guidelines</a>
+      </>
+    );
+  }
+
   return (
-    <InfoPage eyebrow="Tax changelog" title="Tax rules change. We keep the calculator current." intro="This page records each PAYE update, when it took effect, the official source and whether the calculation changed.">
-      <div className="trust-page changelog-page">
-        <aside className="trust-status"><div><span>Current calculator ruleset</span><strong>{rulesetVersion}</strong></div><Link href="/how-paye-is-calculated#sources">Check the source documents</Link></aside>
-        <div className="changelog-list">
-          {updates.map((update, index) => <article key={`${update.date}-${update.version}`}><div className="changelog-date"><time>{update.date}</time><span>{update.version}</span></div><div><h2>{update.title}</h2><dl className="changelog-fields"><div><dt>Previous rule</dt><dd>{update.previous}</dd></div><div><dt>New or confirmed rule</dt><dd>{update.current}</dd></div><div><dt>Effective date</dt><dd>{update.effective}</dd></div><div><dt>Source</dt><dd>{update.source} {index === 0 ? <><a href={taxActUrl} rel="noreferrer" target="_blank">Open Act</a> · <a href={pitGuidelinesUrl} rel="noreferrer" target="_blank">Open Guidelines</a></> : <a href={pitGuidelinesReleaseUrl} rel="noreferrer" target="_blank">Open JRB release</a>}</dd></div></dl></div></article>)}
+    <>
+      {source}{" "}
+      <a href={pitGuidelinesReleaseUrl} rel="noreferrer" target="_blank">Official JRB release</a>
+    </>
+  );
+}
+
+function UpdateFields({ index }: { index: number }) {
+  const update = updates[index];
+
+  return (
+    <dl className="changelog-fields">
+      <div><dt>Before</dt><dd>{update.previous}</dd></div>
+      <div><dt>Now</dt><dd>{update.current}</dd></div>
+      <div><dt>Effective</dt><dd>{update.effective}</dd></div>
+      <div><dt>Official source</dt><dd><SourceDetails index={index} source={update.source} /></dd></div>
+    </dl>
+  );
+}
+
+export default function TaxUpdatesPage() {
+  const latestUpdate = updates[0];
+
+  return (
+    <InfoPage
+      eyebrow="PAYE rules · Current"
+      title="Your PAYE calculator stays current."
+      intro="Checked against Nigeria's official tax rules. Independently reviewed 1 September 2026."
+      heroAction={(
+        <div className="tax-updates-hero-actions">
+          <a className="primary-button" href="#latest-update">See what changed</a>
+          <Link className="secondary-button" href="/how-paye-is-calculated#sources">View official sources</Link>
         </div>
-        <section className="trust-section trust-contact"><div><span className="eyebrow">Spot a change we missed?</span><h2>Send us the official source.</h2></div><a className="primary-button" href="mailto:tax@salarysabi.com?subject=Tax%20rule%20correction">Report a tax-rule update</a></section>
+      )}
+    >
+      <div className="trust-page changelog-page">
+        <aside className="tax-update-proof" aria-label="Current PAYE rule status">
+          <div><span>Ruleset</span><strong>{rulesetVersion}</strong></div>
+          <div><span>Review</span><strong>Independent review complete</strong></div>
+          <div><span>Sources</span><Link href="/how-paye-is-calculated#sources">Official sources linked</Link></div>
+        </aside>
+
+        <section className="changelog-section" aria-labelledby="change-history-heading">
+          <header className="changelog-section-heading">
+            <span className="eyebrow">Change history</span>
+            <h2 id="change-history-heading">What changed</h2>
+          </header>
+
+          <div className="changelog-list">
+            <article className="changelog-latest" id="latest-update">
+              <div className="changelog-date"><time>{latestUpdate.date}</time><span>{latestUpdate.version}</span></div>
+              <div><h3>{latestUpdate.title}</h3><UpdateFields index={0} /></div>
+            </article>
+
+            {updates.slice(1).map((update, offset) => {
+              const index = offset + 1;
+              return (
+                <details className="changelog-history-entry" key={`${update.date}-${update.version}`}>
+                  <summary>
+                    <span className="changelog-summary-date"><time>{update.date}</time><span>{update.version}</span></span>
+                    <strong>{update.title}</strong>
+                    <span className="changelog-summary-toggle" aria-hidden="true" />
+                  </summary>
+                  <div className="changelog-history-content"><UpdateFields index={index} /></div>
+                </details>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="trust-section trust-contact">
+          <div><span className="eyebrow">Tax rule corrections</span><h2>Spotted a rule change?</h2></div>
+          <a className="primary-button" href="mailto:tax@salarysabi.com?subject=Tax%20rule%20correction">Send the official source</a>
+        </section>
       </div>
     </InfoPage>
   );

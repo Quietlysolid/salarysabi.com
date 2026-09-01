@@ -3,50 +3,120 @@ import Link from "next/link";
 import { ArticleStructuredData } from "@/components/article-structured-data";
 import { PublicPageShell } from "@/components/info-page";
 import { PayeGuideTrail } from "@/components/paye-guide-trail";
-import { pitGuidelinesUrl, taxActUrl, taxProfessionalReviewIso, taxReviewStatus } from "@/lib/site";
-import { salaryTerms } from "@/lib/salary-terms";
+import { calculatePaye } from "@/lib/paye";
+import { pitGuidelinesUrl, rulesetVersion, taxActUrl, taxProfessionalReviewIso } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "How PAYE Is Calculated in Nigeria (2026 Guide)",
-  description: "See the five steps used to estimate Nigerian PAYE, with a simple worked example.",
+  description: "See how annual pay becomes monthly Nigerian PAYE, with five clear steps and a worked example.",
   alternates: { canonical: "/how-paye-is-calculated" },
 };
 
-const steps = [
-  ["1", "Find yearly pay", "Multiply regular monthly gross pay by 12."],
-  ["2", "Subtract eligible deductions", "Use only pension, NHF, health insurance, rent and other eligible amounts you can confirm."],
-  ["4", "Apply each tax band", "Each rate applies only to the part of income inside that band."],
-  ["5", "Find monthly PAYE", "Add the yearly tax, then divide it by 12."],
-] as const;
+const example = calculatePaye({ annualGrossIncome: 2_400_000 });
+const exampleBands = example.bands.filter((band) => band.taxableAmount > 0);
+const naira = (value: number) => `₦${new Intl.NumberFormat("en-NG", { maximumFractionDigits: 0 }).format(value)}`;
 
 export default function MethodologyPage() {
-  return <PublicPageShell>
-    <ArticleStructuredData headline="How PAYE Is Calculated in Nigeria" description="See the five steps used to estimate Nigerian PAYE." path="/how-paye-is-calculated" about={["PAYE", "Nigerian personal income tax"]} />
-    <PayeGuideTrail current="methodology" />
-    <article className="methodology-page simple-guide">
-      <header className="simple-guide-hero">
-        <span className="eyebrow">PAYE calculation</span>
-        <h1>How PAYE is calculated</h1>
-        <p>Yearly pay − eligible deductions = taxable income. Tax bands are then applied, and the yearly tax is divided by 12.</p>
-        <Link className="primary-button" href="/payslip-checker">Calculate take-home pay</Link>
-      </header>
-      <aside className="trust-status methodology-review" aria-label="Independent professional review">
-        <div><span>Independent professional review</span><strong>{taxReviewStatus}</strong></div>
-        <time dateTime={taxProfessionalReviewIso}>Completed 1 September 2026</time>
-      </aside>
-      <section className="simple-guide-section" aria-labelledby="steps-title">
-        <h2 id="steps-title">The five steps</h2>
-        <ol className="simple-step-list">
-          {steps.slice(0, 2).map(([number, title, text]) => <li key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></li>)}
-          <li><span>3</span><div><h3>Find taxable income</h3><p>{salaryTerms.chargeableIncome}</p></div></li>
-          {steps.slice(2).map(([number, title, text]) => <li key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></li>)}
-        </ol>
-      </section>
-      <section className="simple-guide-section simple-example" aria-labelledby="example-title">
-        <div><span className="eyebrow">Example</span><h2 id="example-title">₦2.4 million yearly pay</h2><p>With no deductions entered, the official example produces:</p></div>
-        <dl><div><dt>Yearly PAYE</dt><dd>₦240,000</dd></div><div><dt>Monthly PAYE</dt><dd>₦20,000</dd></div></dl>
-      </section>
-      <details className="simple-guide-details"><summary>Important rules and official sources</summary><div><p>The first ₦800,000 of taxable income is taxed at 0%. Higher rates apply only to the portion inside each later band. Employment income at or below the national minimum wage may be exempt.</p><p><Link href="/eligible-deductions">See eligible deductions</Link> · <Link href="/tax-bands">See all tax bands</Link></p><p><a className="methodology-evidence-row" href={taxActUrl} rel="noreferrer" target="_blank">Nigeria Tax Act 2025 ↗</a><br /><a href={pitGuidelinesUrl} rel="noreferrer" target="_blank">JRB Personal Income Tax Guidelines 2026 ↗</a></p></div></details>
-    </article>
-  </PublicPageShell>;
+  return (
+    <PublicPageShell>
+      <ArticleStructuredData
+        headline="How PAYE Is Calculated in Nigeria"
+        description="See how annual pay becomes monthly Nigerian PAYE in five clear steps."
+        path="/how-paye-is-calculated"
+        about={["PAYE", "Nigerian personal income tax"]}
+      />
+
+      <article className="methodology-page simple-guide methodology-story">
+        <header className="simple-guide-hero methodology-story-hero">
+          <span className="eyebrow">PAYE, explained</span>
+          <h1>Your PAYE. Five clear steps.</h1>
+          <p>See how your annual pay becomes the tax on your payslip.</p>
+          <Link className="primary-button" href="/payslip-checker">Check my PAYE</Link>
+          <p className="methodology-trust-line" aria-label={`Independently reviewed 1 September 2026. Ruleset ${rulesetVersion}.`}>
+            <strong>Independently reviewed</strong>
+            <span aria-hidden="true">·</span>
+            <time dateTime={taxProfessionalReviewIso}>1 September 2026</time>
+            <span aria-hidden="true">·</span>
+            <span>Ruleset {rulesetVersion}</span>
+          </p>
+        </header>
+
+        <PayeGuideTrail compactOnMobile current="methodology" />
+
+        <section className="methodology-equation" aria-labelledby="equation-title">
+          <div className="methodology-equation-heading">
+            <span className="eyebrow">The calculation</span>
+            <h2 id="equation-title">From annual pay to monthly PAYE</h2>
+          </div>
+          <div
+            className="methodology-equation-visual"
+            role="img"
+            aria-label="Step 1, find yearly pay. Step 2, subtract eligible deductions. Step 3, find taxable income. Step 4, apply tax bands. Step 5, divide yearly PAYE by 12 to find monthly PAYE."
+          >
+            <div>
+              <span><small>1</small>Yearly pay</span>
+              <b aria-hidden="true">−</b>
+              <span><small>2</small>Eligible deductions</span>
+              <b aria-hidden="true">=</b>
+              <span><small>3</small>Taxable income</span>
+            </div>
+            <div>
+              <span><small>4</small>Apply tax bands</span>
+              <b aria-hidden="true">→</b>
+              <span className="methodology-equation-output">Yearly PAYE</span>
+              <b aria-hidden="true">÷ 12 =</b>
+              <span><small>5</small>Monthly PAYE</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="simple-guide-section methodology-worked-example" aria-labelledby="example-title">
+          <header>
+            <span className="eyebrow">Worked example</span>
+            <h2 id="example-title">See it with ₦2.4 million</h2>
+            <p>No deductions are entered. Every figure below comes from the same PAYE engine used by SalarySabi.</p>
+          </header>
+
+          <div className="methodology-example-grid">
+            <div className="methodology-example-math">
+              <dl className="methodology-example-inputs">
+                <div><dt>Yearly pay</dt><dd>{naira(example.annualGrossIncome)}</dd></div>
+                <div><dt>Eligible deductions</dt><dd>{naira(example.totalEligibleDeductions)}</dd></div>
+                <div><dt>Taxable income</dt><dd>{naira(example.chargeableIncome)}</dd></div>
+              </dl>
+
+              <div className="methodology-band-breakdown" aria-label="Tax band breakdown">
+                <span>Apply the tax bands</span>
+                <dl>
+                  {exampleBands.map((band) => (
+                    <div key={`${band.rate}-${band.taxableAmount}`}>
+                      <dt>{naira(band.taxableAmount)} taxed at {band.rate * 100}%</dt>
+                      <dd>{naira(band.tax)}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+
+            <aside className="methodology-example-result" aria-label="Worked example result">
+              <span>Yearly PAYE</span>
+              <strong>{naira(example.annualTax)}</strong>
+              <div><span>Divide by 12</span><b aria-hidden="true">÷</b></div>
+              <span>Monthly PAYE</span>
+              <strong>{naira(example.monthlyTax)}</strong>
+            </aside>
+          </div>
+        </section>
+
+        <details className="simple-guide-details methodology-source-details" id="sources">
+          <summary>Verify the rules and sources</summary>
+          <div>
+            <p>The first ₦800,000 of taxable income is taxed at 0%. Higher rates apply only to the portion inside each later band. Employment income at or below the national minimum wage may be exempt.</p>
+            <p><Link href="/eligible-deductions">See eligible deductions</Link><span aria-hidden="true"> · </span><Link href="/tax-bands">See all tax bands</Link></p>
+            <p><a className="methodology-evidence-row" href={taxActUrl} rel="noreferrer" target="_blank">Nigeria Tax Act 2025 ↗</a><br /><a href={pitGuidelinesUrl} rel="noreferrer" target="_blank">JRB Personal Income Tax Guidelines 2026 ↗</a></p>
+          </div>
+        </details>
+      </article>
+    </PublicPageShell>
+  );
 }

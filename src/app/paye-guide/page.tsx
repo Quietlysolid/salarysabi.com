@@ -21,27 +21,25 @@ export default function PayeGuidePage() {
   return (
     <PublicPageShell>
       <article className="paye-guide-page paye-guide-simple">
-        <header className="paye-guide-simple-hero">
-          <span className="eyebrow">Pay &amp; tax guide</span>
-          <h1>Understand your PAYE</h1>
-          <p>Start with the question you need answered, then return to your calculation with clearer information.</p>
-        </header>
-
         <PayeGuideCalculator />
 
-        <nav className="paye-guide-question-list" aria-label="PAYE guide topics">
-          {questions.map((question) => (
-            <Link aria-label={"label" in question ? question.label : undefined} href={question.href} key={question.href}>
-              <span>{question.title}</span>
-              <span aria-hidden="true">→</span>
-            </Link>
-          ))}
-        </nav>
-
-        <Link className="primary-button paye-guide-simple-action" href="/payslip-checker">Check my payslip</Link>
+        <section className="paye-guide-topics" aria-labelledby="paye-guide-topics-title">
+          <header>
+            <span className="eyebrow">Go one step deeper</span>
+            <h2 id="paye-guide-topics-title">Understand the calculation</h2>
+          </header>
+          <nav className="paye-guide-question-list" aria-label="PAYE guide topics">
+            {questions.map((question) => (
+              <Link aria-label={"label" in question ? question.label : undefined} href={question.href} key={question.href}>
+                <span>{question.title}</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            ))}
+          </nav>
+        </section>
 
         <details className="paye-guide-simple-sources">
-          <summary><span>Sources and updates</span><span aria-hidden="true">+</span></summary>
+          <summary><span>Verify the rules and sources</span><span aria-hidden="true">+</span></summary>
           <div>
             <ul>
               <li><a href={taxActUrl} rel="noreferrer" target="_blank">Nigeria Tax Act 2025 ↗</a></li>

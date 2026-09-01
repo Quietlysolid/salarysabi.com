@@ -63,6 +63,67 @@ final result: passed
 
 ---
 
+# PAYE guide single-story simplification - design QA
+
+## Source visual truth
+
+- Desktop production capture before the change: `C:\Users\z-Nwosu.Ozichi.G\microSaas\.audit\paye-guide-steve-jobs\01-desktop-full.png`.
+- Mobile production capture before the change: `C:\Users\z-Nwosu.Ozichi.G\microSaas\.audit\paye-guide-steve-jobs\02-mobile-full.png`.
+- Mobile interaction source at ₦1,000,000: `C:\Users\z-Nwosu.Ozichi.G\microSaas\.audit\paye-guide-steve-jobs\03-mobile-one-million.png`.
+- Selected direction: make the live calculation the hero, retain the salary equation, use one precise input and one payslip action, and keep education and source verification secondary.
+
+## Implementation evidence
+
+- Desktop implementation: `C:\Users\z-Nwosu.Ozichi.G\microSaas\.audit\paye-guide-steve-jobs\04-local-desktop.png` at 1440 x 1634 pixels.
+- Mobile implementation: `C:\Users\z-Nwosu.Ozichi.G\microSaas\.audit\paye-guide-steve-jobs\05-local-mobile.png` at 390 x 2469 pixels.
+- Mobile implementation at ₦1,000,000: `C:\Users\z-Nwosu.Ozichi.G\microSaas\.audit\paye-guide-steve-jobs\06-local-mobile-one-million.png` at 390 x 2469 pixels.
+- CSS viewports: 1440 x 1000 and 390 x 844 at device scale factor 1. Source and implementation captures use the same viewport width and native density.
+- State: default ₦500,000 salary and updated ₦1,000,000 salary.
+- Primary interaction: entering ₦1,000,000 immediately returned ₦162,500 PAYE and ₦837,500 take-home pay.
+- Runtime: no browser console errors, no page errors and no horizontal overflow at either viewport.
+
+## Full-view comparison evidence
+
+- The source and implementation desktop captures were opened together in one comparison input at the same 1440-pixel viewport.
+- The source and implementation mobile captures were opened together in one comparison input at the same 390-pixel viewport.
+- The implementation removes the separate introductory hero, promotes the calculator heading to the single H1, removes the range slider, removes the duplicate payslip button and converts the four guide rows to a compact two-column desktop grid.
+- The desktop document height falls from 2,049 to 1,634 pixels. The mobile document height falls from 2,669 to 2,469 pixels while preserving every educational route and the footer.
+
+## Focused region comparison evidence
+
+- The two ₦1,000,000 interaction captures were opened together. The calculation remains identical before and after the design change.
+- The implemented input has a visible focus treatment, the equation remains the dominant dark-green proof, and the independent-review line is now visible beside the result.
+- A separate crop was not needed because the full-width 390-pixel captures keep the input, complete equation, trust line and primary action legible.
+
+## Required surface review
+
+- Typography: Bricolage Grotesque and Source Sans remain unchanged. The calculator owns the only H1, the educational section has one subordinate H2 and no text clips.
+- Spacing: the opening is one joined input-and-result composition. Desktop topics use two columns, mobile uses one, and neither viewport overflows.
+- Color: the established pale green, dark green, lime and white tokens remain unchanged with clear surface contrast.
+- Assets: the existing SalarySabi vector wordmark, shield and arrow icons remain crisp. No new or approximate imagery was introduced.
+- Copy: the opening is reduced to one promise and one sentence. The second payslip CTA is removed. Source language becomes the more purposeful `Verify the rules and sources`.
+- Accessibility: one H1, explicit salary label, visible focus treatment, native disclosure, semantic topic navigation and a single contextual payslip link remain available.
+
+## Comparison history
+
+- Source P1: the introduction instructed users to begin with a question while the design visually prioritised the calculator. Fixed by making the calculator the opening hero.
+- Source P2: the salary slider duplicated the precise text input. Fixed by retaining only the labelled numeric field.
+- Source P2: two payslip actions competed with each other. Fixed by retaining only `Check this against my payslip` inside the result.
+- Source P2: four full-width desktop guide rows created unnecessary height. Fixed with a two-column secondary topic grid.
+- Post-fix evidence: the same calculations and routes pass on desktop and mobile, with no console errors or horizontal overflow.
+
+## Findings
+
+- P0: none.
+- P1: none.
+- P2: none.
+- P3: the compact trust line wraps to a second line on mobile but remains readable and visually subordinate.
+- P3: the circular `N` in local screenshots is the Next.js development indicator and is absent from production.
+
+final result: passed
+
+---
+
 # Payslip PAYE staged-result simplification — design QA
 
 ## Source visual truth

@@ -169,9 +169,11 @@ test("privacy and disclaimer pages give short, scannable reading paths", async (
 
 test("PAYE guide offers four question-led routes", async ({ page }) => {
   await page.goto("/paye-guide");
-  await expect(page.getByRole("heading", { name: "Understand your PAYE" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "See where your salary goes." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Understand the calculation" })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "PAYE guide topics" }).getByRole("link")).toHaveCount(4);
   await expect(page.getByRole("link", { name: "How PAYE is calculated" })).toHaveAttribute("href", "/how-paye-is-calculated");
+  await expect(page.getByRole("link", { name: "Check my payslip" })).toHaveCount(0);
 });
 
 test("pay experiences explain the numbers live", async ({ page }) => {
