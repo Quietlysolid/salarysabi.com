@@ -55,7 +55,7 @@ export function JobScoutProgram() {
       {status === "loading" && <p className="contributor-campaign-state" role="status">Checking whether the paid pilot is open…</p>}
       {status === "active" && campaign && <div className="contributor-hero-actions">
         <Link className="primary-button" href={`/suggest-a-job?campaign=${campaign.slug}`}>Submit a salary-transparent job</Link>
-        <span>{remainingRewards} funded {remainingRewards === 1 ? "reward" : "rewards"} remaining · Ends {new Date(campaign.ends_at).toLocaleDateString("en-NG", { dateStyle: "medium" })}</span>
+        <span>{remainingRewards} funded {remainingRewards === 1 ? "reward" : "rewards"} remaining</span>
       </div>}
       {status === "inactive" && <div className="contributor-campaign-state" role="status"><strong>Paid submissions are not open right now.</strong><span>You can still send an unpaid job tip for SalarySabi to review.</span><Link href="/suggest-a-job">Share an unpaid job tip</Link></div>}
       {status === "error" && <div className="contributor-campaign-state is-error" role="status"><strong>Campaign status is temporarily unavailable.</strong><span>No reward can be promised until the status is confirmed.</span></div>}

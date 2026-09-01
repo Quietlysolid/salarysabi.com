@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  ArrowDown,
   ArrowRight,
   BriefcaseBusiness,
   Calculator,
@@ -86,7 +87,7 @@ export function SplitGatewayHome() {
       </main>
       <nav aria-label="Helpful links" className="gateway-utility-links">
         <Link href="/paye-guide">Learn</Link>
-        <Link href="/contributors">Community</Link>
+        <Link href="/contributors">Contribute</Link>
         <Link href="/privacy">Privacy</Link>
         <Link href="/tax-updates">Inspect the rules</Link>
       </nav>
@@ -96,21 +97,21 @@ export function SplitGatewayHome() {
 
 function PayPreview() {
   return (
-    <div className="gateway-pay-preview" aria-label="Example take-home pay calculation">
-      <div><span>Gross salary</span><strong>{"\u20A6500,000"}</strong></div>
-      <i aria-hidden="true">{"\u2193"}</i>
-      <div className="gateway-paye"><span>PAYE</span><strong>{"\u2212\u20A687,450"}</strong></div>
-      <i aria-hidden="true">{"\u2193"}</i>
-      <div className="gateway-take-home"><span>Take-home pay</span><strong>{"\u20A6412,550"}</strong></div>
+    <div className="gateway-pay-preview gateway-motion-sequence" aria-label="Example take-home pay calculation">
+      <div className="gateway-motion-step gateway-motion-step--1"><span>Gross salary</span><strong>{"\u20A6500,000"}</strong></div>
+      <ArrowDown className="gateway-motion-connector gateway-motion-connector--1" aria-hidden="true" />
+      <div className="gateway-paye gateway-motion-step gateway-motion-step--2"><span>PAYE</span><strong>{"\u2212\u20A672,500"}</strong></div>
+      <ArrowDown className="gateway-motion-connector gateway-motion-connector--2" aria-hidden="true" />
+      <div className="gateway-take-home gateway-motion-step gateway-motion-step--3"><span>Take-home pay</span><strong>{"\u20A6427,500"}</strong></div>
     </div>
   );
 }
 
 function PayrollPreview() {
   const rows = [
-    ["Adaeze M.", "500,000", "87,450", "412,550"],
-    ["Tunde O.", "350,000", "53,875", "296,125"],
-    ["Ngozi I.", "280,000", "40,200", "239,800"],
+    ["Adaeze M.", "500,000", "72,500", "427,500"],
+    ["Tunde O.", "350,000", "45,500", "304,500"],
+    ["Ngozi I.", "280,000", "32,900", "247,100"],
   ];
 
   return (
@@ -119,8 +120,8 @@ function PayrollPreview() {
       <div className="gateway-payroll-row gateway-payroll-head" role="row">
         <span role="columnheader">Employee</span><span role="columnheader">Gross ({"\u20A6"})</span><span role="columnheader">PAYE ({"\u20A6"})</span><span role="columnheader">Net ({"\u20A6"})</span>
       </div>
-      {rows.map((row) => (
-        <div className="gateway-payroll-row" key={row[0]} role="row">
+      {rows.map((row, index) => (
+        <div className={`gateway-payroll-row gateway-payroll-row--${index + 1}`} key={row[0]} role="row">
           {row.map((cell) => <span key={cell} role="cell">{cell}</span>)}
         </div>
       ))}

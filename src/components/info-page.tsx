@@ -56,6 +56,40 @@ export function InfoFooter() {
           <Link href="/contact">Contact us</Link>
         </nav>
       </div>
+      <div className="footer-mobile-links" aria-label="Footer navigation">
+        <details>
+          <summary>For talent</summary>
+          <div>
+            <Link href="/payslip-checker">Take-home pay</Link>
+            <Link href="/salaries">Salary benchmarks</Link>
+            <Link href="/jobs">Jobs with salaries</Link>
+          </div>
+        </details>
+        <details>
+          <summary>For employers</summary>
+          <div>
+            <Link href="/payroll">Small-team payroll</Link>
+            <Link href="/company-tax">Company tax</Link>
+            <Link href="/post-a-job">Post a job</Link>
+          </div>
+        </details>
+        <details>
+          <summary>Contribute</summary>
+          <div>
+            <Link href="/contributors">Contribute pay data</Link>
+            <Link href="/suggest-a-job">Share a paid role</Link>
+            <Link href="/contributions">My contributions</Link>
+          </div>
+        </details>
+        <details>
+          <summary>Learn</summary>
+          <div>
+            <Link href="/paye-guide">PAYE guide</Link>
+            <Link href="/tax-updates">Calculation rules</Link>
+            <Link href="/about">About SalarySabi</Link>
+          </div>
+        </details>
+      </div>
       <p className="footer-legal-line">
         <span>© 2026 SalarySabi.</span>
         <span>

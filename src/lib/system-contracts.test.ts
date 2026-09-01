@@ -98,6 +98,17 @@ describe("shared product contracts", () => {
     expect(wordmark).not.toContain("ı");
   });
 
+  it("credits all three SalarySabi stakeholders as the product team", () => {
+    const about = read("src/app/about/page.tsx");
+    expect(about).toContain("Built by the SalarySabi team");
+    expect(about).toContain("three-person Nigerian stakeholder team");
+    expect(about).toContain("Ozichi Nwosu");
+    expect(about).toContain("Victoria Green");
+    expect(about).toContain("https://www.linkedin.com/in/victoria-green1/");
+    expect(about).toContain("Veno Green");
+    expect(about).toContain("https://www.linkedin.com/in/veno-green-583766183/");
+  });
+
   it("caps contributor liabilities in the database before accepting reward claims", () => {
     const migration = read("supabase/migrations/202608110002_contributor_program.sql");
     expect(migration).toContain("committed_kobo+c.reward_kobo>c.budget_kobo");
@@ -122,8 +133,11 @@ describe("shared product contracts", () => {
     const migration = read("supabase/migrations/202608120003_activate_salary_report_pilot.sql");
     const rewardIncrease = read("supabase/migrations/202608190001_raise_salary_report_pilot_reward.sql");
     expect(campaignSource).toContain("campaign.budget_remaining_kobo >= campaign.reward_kobo");
-    expect(page).toContain("Funded offers currently pay");
-    expect(page).toContain("track every review decision");
+    expect(page).toContain("Your evidence makes pay visible");
+    expect(page).toContain("How your pay contribution becomes useful");
+    expect(page).toContain("Only anonymous groups of at least five approved reports become benchmarks");
+    expect(page).not.toContain("campaignEnd");
+    expect(page).not.toContain("· Ends");
     expect(page).toContain("Only one paid salary report is allowed per person");
     expect(page).toContain("/contributors/job-sourcing");
     expect(jobProgramme).toContain("Find a salary-transparent job");

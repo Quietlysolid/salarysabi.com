@@ -7,6 +7,7 @@ describe("checkPayslip", () => {
     expect(result.expectedMonthlyPaye).toBe(72_500);
     expect(result.comparison).toBe("close");
     expect(result.estimatedTakeHome).toBe(427_500);
+    expect(result.expectedTakeHome).toBe(427_500);
   });
 
   it("includes entered deductions in take-home pay", () => {
@@ -18,5 +19,6 @@ describe("checkPayslip", () => {
     });
     expect(result.totalDeductions).toBe(110_000);
     expect(result.estimatedTakeHome).toBe(390_000);
+    expect(result.expectedTakeHome).toBe(389_700);
   });
 });

@@ -6,6 +6,7 @@ import "./globals.css";
 import "./redesign.css";
 import "./split-gateway.css";
 import "./audience-system.css";
+import "./pay-experience.css";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",

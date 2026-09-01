@@ -35,6 +35,8 @@ export function checkPayslip(inputs: PayslipInputs) {
         : "lower";
   const totalDeductions =
     monthlyPaye + monthlyPension + monthlyNhf + monthlyNhis + otherDeductions;
+  const otherMonthlyDeductions =
+    monthlyPension + monthlyNhf + monthlyNhis + otherDeductions;
 
   return {
     expectedMonthlyPaye: estimate.monthlyTax,
@@ -42,5 +44,9 @@ export function checkPayslip(inputs: PayslipInputs) {
     comparison,
     totalDeductions,
     estimatedTakeHome: Math.max(0, monthlyGross - totalDeductions),
+    expectedTakeHome: Math.max(
+      0,
+      monthlyGross - estimate.monthlyTax - otherMonthlyDeductions,
+    ),
   };
 }

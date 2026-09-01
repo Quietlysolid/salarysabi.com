@@ -61,7 +61,7 @@ const audienceNavigation: Record<AudienceKey, { label: string; home: string; lin
     ],
   },
   community: {
-    label: "Community",
+    label: "Contribute",
     home: "/contributors",
     links: [
       { href: "/contributors", label: "Contribute pay data" },

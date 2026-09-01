@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PublicPageShell } from "@/components/info-page";
+import { PayeGuideCalculator } from "@/components/paye-guide-calculator";
 import { pitGuidelinesUrl, taxActUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -26,6 +27,8 @@ export default function PayeGuidePage() {
           <p>Start with the question you need answered, then return to your calculation with clearer information.</p>
         </header>
 
+        <PayeGuideCalculator />
+
         <nav className="paye-guide-question-list" aria-label="PAYE guide topics">
           {questions.map((question) => (
             <Link aria-label={"label" in question ? question.label : undefined} href={question.href} key={question.href}>
@@ -35,7 +38,7 @@ export default function PayeGuidePage() {
           ))}
         </nav>
 
-        <Link className="primary-button paye-guide-simple-action" href="/payslip-checker">Calculate take-home pay</Link>
+        <Link className="primary-button paye-guide-simple-action" href="/payslip-checker">Check my payslip</Link>
 
         <details className="paye-guide-simple-sources">
           <summary><span>Sources and updates</span><span aria-hidden="true">+</span></summary>

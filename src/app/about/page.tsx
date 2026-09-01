@@ -41,15 +41,36 @@ export default function AboutPage() {
         </section>
 
         <section className="about-simple-section about-founder" aria-labelledby="about-founder-title">
-          <div>
-            <h2 id="about-founder-title">Built by Ozichi Nwosu</h2>
+          <div className="about-team-intro">
+            <h2 id="about-founder-title">Built by the SalarySabi team</h2>
+            <p>SalarySabi is built and run by a three-person Nigerian stakeholder team. Product engineering, people expertise and content strategy come together in every part of the platform.</p>
           </div>
-          <div>
-            <p>A Nigerian software engineer who independently designs, develops and maintains SalarySabi.</p>
-            <p className="about-profile-links">
-              <a href={founderLinkedInUrl} rel="me noreferrer" target="_blank">LinkedIn ↗</a>
-              <a href={founderGitHubUrl} rel="me noreferrer" target="_blank">GitHub ↗</a>
-            </p>
+          <div className="about-team-list">
+            <article className="about-team-member">
+              <span>Product &amp; Engineering</span>
+              <h3>Ozichi Nwosu</h3>
+              <p>Designs, develops and maintains the SalarySabi product and its calculation systems.</p>
+              <p className="about-profile-links">
+                <a href={founderLinkedInUrl} rel="me noreferrer" target="_blank">LinkedIn ↗</a>
+                <a href={founderGitHubUrl} rel="me noreferrer" target="_blank">GitHub ↗</a>
+              </p>
+            </article>
+            <article className="about-team-member">
+              <span>People &amp; Talent</span>
+              <h3>Victoria Green</h3>
+              <p>Brings expertise in employee engagement, business partnering and talent management.</p>
+              <p className="about-profile-links">
+                <a href="https://www.linkedin.com/in/victoria-green1/" rel="noreferrer" target="_blank">LinkedIn ↗</a>
+              </p>
+            </article>
+            <article className="about-team-member">
+              <span>Content &amp; Marketing</span>
+              <h3>Veno Green</h3>
+              <p>Shapes content strategy, marketing, social media and audience growth for SalarySabi.</p>
+              <p className="about-profile-links">
+                <a href="https://www.linkedin.com/in/veno-green-583766183/" rel="noreferrer" target="_blank">LinkedIn ↗</a>
+              </p>
+            </article>
           </div>
         </section>
 

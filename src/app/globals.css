@@ -829,7 +829,8 @@ body .methodology-rules > div:last-child {
   }
 
   .info-footer .brand-wordmark {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     font-size: clamp(18px, 6vw, 23px);
     letter-spacing: var(--ss-tracking-section);
   }
@@ -3898,6 +3899,8 @@ body .info-footer .footer-links a { color: #46574f; font-weight: 600; }
 .brand-wordmark {
   display: inline-flex;
   align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   line-height: 1;
 }
 
@@ -3917,7 +3920,10 @@ body .info-footer .footer-links a { color: #46574f; font-weight: 600; }
   -webkit-text-stroke: 0;
 }
 
-.brand-wordmark-text { display: inline-block; }
+.brand-wordmark-text {
+  display: inline-block;
+  white-space: nowrap;
+}
 
 .info-footer .brand-wordmark-mark .brand-mark-upper-curve { stroke: #fff; }
 .info-footer .brand-wordmark-mark .brand-mark-middle { fill: #fff; }
@@ -6386,8 +6392,9 @@ body {
     display: none;
   }
 
-  .info-header .brand > span:last-child {
-    display: none;
+  .info-header .brand > .brand-wordmark {
+    display: inline-flex;
+    align-items: center;
   }
 
   .mobile-nav {
@@ -6503,8 +6510,9 @@ body {
     font-size: .78rem;
   }
 
-  .footer-brand > span:last-child {
-    display: inline;
+  .footer-brand > .brand-wordmark {
+    display: inline-flex;
+    align-items: center;
   }
 }
 
@@ -9996,6 +10004,14 @@ body .payslip-result > a {
 .about-founder { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(28px, 6vw, 72px); align-items: start; }
 .about-founder h2 { margin-top: 8px; margin-bottom: 0; }
 .about-founder p { margin: 0; color: var(--muted); line-height: 1.65; }
+.about-team-intro { display: grid; gap: 20px; }
+.about-team-intro p { max-width: 42ch; }
+.about-team-list { display: grid; border-top: 1px solid var(--line); }
+.about-team-member { padding: 20px 0; }
+.about-team-member + .about-team-member { border-top: 1px solid var(--line); }
+.about-team-member > span { display: block; margin-bottom: 7px; color: var(--green-dark); font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.about-team-member h3 { margin: 0 0 8px; color: var(--ink); font-family: var(--font-display); font-size: clamp(1.25rem, 2vw, 1.55rem); line-height: 1.1; letter-spacing: -.025em; }
+.about-team-member .about-profile-links { margin-top: 12px !important; }
 .about-profile-links { display: flex; gap: 22px; margin-top: 18px !important; }
 .about-profile-links a,
 .about-method-links a { color: var(--green-dark); font-weight: 800; text-underline-offset: 4px; }
@@ -10017,6 +10033,7 @@ body .payslip-result > a {
   .about-tool-links a:nth-child(odd) { border-right: 0; }
   .about-tool-links a + a,
   .about-checks article + article { border-top: 1px solid var(--line); border-left: 0; }
+  .about-team-intro p { max-width: none; }
   .about-method-links { display: grid; gap: 12px; }
   .info-page:has(.about-simple) { width: calc(100% - 32px); }
   .info-page:has(.about-simple) .info-hero { margin-bottom: 28px; }
