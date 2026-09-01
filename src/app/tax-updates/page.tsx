@@ -11,6 +11,17 @@ export const metadata: Metadata = {
 
 const updates = [
   {
+    date: "1 September 2026",
+    version: rulesetVersion,
+    title: "Full PAYE methodology independently reviewed",
+    previous: "SalarySabi's maintainer had verified the implementation against the official Act and JRB guidance.",
+    current: "A Nigerian tax professional independently reviewed the full PAYE calculation methodology, supported deductions, tax bands, exemptions, rent relief, payroll outputs and documented limitations.",
+    effective: "Review completed 1 September 2026",
+    source: "Nigeria Tax Act 2025 and JRB Personal Income Tax Guidelines 2026.",
+    effect: "The review confirmed the current implementation. No calculation correction was required.",
+    maintainer: "Independent Nigerian tax professional (name withheld)",
+  },
+  {
     date: "29 July 2026",
     version: rulesetVersion,
     title: "Calculator checked after the JRB issued its 2026 PIT Guidelines",

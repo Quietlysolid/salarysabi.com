@@ -15,6 +15,9 @@ test.describe("work-and-pay platform redesign", () => {
     await page.getByRole("link", { name: /Run my payroll/i }).click();
     await expect(page).toHaveURL(/\/payroll$/);
     await expect(page.getByRole("heading", { name: "Small-team payroll" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Built for straightforward monthly payroll." })).toBeVisible();
+    await expect(page.getByText(/Bonuses, commissions, arrears or irregular pay/i)).toBeVisible();
+    await expect(page.getByRole("button", { name: "Forgot password?" })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Salary na promise/i })).toHaveCount(0);
     if ((page.viewportSize()?.width ?? 0) <= 760) {
       await expect(page.getByRole("navigation", { name: "Mobile navigation" }).getByRole("link", { name: "Employers" })).toHaveAttribute("aria-current", "page");
@@ -150,6 +153,16 @@ test.describe("work-and-pay platform redesign", () => {
     await expect(page.getByRole("link", { name: "Post open roles" })).toHaveAttribute("href", "/post-a-job");
     await expect(page.getByRole("link", { name: "Calculate & verify pay" })).toHaveCount(0);
     expect(consoleErrors).toEqual([]);
+  });
+
+  test("payroll password recovery gives a privacy-safe confirmation", async ({ page }) => {
+    await page.route("**/auth/v1/recover*", async (route) => {
+      await route.fulfill({ contentType: "application/json", body: "{}" });
+    });
+    await page.goto("/payroll");
+    await page.getByLabel("Email").fill("owner@example.com");
+    await page.getByRole("button", { name: "Forgot password?" }).click();
+    await expect(page.getByRole("status")).toContainText("If an account exists for that email");
   });
 
   test("admin fixture loads review work and gates publication", async ({ page }) => {

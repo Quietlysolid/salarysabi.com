@@ -44,8 +44,9 @@ Primary references:
 - [Joint Revenue Board Personal Income Tax Guidelines 2026](https://www.jrb.gov.ng/assets/2026-pit-guidelines-TJG3n9-T.pdf)
 - [Nigeria Tax Act 2025](https://www.nipc.gov.ng/wp-content/uploads/2025/07/Nigeria-Tax-Act-2025.pdf)
 
-The output is an estimate and not tax advice. Calculation logic should be
-reviewed by a Nigerian tax professional before a public commercial launch.
+The output is an estimate and not tax advice. SalarySabi's full PAYE calculation
+methodology was independently reviewed by a Nigerian tax professional on
+1 September 2026. The reviewer's name is withheld by request.
 
 ## MVP boundary
 

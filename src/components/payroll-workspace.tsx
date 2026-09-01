@@ -1,8 +1,10 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
+import Link from "next/link";
 import { createBrowserSupabaseClient } from "@/lib/supabase";
+import { track } from "@/components/analytics";
 import { buildPayrollCsv, calculatePayrollLine, downloadPayrollPayslip, parsePayrollCsv, payrollCsvTemplate, payrollTotals, type PayrollEmployeeInput, type PayrollImportRow } from "@/lib/payroll";
 import { rulesetVersion } from "@/lib/site";
 
@@ -51,6 +53,26 @@ function EmployeeFields({ employee }: { employee?: EmployeeRow | null }) {
   </div>;
 }
 
+function PayrollScopeNotice({ compact = false }: { compact?: boolean }) {
+  if (compact) return <aside className="payroll-scope-notice payroll-scope-notice--compact">
+    <div><strong>Regular monthly payroll only</strong><span>Complex and irregular pay cases are not yet supported.</span></div>
+    <Link href="/calculation-notes">Check payroll limits</Link>
+  </aside>;
+
+  return <section className="payroll-scope-notice" aria-labelledby="payroll-scope-title">
+    <div className="payroll-scope-intro">
+      <span className="eyebrow">Supported payroll scope</span>
+      <h2 id="payroll-scope-title">Built for straightforward monthly payroll.</h2>
+      <p>Use SalarySabi for up to 20 Nigerian employees who receive a regular monthly salary.</p>
+    </div>
+    <div className="payroll-scope-columns">
+      <div><strong>Supported</strong><ul><li>Regular monthly gross salary</li><li>PAYE and entered deductions</li><li>Monthly payroll records and payslips</li></ul></div>
+      <div><strong>Not yet supported</strong><ul><li>Bonuses, commissions, arrears or irregular pay</li><li>Joiners, leavers or part-year employment</li><li>Benefits in kind, expatriate or cross-border cases</li><li>Tax filing, payments or statutory remittance</li></ul></div>
+    </div>
+    <Link href="/calculation-notes">See every assumption and limitation</Link>
+  </section>;
+}
+
 export function PayrollWorkspace() {
   const [supabase] = useState(() => createBrowserSupabaseClient());
   const [session, setSession] = useState<Session | null>(null);
@@ -68,6 +90,7 @@ export function PayrollWorkspace() {
   const [correctionNote, setCorrectionNote] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [passwordRecovery, setPasswordRecovery] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("recovery") === "1");
 
   const lines = useMemo(() => employees.filter((employee) => employee.active).map(toInput).map(calculatePayrollLine), [employees]);
   const totals = useMemo(() => payrollTotals(lines), [lines]);
@@ -91,7 +114,7 @@ export function PayrollWorkspace() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => { setSession(data.session); setChecked(true); if (data.session) void load(data.session.user.id); });
-    const { data } = supabase.auth.onAuthStateChange((_event, next) => { setSession(next); setChecked(true); if (next) void load(next.user.id); });
+    const { data } = supabase.auth.onAuthStateChange((event, next) => { setSession(next); setChecked(true); if (event === "PASSWORD_RECOVERY") setPasswordRecovery(true); if (next) void load(next.user.id); });
     return () => data.subscription.unsubscribe();
   }, [load, supabase]);
 
@@ -99,10 +122,39 @@ export function PayrollWorkspace() {
     event.preventDefault(); setBusy(true); setMessage("");
     const data = new FormData(event.currentTarget);
     const credentials = { email: String(data.get("email") || "").trim(), password: String(data.get("password") || "") };
+    if (authMode === "signup") track("payroll_signup_submitted");
     const result = authMode === "signup"
       ? await supabase.auth.signUp({ ...credentials, options: { emailRedirectTo: `${window.location.origin}/payroll` } })
       : await supabase.auth.signInWithPassword(credentials);
+    if (!result.error && authMode === "signup") track("payroll_signup_succeeded");
     setMessage(result.error ? result.error.message : authMode === "signup" ? "Check your email to confirm your account." : "Signed in."); setBusy(false);
+  }
+
+  async function requestPasswordReset(event: MouseEvent<HTMLButtonElement>) {
+    const form = event.currentTarget.form;
+    const email = form ? String(new FormData(form).get("email") || "").trim() : "";
+    if (!email) { setMessage("Enter your email first, then choose Forgot password."); return; }
+    setBusy(true); setMessage("");
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/payroll?recovery=1` });
+    setMessage(error ? "We could not send the reset email. Try again shortly." : "If an account exists for that email, a password reset link is on its way.");
+    setBusy(false);
+  }
+
+  async function updatePassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setMessage("");
+    const data = new FormData(event.currentTarget);
+    const password = String(data.get("password") || "");
+    const confirmation = String(data.get("password_confirmation") || "");
+    if (password !== confirmation) { setMessage("The passwords do not match."); return; }
+    setBusy(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    if (error) setMessage("We could not update your password. Request a new reset link and try again.");
+    else {
+      setPasswordRecovery(false);
+      window.history.replaceState({}, "", "/payroll");
+      setMessage("Password updated. Your payroll workspace is ready.");
+    }
+    setBusy(false);
   }
 
   async function createOrganisation(event: FormEvent<HTMLFormElement>) {
@@ -157,7 +209,7 @@ export function PayrollWorkspace() {
     if (!organisation || !importRows.length || importErrors.length) return; setBusy(true); setMessage("");
     const payload = importRows.map((row) => ({ organisation_id: organisation.id, employee_number: row.employeeNumber, full_name: row.fullName, email: row.email ?? null, monthly_gross: row.monthlyGross, monthly_pension: row.monthlyPension, monthly_nhf: row.monthlyNhf, monthly_nhis: row.monthlyNhis, monthly_mortgage_interest: row.monthlyMortgageInterest, monthly_life_insurance: row.monthlyLifeInsurance, monthly_rent: row.monthlyRent, monthly_other_deductions: row.monthlyOtherDeductions }));
     const result = await supabase.from("payroll_employees").insert(payload).select("*");
-    if (result.error) setMessage(result.error.message); else { setEmployees((current) => [...current, ...result.data as EmployeeRow[]]); setImportRows([]); setImportErrors([]); setMessage(`${result.data.length} employees imported.`); setView("run"); }
+    if (result.error) setMessage(result.error.message); else { setEmployees((current) => [...current, ...result.data as EmployeeRow[]]); setImportRows([]); setImportErrors([]); setMessage(`${result.data.length} employees imported.`); track("payroll_import_completed"); setView("run"); }
     setBusy(false);
   }
 
@@ -175,6 +227,7 @@ export function PayrollWorkspace() {
 
   function exportSchedule() {
     if (!organisation) return;
+    track("payroll_register_downloaded");
     download(`salarysabi-payroll-${period}.csv`, buildPayrollCsv(period, organisation.name, lines), "text/csv;charset=utf-8");
   }
 
@@ -184,6 +237,7 @@ export function PayrollWorkspace() {
 
   async function savePayslip(line: ReturnType<typeof calculatePayrollLine>) {
     if (!organisation) return;
+    track("payroll_payslip_downloaded");
     await downloadPayrollPayslip(organisation.name, period, line);
   }
 
@@ -193,16 +247,19 @@ export function PayrollWorkspace() {
       <strong className="payroll-feature-heading">Inside your private workspace</strong>
       <ul className="payroll-feature-preview"><li>Add employees</li><li>Review payroll</li><li>Export records</li></ul>
       <aside className="payroll-boundary">SalarySabi does not make payments or remit taxes.</aside>
+      <PayrollScopeNotice />
     </div>
-    <div className="payroll-auth-panel"><div className="payroll-auth-toggle"><button className={authMode === "signin" ? "active" : ""} onClick={() => setAuthMode("signin")} type="button">Sign in</button><button className={authMode === "signup" ? "active" : ""} onClick={() => setAuthMode("signup")} type="button">Create account</button></div><form onSubmit={authenticate}><label>Email<input name="email" type="email" autoComplete="email" required /></label><label>Password<input name="password" type="password" autoComplete={authMode === "signup" ? "new-password" : "current-password"} minLength={8} required /></label><button className="primary-button" disabled={busy} type="submit">{authMode === "signup" ? "Create account" : "Sign in"}</button><small>Your payroll records are private.</small></form><p className="payroll-message" role="status">{message}</p></div>
+    <div className="payroll-auth-panel"><div className="payroll-auth-toggle"><button className={authMode === "signin" ? "active" : ""} onClick={() => { setAuthMode("signin"); setMessage(""); }} type="button">Sign in</button><button className={authMode === "signup" ? "active" : ""} onClick={() => { setAuthMode("signup"); setMessage(""); track("payroll_signup_viewed"); }} type="button">Create account</button></div><form onSubmit={authenticate}><label>Email<input name="email" type="email" autoComplete="email" required /></label><label>Password<input name="password" type="password" autoComplete={authMode === "signup" ? "new-password" : "current-password"} minLength={8} required /></label>{authMode === "signin" && <div className="payroll-password-actions"><button disabled={busy} onClick={requestPasswordReset} type="button">Forgot password?</button></div>}<button className="primary-button" disabled={busy} type="submit">{authMode === "signup" ? "Create account" : "Sign in"}</button><small>Your payroll records are private.</small></form><p className="payroll-message" role="status">{message}</p></div>
   </section>;
-  if (!organisation) return <section className="payroll-shell payroll-access payroll-onboarding"><span className="eyebrow">Set up payroll</span><h1>Create your employer workspace.</h1><p>Start with the business name that should appear on payroll schedules and payslips.</p><ol className="payroll-onboarding-steps" aria-label="Payroll setup steps"><li className="active"><span>01</span><strong>Create workspace</strong></li><li><span>02</span><strong>Add employees</strong></li><li><span>03</span><strong>Run payroll</strong></li></ol><form onSubmit={createOrganisation}><label>Business name<input name="name" minLength={2} maxLength={120} required /></label><button className="primary-button" disabled={busy} type="submit">Create workspace</button><p className="payroll-private-note"><strong>Private to your account.</strong> Your business and payroll records are available only inside your employer workspace.</p></form><p className="payroll-message" role="status">{message}</p></section>;
+  if (passwordRecovery && session) return <section className="payroll-shell payroll-access payroll-recovery"><span className="eyebrow">Secure account recovery</span><h1>Choose a new password.</h1><p>Use at least eight characters. Your payroll records will stay connected to the same private account.</p><form onSubmit={updatePassword}><label>New password<input name="password" type="password" autoComplete="new-password" minLength={8} required /></label><label>Confirm new password<input name="password_confirmation" type="password" autoComplete="new-password" minLength={8} required /></label><button className="primary-button" disabled={busy} type="submit">Update password</button></form><p className="payroll-message" role="status">{message}</p></section>;
+  if (!organisation) return <section className="payroll-shell payroll-access payroll-onboarding"><span className="eyebrow">Set up payroll</span><h1>Create your employer workspace.</h1><p>Start with the business name that should appear on payroll schedules and payslips.</p><ol className="payroll-onboarding-steps" aria-label="Payroll setup steps"><li className="active"><span>01</span><strong>Create workspace</strong></li><li><span>02</span><strong>Add employees</strong></li><li><span>03</span><strong>Run payroll</strong></li></ol><PayrollScopeNotice /><form onSubmit={createOrganisation}><label>Business name<input name="name" minLength={2} maxLength={120} required /></label><label className="payroll-scope-confirmation"><input name="supported_scope" type="checkbox" required /><span>My team uses regular monthly salaries, and I understand that the complex cases listed above are not yet supported.</span></label><button className="primary-button" disabled={busy} type="submit">Create workspace</button><p className="payroll-private-note"><strong>Private to your account.</strong> Your business and payroll records are available only inside your employer workspace.</p></form><p className="payroll-message" role="status">{message}</p></section>;
 
   return <section className="payroll-shell">
     <header className="payroll-header"><div><span className="eyebrow">Small-team payroll · Ruleset {rulesetVersion}</span><h1>{organisation.name}</h1><p>Calculate PAYE, prepare a schedule and issue payslips. SalarySabi does not move or remit funds.</p></div><button onClick={() => supabase.auth.signOut()} type="button">Sign out</button></header>
     <nav className="payroll-tabs" aria-label="Payroll sections"><button className={view === "run" ? "active" : ""} onClick={() => setView("run")} type="button">Run payroll</button><button className={view === "team" ? "active" : ""} onClick={() => setView("team")} type="button">Team <span>{employees.length}</span></button><button className={view === "history" ? "active" : ""} onClick={() => setView("history")} type="button">History <span>{runs.length}</span></button></nav>
     <p className="payroll-message" role="status">{message}</p>
     {view === "run" && <div className="payroll-run">
+      <PayrollScopeNotice compact />
       {amendingRun && <aside className="payroll-amendment"><div><strong>Preparing amendment {amendingRun.revision_number + 1}</strong><span>The original run will remain in history as superseded.</span></div><label>Correction note<textarea value={correctionNote} onChange={(event) => setCorrectionNote(event.target.value)} maxLength={500} required /></label><button onClick={() => { setAmendingRun(null); setCorrectionNote(""); }} type="button">Cancel amendment</button></aside>}
       <div className="payroll-run-bar"><label>Pay period<input type="month" value={period} onChange={(event) => setPeriod(event.target.value)} disabled={Boolean(amendingRun)} /></label><div><button disabled={!lines.length} onClick={exportSchedule} type="button">Download CSV register</button><button className="primary-button" disabled={busy || !lines.length} onClick={finaliseRun} type="button">{amendingRun ? "Finalise amendment" : "Finalise payroll"}</button></div></div>
       {lines.length ? <><div className="payroll-totals"><div><span>Gross payroll</span><strong>{money.format(totals.gross)}</strong></div><div><span>PAYE</span><strong>{money.format(totals.paye)}</strong></div><div><span>Total deductions</span><strong>{money.format(totals.deductions)}</strong></div><div><span>Net payroll</span><strong>{money.format(totals.net)}</strong></div></div><div className="payroll-table" role="table" aria-label="Payroll preview"><div className="payroll-table-head" role="row"><span>Employee</span><span>Gross</span><span>PAYE</span><span>Deductions</span><span>Net pay</span><span>Payslip</span></div>{lines.map((line) => <div role="row" key={line.id}><span><strong>{line.fullName}</strong><small>{line.employeeNumber}</small></span><span>{money.format(line.monthlyGross)}</span><span>{money.format(line.monthlyPaye)}</span><span>{money.format(line.monthlyStatutoryDeductions + line.monthlyOtherDeductions)}</span><strong>{money.format(line.monthlyNetPay)}</strong><button onClick={() => void savePayslip(line)} type="button">PDF</button></div>)}</div></> : <div className="payroll-empty"><h2>Add your first employee</h2><p>Your payroll preview will appear here before anything is saved.</p><button className="primary-button" onClick={() => setView("team")} type="button">Add employee</button></div>}

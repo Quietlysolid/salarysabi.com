@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArticleStructuredData } from "@/components/article-structured-data";
 import { PublicPageShell } from "@/components/info-page";
 import { PayeGuideTrail } from "@/components/paye-guide-trail";
-import { pitGuidelinesUrl, taxActUrl } from "@/lib/site";
+import { pitGuidelinesUrl, taxActUrl, taxProfessionalReviewIso, taxReviewStatus } from "@/lib/site";
 import { salaryTerms } from "@/lib/salary-terms";
 
 export const metadata: Metadata = {
@@ -30,6 +30,10 @@ export default function MethodologyPage() {
         <p>Yearly pay − eligible deductions = taxable income. Tax bands are then applied, and the yearly tax is divided by 12.</p>
         <Link className="primary-button" href="/payslip-checker">Calculate take-home pay</Link>
       </header>
+      <aside className="trust-status methodology-review" aria-label="Independent professional review">
+        <div><span>Independent professional review</span><strong>{taxReviewStatus}</strong></div>
+        <time dateTime={taxProfessionalReviewIso}>Completed 1 September 2026</time>
+      </aside>
       <section className="simple-guide-section" aria-labelledby="steps-title">
         <h2 id="steps-title">The five steps</h2>
         <ol className="simple-step-list">

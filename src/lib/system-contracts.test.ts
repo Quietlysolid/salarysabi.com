@@ -100,6 +100,41 @@ describe("shared product contracts", () => {
     expect(migration).toContain("status = 'superseded'");
     expect(workspace).toContain('supabase.rpc("finalise_payroll_run"');
     expect(workspace).not.toContain('supabase.from("payroll_run_items").insert');
+    expect(workspace).toContain("Built for straightforward monthly payroll.");
+    expect(workspace).toContain("Bonuses, commissions, arrears or irregular pay");
+    expect(workspace).toContain('name="supported_scope" type="checkbox" required');
+  });
+
+  it("measures payroll activation and retention without copying payroll data", () => {
+    const migration = read("supabase/migrations/202609010001_payroll_pilot_readiness.sql");
+    const workspace = read("src/components/payroll-workspace.tsx");
+    const launch = read("src/lib/launch.ts");
+    for (const event of [
+      "payroll_workspace_created",
+      "payroll_first_employee_added",
+      "payroll_import_completed",
+      "payroll_run_finalised",
+      "payroll_second_month_finalised",
+      "payroll_register_downloaded",
+      "payroll_payslip_downloaded",
+    ]) {
+      expect(migration).toContain(`'${event}'`);
+      expect(launch).toContain(`"${event}"`);
+    }
+    expect(migration).toContain("count(distinct pay_period)");
+    expect(migration).not.toMatch(/monthly_gross|monthly_paye|monthly_net|full_name|contact_email|owner_user_id/i);
+    expect(workspace).toContain('track("payroll_import_completed")');
+    expect(workspace).toContain('track("payroll_register_downloaded")');
+    expect(workspace).toContain('track("payroll_payslip_downloaded")');
+  });
+
+  it("lets payroll employers request and complete secure password recovery", () => {
+    const workspace = read("src/components/payroll-workspace.tsx");
+    expect(workspace).toContain("resetPasswordForEmail");
+    expect(workspace).toContain('event === "PASSWORD_RECOVERY"');
+    expect(workspace).toContain("supabase.auth.updateUser({ password })");
+    expect(workspace).toContain("The passwords do not match.");
+    expect(workspace).toContain("If an account exists for that email");
   });
 
   it("uses a native final i so the wordmark remains typographically connected", () => {
@@ -278,7 +313,7 @@ describe("search visibility contracts", () => {
     expect(article).toContain('"@type": "Article"');
     expect(article).toContain("https://www.jrb.gov.ng/policies-reforms");
     expect(article).toContain("https://www.jrb.gov.ng/assets/2026-pit-guidelines-TJG3n9-T.pdf");
-    expect(article).toContain("No qualified tax professional has independently reviewed SalarySabi yet.");
+    expect(article).toContain("SalarySabi&apos;s full PAYE calculation methodology was independently reviewed by a Nigerian tax professional on 1 September 2026.");
     expect(sitemap).toContain("/tax-news/nigeria-tax-act-2025-paycheck-2026");
   });
 

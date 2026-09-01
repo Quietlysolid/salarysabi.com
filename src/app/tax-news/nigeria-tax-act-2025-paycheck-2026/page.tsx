@@ -90,7 +90,7 @@ export default function TaxActPaycheckExplainerPage() {
 
         <footer className="tax-news-disclosure">
           <strong>About this explainer</strong>
-          <p>Ozichi Nwosu is a software engineer, not an accountant or tax adviser. This article explains the rules used by SalarySabi and is not personal tax advice. No qualified tax professional has independently reviewed SalarySabi yet.</p>
+          <p>Ozichi Nwosu is a software engineer, not an accountant or tax adviser. This article explains the rules used by SalarySabi and is not personal tax advice. SalarySabi&apos;s full PAYE calculation methodology was independently reviewed by a Nigerian tax professional on 1 September 2026. The reviewer&apos;s name is withheld by request.</p>
           <Link href="/tax-updates">See the calculator changelog</Link>
         </footer>
       </article>
