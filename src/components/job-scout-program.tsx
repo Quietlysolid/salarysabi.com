@@ -51,7 +51,6 @@ export function JobScoutProgram() {
     <header className="contributor-hero">
       <span className="eyebrow">Transparent jobs scout</span>
       <h1>{campaign ? `Find a salary-transparent job. Earn ${money(campaign.reward_kobo)}.` : "Help uncover salary-transparent Nigerian jobs."}</h1>
-      <p>Send an official, active Nigerian vacancy where the employer already shows the offered salary. SalarySabi independently checks every source before approving a reward.</p>
       {status === "loading" && <p className="contributor-campaign-state" role="status">Checking whether the paid pilot is open…</p>}
       {status === "active" && campaign && <div className="contributor-hero-actions">
         <Link className="primary-button" href={`/suggest-a-job?campaign=${campaign.slug}`}>Submit a salary-transparent job</Link>
@@ -65,9 +64,9 @@ export function JobScoutProgram() {
     <section className="contributor-reward-model">
       <header><span className="eyebrow">How approval works</span><h2>One source, three clear steps.</h2></header>
       <ol>
-        <li><strong>01</strong><div><span>Submit the official vacancy</span><small>Include the employer page, company name and the exact salary shown.</small></div></li>
-        <li><strong>02</strong><div><span>SalarySabi verifies it</span><small>We confirm the application is open, Nigeria-relevant, salary-bearing and not duplicated.</small></div></li>
-        <li><strong>03</strong><div><span>Your reward is approved</span><small>The reward enters your contributor balance after all checks pass.</small></div></li>
+        <li><strong>01</strong><div><span>Submit the official vacancy</span></div></li>
+        <li><strong>02</strong><div><span>SalarySabi verifies it</span></div></li>
+        <li><strong>03</strong><div><span>Your reward is approved</span></div></li>
       </ol>
     </section>
 

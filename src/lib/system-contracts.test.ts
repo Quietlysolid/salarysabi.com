@@ -46,12 +46,18 @@ describe("shared product contracts", () => {
 
   it("keeps analytics events free of sensitive financial and credential properties", () => {
     const analytics = read("src/components/analytics.tsx");
+    const endpoint = read("src/app/api/analytics/route.ts");
     expect(analytics).toContain("analyticsOptOutKey");
     expect(analytics).toContain('process.env.NODE_ENV !== "production"');
     expect(analytics).toContain("window.location.pathname");
-    expect(analytics).toContain("p_event_name: event");
-    expect(analytics).toContain("p_page_path: pagePath");
-    expect(analytics).toContain("p_referrer_host:");
+    expect(analytics).toContain('fetch("/api/analytics"');
+    expect(analytics).toContain("isPublicAnalyticsPath");
+    expect(analytics).not.toContain("record_analytics_event");
+    expect(endpoint).toContain("allowedBodyKeys");
+    expect(endpoint).toContain("origin !== requestUrl.origin");
+    expect(endpoint).toContain("ANALYTICS_API_RATE_LIMITER");
+    expect(endpoint).toContain("botPattern");
+    expect(endpoint).toContain("p_event_name: payload.event");
     expect(analytics).not.toContain("window.location.search");
     expect(analytics).not.toMatch(/posthog/i);
     expect(analytics).not.toMatch(/salary|deduction|password|payslip_value|email/i);
@@ -80,15 +86,61 @@ describe("shared product contracts", () => {
     expect(payeGuide).toContain("salaryTerms.chargeableIncome");
     expect(payslipChecker).toContain('label="Gross pay"');
     expect(payslipChecker).toContain('label="PAYE deducted"');
+    expect(payslipChecker).toContain('label="Pension deducted"');
+    expect(payslipChecker).toContain('placeholder="40,000" required');
+  });
+
+  it("keeps Your Pay Check private, actionable and connected to the next journey", () => {
+    const checker = read("src/components/payslip-checker.tsx");
+    const page = read("src/app/payslip-checker/page.tsx");
+
+    for (const outcome of ["Looks consistent", "Review recommended", "Likely discrepancy"]) {
+      expect(checker).toContain(outcome);
+    }
+    expect(checker).toContain("navigator.clipboard.writeText");
+    expect(checker).toContain("Ask payroll these questions");
+    expect(checker).toContain("deduction_tracker_interest_yes");
+    expect(checker).toContain("deduction_tracker_interest_no");
+    expect(checker).toContain("does not send the pay figures you entered");
+    expect(checker).toContain('href="/salaries"');
+    expect(checker).toContain('href="/jobs"');
+    expect(checker).not.toContain("fetch(");
+    expect(page).toContain("Your Pay Check: Check Your Nigerian Payslip");
   });
 
   it("keeps the analytics allow-list synchronized with the database migration", () => {
-    const migration = read("supabase/migrations/202608070001_product_analytics.sql");
-    for (const event of ["page_view", "paye_calculated", "payslip_checked", "account_signup_succeeded", "job_apply_clicked"]) {
+    const migration = read("supabase/migrations/202609020001_repair_product_analytics.sql");
+    const interestMigration = read("supabase/migrations/202609020002_deduction_tracker_interest.sql");
+    const calculator = read("src/components/paye-guide-calculator.tsx");
+    const payslip = read("src/components/payslip-checker.tsx");
+    for (const event of ["page_view", "paye_input_started", "paye_calculated", "paye_to_payslip_clicked", "payslip_check_started", "payslip_checked", "account_signup_succeeded", "job_apply_clicked"]) {
       expect(migration).toContain(`'${event}'`);
     }
     expect(migration).toContain("is_current_user_admin()");
     expect(migration).toContain("from auth.users");
+    expect(migration).toContain("reporting_started_on");
+    expect(migration).toContain("paye_guide_views");
+    expect(migration).toContain("payslip_checker_views");
+    for (const event of ["deduction_tracker_interest_yes", "deduction_tracker_interest_no"]) {
+      expect(interestMigration).toContain(`'${event}'`);
+    }
+    expect(interestMigration).toContain("deduction_tracker_interest_yes");
+    expect(interestMigration).toContain("deduction_tracker_interest_no");
+    expect(calculator).toContain('track("paye_input_started")');
+    expect(calculator).toContain('track("paye_calculated")');
+    expect(calculator).toContain('track("paye_to_payslip_clicked")');
+    expect(calculator).toContain("payslipTransitionRecorded.current");
+    expect(payslip).toContain('track("payslip_check_started")');
+    expect(payslip).toContain("checkCompleted.current");
+  });
+
+  it("treats statutory pension as a first-class take-home input", () => {
+    const calculator = read("src/components/paye-guide-calculator.tsx");
+    expect(calculator).toContain("monthlyPensionablePay * 0.08");
+    expect(calculator).toContain("monthlyPensionablePay * 0.1");
+    expect(calculator).toContain("pensionContribution: employeePension * 12");
+    expect(calculator).toContain("monthlyGross - employeePension - result.monthlyTax");
+    expect(calculator).toContain("Turn this off only if you are exempt");
   });
 
   it("finalises payroll through one owner-scoped database transaction", () => {

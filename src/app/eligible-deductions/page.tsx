@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { ArticleStructuredData } from "@/components/article-structured-data";
 import { PublicPageShell } from "@/components/info-page";
 import { PayeGuideTrail } from "@/components/paye-guide-trail";
@@ -24,7 +25,7 @@ export default function DeductionsPage() {
     <ArticleStructuredData headline="Nigeria PAYE Eligible Deductions 2026" description="See which confirmed amounts belong in a Nigerian PAYE estimate." path="/eligible-deductions" about={["PAYE deductions", "Pension", "Rent relief"]} />
     <PayeGuideTrail current="deductions" />
     <article className="deductions-guide-page simple-guide">
-      <header className="simple-guide-hero"><span className="eyebrow">Eligible deductions</span><h1>What can reduce your PAYE?</h1><p>Use only amounts you can confirm. Leave anything else at ₦0.</p></header>
+      <header className="simple-guide-hero"><span className="eyebrow">Eligible deductions</span><h1>What can reduce your PAYE?</h1></header>
       <section className="simple-guide-section" aria-labelledby="deduction-list-title">
         <h2 id="deduction-list-title">Check each amount</h2>
         <div className="simple-deduction-list">
@@ -32,7 +33,13 @@ export default function DeductionsPage() {
         </div>
       </section>
       <aside className="simple-guide-note"><strong>Keep your records.</strong><span>Keep the payslip, statement or receipt supporting every amount.</span></aside>
-      <div className="simple-guide-actions"><Link className="primary-button" href="/payslip-checker">Back to my pay check</Link><Link href="/how-paye-is-calculated">How PAYE is calculated</Link></div>
+      <div className="simple-guide-actions">
+        <Link className="primary-button" href="/payslip-checker">Back to my pay check</Link>
+        <Link className="simple-guide-secondary-action" href="/how-paye-is-calculated">
+          How PAYE is calculated
+          <ArrowRight aria-hidden="true" size={18} strokeWidth={2.25} />
+        </Link>
+      </div>
     </article>
   </PublicPageShell>;
 }

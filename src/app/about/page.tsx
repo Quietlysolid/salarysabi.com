@@ -15,24 +15,18 @@ const audiences = [
   {
     eyebrow: "For people",
     title: "Know what reaches your bank.",
-    description: "Calculate your take-home pay, check your PAYE, compare salaries and find jobs that publish the pay.",
     href: "/talent",
     action: "Explore talent tools",
   },
   {
     eyebrow: "For employers",
     title: "Pay people right. Prove it.",
-    description: "Run payroll, calculate PAYE, keep reliable records and hire with published pay.",
     href: "/employers",
     action: "Explore employer tools",
   },
 ] as const;
 
-const checks = [
-  ["Official rules", "PAYE calculations use Nigerian legislation and published guidance."],
-  ["Anonymous groups", "Public salary ranges appear only after five similar reports are approved."],
-  ["Original sources", "Job pay and application links are checked against named sources."],
-] as const;
+const checks = ["Official rules", "Anonymous groups", "Original sources"] as const;
 
 const team = [
   {
@@ -83,7 +77,6 @@ export default function AboutPage() {
               <article className="about-audience-panel" key={audience.eyebrow}>
                 <span className="eyebrow">{audience.eyebrow}</span>
                 <h3>{audience.title}</h3>
-                <p>{audience.description}</p>
                 <Link href={audience.href}>
                   {audience.action} <ArrowRight aria-hidden="true" />
                 </Link>
@@ -96,11 +89,10 @@ export default function AboutPage() {
           <span className="eyebrow">Built to be checked</span>
           <h2 id="about-checks-title">Our numbers have receipts.</h2>
           <div className="about-checks">
-            {checks.map(([title, description], index) => (
+            {checks.map((title, index) => (
               <article key={title}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{title}</h3>
-                <p>{description}</p>
               </article>
             ))}
           </div>

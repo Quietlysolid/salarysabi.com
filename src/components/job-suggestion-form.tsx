@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Banknote, Building2, Link2, Mail, MessageSquareText, Send, ShieldCheck } from "lucide-react";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { track } from "@/components/analytics";
@@ -194,18 +195,77 @@ export function JobSuggestionForm() {
       <strong>Job scout campaign · {money(campaign.reward_kobo)} after approval</strong>
       <span>The budget is reserved when you submit. The reward is approved only after all source checks pass. <Link href="/contributors/job-sourcing">View the rules</Link></span>
     </aside>}
-    <div className="job-form-grid">
-      <label>Company name<input name="company_name" required maxLength={120} /></label>
-      <label>Salary exactly as shown<input name="advertised_salary" required maxLength={160} placeholder="e.g. ₦300,000–₦400,000 per month" /></label>
-      <label className="wide">Official vacancy URL<input name="official_url" type="url" required placeholder="https://company.com/careers/job…" /></label>
-      {!campaign && <label className="wide">Your email, optional<input name="submitter_email" type="email" /></label>}
-      <label className="wide">Anything we should check?<textarea name="notes" maxLength={1000} rows={4} placeholder="Job title, location, deadline, or where the salary appears on the page" /></label>
-      <label className="wide job-source-declaration"><input name="source_confirmed" required type="checkbox" /><span>I opened the original vacancy and confirmed it is active, Nigeria-relevant, and shows this offered salary. I did not estimate or convert the amount.</span></label>
-      <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
-    </div>
+    <header className="job-suggestion-form-heading">
+      <span className="eyebrow">Independent source review</span>
+      <h2>Share the original vacancy</h2>
+      <p>Copy the details exactly as the employer published them. SalarySabi checks the source before the role appears publicly.</p>
+    </header>
+
+    <section className="job-suggestion-form-section" aria-labelledby="vacancy-details-heading">
+      <header>
+        <span aria-hidden="true">01</span>
+        <div>
+          <h3 id="vacancy-details-heading">Vacancy details</h3>
+          <p>Use the employer’s wording so the listing is easy to verify.</p>
+        </div>
+      </header>
+      <div className="job-form-grid">
+        <label>
+          <span className="job-field-label"><Building2 aria-hidden="true" size={18} />Company name</span>
+          <input autoComplete="organization" name="company_name" required maxLength={120} placeholder="e.g. Paystack" />
+          <small>Enter the name shown on the vacancy.</small>
+        </label>
+        <label>
+          <span className="job-field-label"><Banknote aria-hidden="true" size={18} />Salary exactly as shown</span>
+          <input name="advertised_salary" required maxLength={160} placeholder="e.g. ₦300,000–₦400,000 per month" />
+          <small>Keep the currency, range and pay period unchanged.</small>
+        </label>
+        <label className="wide">
+          <span className="job-field-label"><Link2 aria-hidden="true" size={18} />Official vacancy URL</span>
+          <input autoComplete="url" name="official_url" type="url" required placeholder="https://company.com/careers/job…" />
+          <small>Link to the employer’s original careers page or official application page.</small>
+        </label>
+      </div>
+    </section>
+
+    <section className="job-suggestion-form-section" aria-labelledby="review-context-heading">
+      <header>
+        <span aria-hidden="true">02</span>
+        <div>
+          <h3 id="review-context-heading">Review context</h3>
+          <p>Add anything that will help us find and confirm the salary quickly.</p>
+        </div>
+      </header>
+      <div className="job-form-grid">
+        {!campaign && <label className="wide">
+          <span className="job-field-label"><Mail aria-hidden="true" size={18} />Your email <em>Optional</em></span>
+          <input autoComplete="email" name="submitter_email" type="email" placeholder="you@example.com" />
+          <small>Only used if we need to clarify the source. It is never shown on the listing.</small>
+        </label>}
+        <label className="wide">
+          <span className="job-field-label"><MessageSquareText aria-hidden="true" size={18} />Anything we should check?</span>
+          <textarea name="notes" maxLength={1000} rows={4} placeholder="Job title, location, deadline, or where the salary appears on the page" />
+        </label>
+      </div>
+    </section>
+
+    <section className="job-source-confirmation" aria-labelledby="source-confirmation-heading">
+      <ShieldCheck aria-hidden="true" size={24} strokeWidth={2} />
+      <label>
+        <input name="source_confirmed" required type="checkbox" />
+        <span><strong id="source-confirmation-heading">Confirm the source</strong>I opened the original vacancy and confirmed it is active, Nigeria-relevant, and shows this offered salary. I did not estimate or convert the amount.</span>
+      </label>
+    </section>
+    <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
     {campaign && <TurnstileCheck action="reward_job" onToken={receiveHumanToken} resetSignal={humanReset} />}
-    <button className="primary-button" disabled={busy || Boolean(campaign && !humanToken)}>{busy ? "Submitting…" : campaign ? "Verify source and submit" : "Send job tip"}</button>
-    <p role="status">{message}</p>
+    <footer className="job-suggestion-submit">
+      <div><strong>What happens next?</strong><span>We verify the company, vacancy and published salary before listing it.</span></div>
+      <button className="primary-button" disabled={busy || Boolean(campaign && !humanToken)} type="submit">
+        <Send aria-hidden="true" size={18} strokeWidth={2.25} />
+        {busy ? "Submitting…" : campaign ? "Verify source and submit" : "Send job tip"}
+      </button>
+    </footer>
+    <p className="job-suggestion-status" role="status">{message}</p>
     {rewardSubmitted && <Link className="submission-tracking-link" href="/contributions">Track this contribution and reward</Link>}
   </form>;
 }

@@ -58,6 +58,18 @@ type Metrics = {
 type ProductAnalytics = {
   totals: Record<string, number>;
   previous: Record<string, number>;
+  reporting_started_on?: string;
+  funnel?: {
+    paye_guide_views: number;
+    paye_input_starts: number;
+    paye_calculations: number;
+    paye_to_payslip_clicks: number;
+    payslip_checker_views: number;
+    payslip_check_starts: number;
+    payslip_checks: number;
+    deduction_tracker_interest_yes: number;
+    deduction_tracker_interest_no: number;
+  };
   daily: { date: string; page_views: number; calculations: number }[];
   top_pages: { path: string; views: number }[];
   referrers: { source: string; views: number }[];
@@ -160,7 +172,7 @@ function VerificationChecklist({
 }
 
 const analyticsCards = [
-  ["page_view", "Page views"],
+  ["page_view", "Page views (events)"],
   ["paye_calculated", "PAYE calculations"],
   ["payslip_checked", "Payslip checks"],
   ["job_apply_clicked", "Apply clicks"],
@@ -822,6 +834,21 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
   const lastSuccessfulSync = activeImportSources
     .filter((source) => source.last_sync_status === "ok" && source.last_sync_at)
     .sort((a, b) => String(b.last_sync_at).localeCompare(String(a.last_sync_at)))[0]?.last_sync_at;
+  const analyticsFunnel = {
+    paye_guide_views: 0,
+    paye_input_starts: 0,
+    paye_calculations: 0,
+    paye_to_payslip_clicks: 0,
+    payslip_checker_views: 0,
+    payslip_check_starts: 0,
+    payslip_checks: 0,
+    deduction_tracker_interest_yes: 0,
+    deduction_tracker_interest_no: 0,
+    ...productAnalytics?.funnel,
+  };
+  const funnelRate = (value: number, baseline: number) => baseline
+    ? `${Math.round((value / baseline) * 100)}%`
+    : "—";
 
   return (
     <section className="admin-shell">
@@ -925,10 +952,33 @@ export function AdminDashboard({ fixtureMode = false }: { fixtureMode?: boolean 
 
       {activeView === "analytics" && <section className="admin-analytics" aria-labelledby="admin-analytics-title">
         <header>
-          <div><span className="eyebrow">Last 30 days</span><h2 id="admin-analytics-title">Understand what people use</h2><p>Privacy-safe product activity, without salary figures, deductions, payslip values, passwords or form text.</p></div>
+          <div><span className="eyebrow">Last 30 days</span><h2 id="admin-analytics-title">Understand what people use</h2><p>Privacy-safe event counts—not unique visitors—without salary figures, deductions, payslip values, passwords or form text.</p></div>
           <span className="admin-analytics-setup">First-party analytics</span>
         </header>
         {productAnalytics ? <>
+          <section className="admin-analytics-funnel" aria-labelledby="analytics-funnel-title">
+            <header><div><span className="eyebrow">Primary journey</span><h3 id="analytics-funnel-title">PAYE to payslip funnel</h3></div><small>Clean reporting since {productAnalytics.reporting_started_on ?? "the analytics repair"}</small></header>
+            <div>
+              <article><strong>{analyticsFunnel.paye_guide_views.toLocaleString()}</strong><span>PAYE guide views</span><small>Entry page views</small></article>
+              <article><strong>{analyticsFunnel.paye_input_starts.toLocaleString()}</strong><span>Salary inputs started</span><small>{funnelRate(analyticsFunnel.paye_input_starts, analyticsFunnel.paye_guide_views)} of guide views</small></article>
+              <article><strong>{analyticsFunnel.paye_calculations.toLocaleString()}</strong><span>PAYE results calculated</span><small>{funnelRate(analyticsFunnel.paye_calculations, analyticsFunnel.paye_input_starts)} of input starts</small></article>
+              <article><strong>{analyticsFunnel.paye_to_payslip_clicks.toLocaleString()}</strong><span>Payslip transitions</span><small>{funnelRate(analyticsFunnel.paye_to_payslip_clicks, analyticsFunnel.paye_guide_views)} of guide views</small></article>
+              <article><strong>{analyticsFunnel.payslip_checker_views.toLocaleString()}</strong><span>Payslip checker views</span><small>All entry sources</small></article>
+              <article><strong>{analyticsFunnel.payslip_check_starts.toLocaleString()}</strong><span>Payslip checks started</span><small>{funnelRate(analyticsFunnel.payslip_check_starts, analyticsFunnel.payslip_checker_views)} of checker views</small></article>
+              <article><strong>{analyticsFunnel.payslip_checks.toLocaleString()}</strong><span>Payslip checks completed</span><small>{funnelRate(analyticsFunnel.payslip_checks, analyticsFunnel.payslip_check_starts)} of starts</small></article>
+            </div>
+          </section>
+          <section className="admin-analytics-validation" aria-labelledby="deduction-interest-title">
+            <header>
+              <div><span className="eyebrow">Needs validation</span><h3 id="deduction-interest-title">Track My Deductions interest</h3></div>
+              <small>Responses contain no salary or deduction values</small>
+            </header>
+            <div>
+              <article><strong>{analyticsFunnel.deduction_tracker_interest_yes.toLocaleString()}</strong><span>Interested</span><small>{funnelRate(analyticsFunnel.deduction_tracker_interest_yes, analyticsFunnel.deduction_tracker_interest_yes + analyticsFunnel.deduction_tracker_interest_no)} of responses</small></article>
+              <article><strong>{analyticsFunnel.deduction_tracker_interest_no.toLocaleString()}</strong><span>Not now</span><small>Explicit responses</small></article>
+              <article><strong>{funnelRate(analyticsFunnel.deduction_tracker_interest_yes + analyticsFunnel.deduction_tracker_interest_no, analyticsFunnel.payslip_checks)}</strong><span>Response rate</span><small>Of completed pay checks</small></article>
+            </div>
+          </section>
           <div className="admin-analytics-cards">
             <article><strong>{productAnalytics.accounts_total.toLocaleString()}</strong><span>Total accounts</span><small>{productAnalytics.accounts_30d.toLocaleString()} created in 30 days</small></article>
             {analyticsCards.map(([event, label]) => {

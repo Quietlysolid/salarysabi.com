@@ -25,10 +25,10 @@ function remainingRewards(campaign: Campaign) {
 }
 
 const journey = [
-  { title: "Submit privately", detail: "Only you and SalarySabi see your details.", icon: FilePlus2 },
-  { title: "We verify", detail: "We check the evidence and confirm it.", icon: ShieldCheck },
-  { title: "We publish safely", detail: "Approved data joins an anonymous benchmark.", icon: BarChart3 },
-  { title: "You earn a reward", detail: "Payment follows an approved report.", icon: WalletCards },
+  { title: "Submit privately", icon: FilePlus2 },
+  { title: "We verify", icon: ShieldCheck },
+  { title: "We publish safely", icon: BarChart3 },
+  { title: "You earn a reward", icon: WalletCards },
 ] as const;
 
 export function ContributorProgram() {
@@ -46,7 +46,6 @@ export function ContributorProgram() {
       <div className="contributor-outcome-pitch">
         <span className="eyebrow">Funded contributor programme</span>
         <h1 id="contributor-outcome-title">Your evidence makes pay visible.</h1>
-        <p>Share your salary or a paid job. SalarySabi verifies it, publishes it safely and rewards approved evidence.</p>
 
         {salaryCampaign && <div className="contributor-outcome-reward" aria-label={`${money(salaryCampaign.reward_kobo)} after approval`}>
           <strong>{money(salaryCampaign.reward_kobo)}</strong>
@@ -74,33 +73,46 @@ export function ContributorProgram() {
 
       <div className="contributor-outcome-proof">
         <span className="eyebrow">How your pay contribution becomes useful</span>
-        <ol className="contributor-outcome-steps">
-          {journey.map(({ title, detail, icon: Icon }, index) => <li key={title}>
-            <Icon aria-hidden="true" />
-            <span>{String(index + 1).padStart(2, "0")}</span>
-            <strong>{title}</strong>
-            <small>{detail}</small>
-          </li>)}
+        <ol className="contributor-outcome-process" aria-label="Example of a private salary report being verified, published safely and rewarded">
+          <li>
+            <header><FilePlus2 aria-hidden="true" /><span>01</span><strong>{journey[0].title}</strong></header>
+            <section className="contributor-outcome-stage-card is-private">
+              <span>Verified report · private</span>
+              <strong>Anonymous</strong>
+              <p>Software Engineer<br />Lagos · Mid-level</p>
+              <small>Gross pay</small>
+              <b>₦520,000 <em>/month</em></b>
+            </section>
+          </li>
+          <li>
+            <header><ShieldCheck aria-hidden="true" /><span>02</span><strong>{journey[1].title}</strong></header>
+            <section className="contributor-outcome-stage-card is-verification">
+              <ShieldCheck aria-hidden="true" />
+              <strong>Evidence checked</strong>
+              <span>Source · salary · privacy</span>
+            </section>
+          </li>
+          <li>
+            <header><BarChart3 aria-hidden="true" /><span>03</span><strong>{journey[2].title}</strong></header>
+            <section className="contributor-outcome-stage-card is-public">
+              <span>Published benchmark · public</span>
+              <strong>Software Engineer · Lagos</strong>
+              <p>Based on 5 verified reports</p>
+              <small>Median gross pay</small>
+              <b>₦480,000 <em>/month</em></b>
+              <small>Range: ₦420,000–₦560,000</small>
+            </section>
+          </li>
+          <li>
+            <header><WalletCards aria-hidden="true" /><span>04</span><strong>{journey[3].title}</strong></header>
+            <section className="contributor-outcome-stage-card is-reward">
+              <WalletCards aria-hidden="true" />
+              <strong>Reward approved</strong>
+              <b>{salaryCampaign ? money(salaryCampaign.reward_kobo) : "Funded reward"}</b>
+              <small>Contributor balance</small>
+            </section>
+          </li>
         </ol>
-
-        <div className="contributor-outcome-preview" aria-label="Example of a private report becoming a public benchmark">
-          <section>
-            <span>Verified report · private</span>
-            <strong>Anonymous</strong>
-            <p>Software Engineer<br />Lagos · Mid-level</p>
-            <small>Gross pay</small>
-            <b>₦520,000 <em>/month</em></b>
-          </section>
-          <ArrowRight aria-hidden="true" />
-          <section>
-            <span>Published benchmark · public</span>
-            <strong>Software Engineer · Lagos</strong>
-            <p>Based on 5 verified reports</p>
-            <small>Median gross pay</small>
-            <b>₦480,000 <em>/month</em></b>
-            <small>Typical range: ₦420,000–₦560,000</small>
-          </section>
-        </div>
         <p className="contributor-outcome-privacy"><ShieldCheck aria-hidden="true" /><span><strong>Your individual salary stays out of public view.</strong> Only anonymous groups of at least five approved reports become benchmarks.</span></p>
       </div>
     </section>
@@ -109,21 +121,10 @@ export function ContributorProgram() {
       <BriefcaseBusiness aria-hidden="true" />
       <div>
         <h2 id="job-contribution-title">Share a paid job</h2>
-        <p>Help someone find a genuine Nigerian role where the employer publishes the salary.</p>
       </div>
       <strong>{money(jobCampaign.reward_kobo)} <small>after approval</small></strong>
       <Link href="/contributors/job-sourcing" onClick={() => track("reward_offer_clicked")}>Share a paid job <ArrowRight aria-hidden="true" /></Link>
     </section>}
-
-    <section className="contributor-outcome-journey" aria-labelledby="contributor-journey-title">
-      <span className="eyebrow" id="contributor-journey-title">Your contribution journey</span>
-      <ol>
-        <li><span>01</span><FilePlus2 aria-hidden="true" /><strong>Submit</strong><small>Share salary or job evidence privately.</small></li>
-        <li><span>02</span><ShieldCheck aria-hidden="true" /><strong>Verify</strong><small>SalarySabi checks it against clear rules.</small></li>
-        <li><span>03</span><BarChart3 aria-hidden="true" /><strong>Publish safely</strong><small>Approved data helps people make decisions.</small></li>
-        <li><span>04</span><WalletCards aria-hidden="true" /><strong>Reward</strong><small>Approved evidence is added to your balance.</small></li>
-      </ol>
-    </section>
 
     {salaryCampaign && <details className="reward-rules-disclosure contributor-outcome-rules" id="pilot-rules">
       <summary>Salary-report eligibility and approval rules <span aria-hidden="true">+</span></summary>

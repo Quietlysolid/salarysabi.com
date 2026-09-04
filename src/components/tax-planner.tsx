@@ -30,7 +30,7 @@ export function TaxPlanner({ mode }: { mode: Mode }) {
   const independent = mode === "freelancer" || mode === "creator";
 
   return <section className="tax-planner" aria-labelledby="planner-title">
-    <header>{mode !== "company" && !independent && <span className="eyebrow">2026 planning estimate</span>}<h1 id="planner-title">{copy[mode].title}</h1>{mode !== "company" && <p>{copy[mode].intro}</p>}</header>
+    <header>{mode !== "company" && !independent && <span className="eyebrow">2026 planning estimate</span>}<h1 id="planner-title">{copy[mode].title}</h1></header>
     <div className="tax-planner-grid">
       <form className="tax-planner-form" onSubmit={(event) => event.preventDefault()}>
         <label>{mode === "foreign" ? "Annual amount in foreign currency" : mode === "investment" ? "Annual investment income" : mode === "company" ? "Annual revenue" : "Annual business income"}<span className="small-currency-input"><b>{mode === "foreign" ? "$" : "₦"}</b><input inputMode="numeric" value={values.revenue} onChange={(event) => set("revenue", event.target.value)} placeholder={mode === "company" ? "Example: 12,000,000" : mode === "foreign" ? "10,000" : "Example: 12,000,000"} /></span></label>

@@ -1,7 +1,12 @@
 export const analyticsEvents = [
   "page_view",
+  "paye_input_started",
   "paye_calculated",
+  "paye_to_payslip_clicked",
+  "payslip_check_started",
   "payslip_checked",
+  "deduction_tracker_interest_yes",
+  "deduction_tracker_interest_no",
   "pdf_exported",
   "excel_exported",
   "print_opened",
@@ -66,10 +71,26 @@ export function normalizePath(value: unknown) {
   return path.startsWith("/") && path.length <= 160 ? path : "/";
 }
 
+const internalAnalyticsPathPrefixes = ["/admin", "/e2e-fixtures"];
+
+export function isPublicAnalyticsPath(value: unknown) {
+  const path = normalizePath(value);
+  return !internalAnalyticsPathPrefixes.some(
+    (prefix) => path === prefix || path.startsWith(`${prefix}/`),
+  );
+}
+
 export function normalizeReferrerHost(value: unknown) {
   if (typeof value !== "string" || !value) return "direct";
+  const candidate = value.trim().toLowerCase();
+  if (candidate === "direct") return "direct";
   try {
-    return new URL(value).hostname.slice(0, 120) || "direct";
+    const hostname = candidate.includes("://")
+      ? new URL(candidate).hostname
+      : candidate;
+    return /^(?=.{1,253}$)(?!-)[a-z0-9-]+(?:\.[a-z0-9-]+)*(?<!-)$/.test(hostname)
+      ? hostname.slice(0, 120)
+      : "direct";
   } catch {
     return "direct";
   }

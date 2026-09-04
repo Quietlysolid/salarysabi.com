@@ -33,13 +33,12 @@ export default function TaxNewsPage() {
             <article key={article.slug}>
               <div className="tax-news-meta"><span>{article.status}</span><time dateTime={article.updatedIso}>Updated {article.updatedDate}</time></div>
               <h3><Link href={`/tax-news/${article.slug}`}>{article.title}</Link></h3>
-              <p>{article.summary}</p>
               <Link className="tax-news-read" href={`/tax-news/${article.slug}`}>Read the explainer</Link>
             </article>
           ))}
         </section>
         <section className="trust-section trust-contact">
-          <div><span className="eyebrow">See a tax announcement?</span><h2>Send the official source.</h2><p>We verify the document and effective date before changing the calculator.</p></div>
+          <div><span className="eyebrow">See a tax announcement?</span><h2>Send the official source.</h2></div>
           <a className="primary-button" href="mailto:tax@salarysabi.com?subject=Nigerian%20tax%20news%20source">Share a tax source</a>
         </section>
       </div>

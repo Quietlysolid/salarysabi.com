@@ -447,6 +447,53 @@ final result: passed
 
 ## Follow-up polish
 
+---
+
+# Homepage Option 2 redesign - design QA
+
+## Source visual truth
+
+- Selected source: `C:\Users\z-Nwosu.Ozichi.G\.codex\generated_images\01a06d1d-edfd-7323-b74b-dbabccad62ee\exec-a1312ebc-00e5-4dab-8291-5b44dc9a3c89.png`.
+- Direction: compact overlapping square audience photos, editorial hero, complete navigation, audience switchboard, product menu and full footer.
+- User constraint retained: marketing supporting paragraphs are not reintroduced.
+
+## Implementation evidence
+
+- Desktop: `.audit/home-option2-desktop.png`, 1440 CSS pixels wide.
+- Mobile: `.audit/home-option2-mobile.png`, 390 CSS pixels wide.
+- Focused regions: `.audit/home-option2-desktop-hero.png` and `.audit/home-option2-desktop-paths.png`.
+- Production route: `http://127.0.0.1:3100`.
+- Desktop and mobile document widths exactly equal their viewport widths; no horizontal overflow.
+- Mobile More navigation opens, exposes its links and closes normally.
+- All homepage and global-navigation destinations use real application routes.
+- Automated route checks returned HTTP 200 for all 23 unique local links; the focused desktop/mobile Playwright checks passed 4 of 4.
+
+## Full-view comparison evidence
+
+- The source and implementation were inspected together in one comparison input at the same desktop state.
+- The implementation preserves the source hierarchy: white editorial hero, two compact photos, dark two-path band, three-column tool directory and dark full footer.
+- Existing SalarySabi wordmark, color tokens, route architecture and footer information architecture are retained.
+
+## Required surface review
+
+- Typography: the selected serif display treatment is isolated to the homepage promise; established body and interface typography remains unchanged.
+- Spacing: hero media no longer takes over the viewport; desktop sections are balanced and mobile sections reflow into a clear single-column sequence.
+- Color: existing deep green, white and lime remain the dominant surfaces with accessible contrast.
+- Assets: two generated 1254 x 1254 PNG audience photos fit their square slots without text, logos, borders or watermarks.
+- Copy: short labels and actions remain; removed supporting paragraphs stay removed.
+- Accessibility: semantic landmarks, native links, labelled navigation, heading hierarchy, alt text and visible focus behavior are retained.
+- Runtime: production build passes. Browser diagnostics are limited to pre-existing third-party Google Ads requests blocked by the site's CSP/remote 403; no homepage control or layout depends on them.
+
+## Comparison history
+
+- Iteration 1 P1: full-bleed audience imagery dominated the first screen. Replaced with two compact overlapping square image frames.
+- Iteration 1 P1: the homepage lacked a usable product directory and full ending. Added a three-group route menu and the existing responsive site footer.
+- Iteration 2 P2: the global type contract overrode the selected serif headline and the global shape reset squared the path markers. Added narrowly scoped homepage overrides.
+- Iteration 3 P2: the headline wrapped to three lines. Preserved the source's intentional two-line break at desktop and mobile widths.
+- Final comparison: no actionable P0, P1 or P2 visual, responsive or interaction issues remain.
+
+final result: passed
+
 - P3: the circular “N” badge visible in development captures is the Next.js development indicator and is absent from production UI.
 
 final result: passed

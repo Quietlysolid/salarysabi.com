@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { InfoPage } from "@/components/info-page";
 import { pitGuidelinesReleaseUrl, pitGuidelinesUrl, rulesetVersion, taxActUrl } from "@/lib/site";
 
@@ -83,7 +82,12 @@ export default function TaxUpdatesPage() {
       heroAction={(
         <div className="tax-updates-hero-actions">
           <a className="primary-button" href="#latest-update">See what changed</a>
-          <Link className="secondary-button" href="/how-paye-is-calculated#sources">View official sources</Link>
+          <a className="secondary-button" href={taxActUrl} rel="noopener noreferrer" target="_blank">
+            Nigeria Tax Act 2025 <span aria-hidden="true">↗</span>
+          </a>
+          <a className="secondary-button" href={pitGuidelinesUrl} rel="noopener noreferrer" target="_blank">
+            JRB PAYE Guidelines <span aria-hidden="true">↗</span>
+          </a>
         </div>
       )}
     >
@@ -91,7 +95,13 @@ export default function TaxUpdatesPage() {
         <aside className="tax-update-proof" aria-label="Current PAYE rule status">
           <div><span>Ruleset</span><strong>{rulesetVersion}</strong></div>
           <div><span>Review</span><strong>Independent review complete</strong></div>
-          <div><span>Sources</span><Link href="/how-paye-is-calculated#sources">Official sources linked</Link></div>
+          <div>
+            <span>Official sources</span>
+            <div className="tax-update-source-links">
+              <a href={taxActUrl} rel="noopener noreferrer" target="_blank">National Assembly Act <span aria-hidden="true">↗</span></a>
+              <a href={pitGuidelinesReleaseUrl} rel="noopener noreferrer" target="_blank">JRB guideline release <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
         </aside>
 
         <section className="changelog-section" aria-labelledby="change-history-heading">

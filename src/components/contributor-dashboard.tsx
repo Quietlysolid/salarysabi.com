@@ -193,7 +193,7 @@ export function ContributorDashboard({ fixtureMode = false }: { fixtureMode?: bo
     <div className="contributions-layout">
       <section className="contribution-history" aria-labelledby="contribution-history-title">
         <div className="contribution-section-heading"><span className="eyebrow">Submission history</span><h2 id="contribution-history-title">Your contributions</h2></div>
-        {claims.length === 0 ? <div className="contribution-empty"><strong>No rewarded contributions yet.</strong><span>Choose an active offer to make your first contribution.</span><Link href="/contributors">View funded offers</Link></div> : <div className="contribution-claim-list">
+        {claims.length === 0 ? <div className="contribution-empty"><strong>No rewarded contributions yet.</strong><Link href="/contributors">View funded offers</Link></div> : <div className="contribution-claim-list">
           {claims.map((claim) => {
             const status = claimStatus[claim.status];
             const StatusIcon = status.icon;

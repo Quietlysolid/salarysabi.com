@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import type { AnalyticsEvent } from "@/lib/launch";
+import { isPublicAnalyticsPath } from "@/lib/launch";
 
 const analyticsOptOutKey = "product_analytics_opt_out";
 
@@ -36,21 +37,17 @@ export function track(event: AnalyticsEvent) {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
   if (connection?.saveData) return;
   const pagePath = window.location.pathname;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return;
+  if (!isPublicAnalyticsPath(pagePath)) return;
 
-  void fetch(`${url.replace(/\/$/, "")}/rest/v1/rpc/record_analytics_event`, {
+  void fetch("/api/analytics", {
     method: "POST",
     headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      p_event_name: event,
-      p_page_path: pagePath,
-      p_referrer_host: document.referrer
+      event,
+      pagePath,
+      referrerHost: document.referrer
         ? new URL(document.referrer).hostname
         : "direct",
     }),
@@ -62,7 +59,7 @@ export function Analytics() {
   const pathname = usePathname();
   useEffect(() => {
     syncAnalyticsPreference();
-    track("page_view");
+    if (isPublicAnalyticsPath(pathname)) track("page_view");
   }, [pathname]);
   return null;
 }

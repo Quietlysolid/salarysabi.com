@@ -39,7 +39,6 @@ export function ContributorShare() {
     <div>
       <span className="eyebrow">Grow trusted pay data</span>
       <h2 id="contributor-share-title">Know someone with useful pay information?</h2>
-      <p>Send them the funded offers. SalarySabi rewards approved evidence, not referrals, clicks or unverified posts.</p>
     </div>
     <div className="contributor-share-actions">
       <a href={whatsappUrl} onClick={() => track("reward_offer_shared")} rel="noopener noreferrer" target="_blank">Share on WhatsApp</a>

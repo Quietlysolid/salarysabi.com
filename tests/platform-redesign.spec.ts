@@ -9,10 +9,11 @@ test.describe("work-and-pay platform redesign", () => {
     await page.goto("/");
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(page.getByRole("heading", { name: "How do you want to use SalarySabi?" })).toHaveCount(0);
-    await expect(page.locator(".gateway-choice--talent .gateway-choice-eyebrow")).toHaveText("For talent");
-    await expect(page.locator(".gateway-choice--employer .gateway-choice-eyebrow")).toHaveText("For employers");
+    await expect(page.getByRole("heading", { name: "Pay should be clear." })).toBeVisible();
+    await expect(page.locator(".gateway-path-list").getByText("For talent")).toBeVisible();
+    await expect(page.locator(".gateway-path-list").getByText("For employers")).toBeVisible();
     await expect(page.getByRole("link", { name: /Understand my pay/i })).toHaveAttribute("href", "/talent");
-    await page.getByRole("link", { name: /Run my payroll/i }).click();
+    await page.getByRole("link", { name: "Run payroll" }).click();
     await expect(page).toHaveURL(/\/payroll$/);
     await expect(page.getByRole("heading", { name: "Small-team payroll" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Built for straightforward monthly payroll." })).toBeVisible();
@@ -143,7 +144,7 @@ test.describe("work-and-pay platform redesign", () => {
     await expect(page.getByRole("heading", { name: "Everything about your pay in one place." })).toBeVisible();
     await expect(page.getByText("From offer letter to bank alert.")).toBeVisible();
     await expect(page.getByRole("link", { name: "Calculate my pay" })).toHaveAttribute("href", "/payslip-checker");
-    await expect(page.getByText(/See your PAYE, deductions, and take-home pay/i)).toBeVisible();
+    await expect(page.getByText(/See your PAYE, deductions, and take-home pay/i)).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Compare salaries" })).toHaveAttribute("href", "/salaries");
     await expect(page.getByRole("link", { name: "Explore jobs" })).toHaveAttribute("href", "/jobs");
     await expect(page.getByText(/Built on Nigeria's official tax rules/i)).toBeVisible();

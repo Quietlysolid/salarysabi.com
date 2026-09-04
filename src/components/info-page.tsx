@@ -26,7 +26,6 @@ export function InfoFooter() {
         <Link aria-label="SalarySabi home" className="brand footer-brand" href="/">
           <BrandWordmark />
         </Link>
-        <p>From salary promise to take-home reality.</p>
       </div>
       <div className="footer-links">
         <nav aria-labelledby="footer-talent">
@@ -124,7 +123,6 @@ export function PublicPageShell({
 export function InfoPage({
   eyebrow,
   title,
-  intro,
   heroAction,
   children,
   contents,
@@ -145,7 +143,6 @@ export function InfoPage({
         <div className="info-hero">
           {eyebrow && <span className="eyebrow">{eyebrow}</span>}
           <h1>{title}</h1>
-          {intro && <p>{intro}</p>}
           {heroAction}
         </div>
         {contents && contents.length > 0 && (

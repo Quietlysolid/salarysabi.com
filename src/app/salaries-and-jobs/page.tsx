@@ -8,9 +8,9 @@ export const metadata = {
 };
 
 const paths = [
-  ["01", "Compare salaries", "See reviewed ranges for similar roles as the public dataset grows.", "/salaries"],
-  ["02", "Find jobs with published pay", "See the offered salary and source before you apply.", "/jobs"],
-  ["03", "Track applications", "Save jobs and keep your application progress in one workspace.", "/account"],
+  ["01", "Compare salaries", "/salaries"],
+  ["02", "Find jobs with published pay", "/jobs"],
+  ["03", "Track applications", "/account"],
 ];
 
 export default function Page() {
@@ -20,14 +20,13 @@ export default function Page() {
         <header>
           <span className="eyebrow">Compare. Apply. Keep track.</span>
           <h1>Jobs &amp; salaries</h1>
-          <p>Understand what roles pay, find openings that publish salary information and organise your next move.</p>
         </header>
         <section className="product-hub-paths" aria-label="Salary and job tools">
-          {paths.map(([number, title, description, href]) => (
+          {paths.map(([number, title, href]) => (
             <Link href={href} key={href}>
               <span>{number}</span>
               <h2>{title}</h2>
-              <p>{description} <span aria-hidden="true">→</span></p>
+              <span aria-hidden="true">→</span>
             </Link>
           ))}
         </section>

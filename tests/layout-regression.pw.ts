@@ -30,17 +30,18 @@ test("root is a clear audience gateway", async ({ page }) => {
   await page.context().clearCookies();
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "How do you want to use SalarySabi?" })).toHaveCount(0);
-  await expect(page.locator(".gateway-choice--talent .gateway-choice-eyebrow")).toHaveText("For talent");
-  await expect(page.locator(".gateway-choice--employer .gateway-choice-eyebrow")).toHaveText("For employers");
+  await expect(page.getByRole("heading", { name: "Pay should be clear." })).toBeVisible();
+  await expect(page.locator(".gateway-path-list").getByText("For talent")).toBeVisible();
+  await expect(page.locator(".gateway-path-list").getByText("For employers")).toBeVisible();
   await expect(page.getByRole("link", { name: /Understand my pay/i })).toHaveAttribute("href", "/talent");
-  await expect(page.getByRole("link", { name: /Run my payroll/i })).toHaveAttribute("href", "/payroll");
-  await expect(page.getByText("PAYE calculated · Net pay confirmed")).toBeVisible();
-  await expect(page.locator(".gateway-utility-links").getByRole("link", { name: "Contribute" })).toHaveAttribute("href", "/contributors");
-  await expect(page.locator(".gateway-utility-links").getByRole("link", { name: "Community" })).toHaveCount(0);
-  await expect(page.getByRole("dialog")).toHaveCount(0);
-  if ((page.viewportSize()?.width ?? 0) > 820) {
-    expect(await page.evaluate(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight)).toBe(true);
+  await expect(page.getByRole("link", { name: "Run payroll" })).toHaveAttribute("href", "/payroll");
+  if ((page.viewportSize()?.width ?? 0) <= 760) {
+    await expect(page.locator('.mobile-nav a[href="/contributors"]')).toHaveAttribute("href", "/contributors");
+  } else {
+    await expect(page.getByRole("navigation", { name: "Primary navigation" }).getByRole("link", { name: "Contribute" })).toHaveAttribute("href", "/contributors");
   }
+  await expect(page.locator(".info-footer")).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 });
 
 test("audience homepages route every visible task to the correct tool", async ({ page }) => {
@@ -59,8 +60,9 @@ test("audience homepages route every visible task to the correct tool", async ({
 test("mobile audience gateway keeps both choices clear and focused", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Know your actual salary." })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Pay people right. Prove it." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Pay should be clear." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Pay & tax" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Employer tools" })).toBeVisible();
   await page.getByRole("link", { name: /Understand my pay/i }).click();
   await expect(page).toHaveURL(/\/talent$/);
   await expect(page.getByRole("heading", { name: /Everything about your pay in one place/i })).toBeVisible();
@@ -71,9 +73,9 @@ test("mobile audience gateway keeps both choices clear and focused", async ({ pa
 test("mobile keeps descriptions and avoids horizontal overflow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/salaries-and-jobs");
-  await expect(page.getByText(/See reviewed ranges for similar roles/i)).toBeVisible();
-  await expect(page.getByText(/See the offered salary and source before you apply/i)).toBeVisible();
-  await expect(page.getByText(/Save jobs and keep your application progress/i)).toBeVisible();
+  await expect(page.getByText(/See reviewed ranges for similar roles/i)).toHaveCount(0);
+  await expect(page.getByText(/See the offered salary and source before you apply/i)).toHaveCount(0);
+  await expect(page.getByText(/Save jobs and keep your application progress/i)).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
   await page.goto("/");
   expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
@@ -187,15 +189,26 @@ test("pay experiences explain the numbers live", async ({ page }) => {
   await page.getByLabel("Gross pay").fill("500000");
   await expect(page.locator(".payslip-live-result")).toHaveCount(0);
   await page.getByLabel("PAYE deducted").fill("45000");
+  await page.getByLabel("Pension deducted").fill("0");
   await page.getByRole("button", { name: "Check my PAYE" }).click();
+  await expect(page.locator(".pay-check-verdict")).toContainText("Likely discrepancy");
   await expect(page.getByRole("heading", { name: "Your PAYE is ₦27,500 lower." })).toBeVisible();
   await expect(page.locator(".payslip-result-comparison")).toContainText("₦72,500");
   await expect(page.locator(".payslip-result-equation")).toContainText("₦427,500");
   await expect(page.locator(".payslip-live-status")).toContainText("ask payroll to explain the difference");
+  await expect(page.locator(".pay-check-breakdown")).toContainText("Take-home from entered figures");
+  await expect(page.locator(".pay-check-payroll li")).toHaveCount(4);
+  await expect(page.getByRole("button", { name: "Copy questions for payroll" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /whether your PAYE and pension deductions were actually remitted/i })).toBeVisible();
+  await page.getByRole("button", { name: "Yes, help me track it" }).click();
+  await expect(page.getByRole("status")).toContainText("without your pay figures");
+  await expect(page.getByRole("navigation", { name: "Your Pay Check next actions" }).getByRole("link")).toHaveCount(3);
 
   await page.goto("/paye-guide");
+  await expect(page.getByRole("checkbox", { name: /Include statutory employee pension/i })).toBeChecked();
   await page.getByRole("textbox", { name: "Monthly gross salary" }).fill("600000");
-  await expect(page.locator(".paye-guide-live-result")).toContainText("₦90,500");
+  await expect(page.locator(".paye-guide-live-result")).toContainText("₦48,000");
+  await expect(page.locator(".paye-guide-live-result")).toContainText("₦81,860");
 });
 
 test("jobs and business hubs retain clear audience routes", async ({ page }) => {
@@ -222,8 +235,8 @@ test("mobile about page gives both audiences equal paths and concise proof", asy
   await page.goto("/about");
 
   await expect(page.getByRole("heading", { name: "Pay should be clear." })).toBeVisible();
-  await expect(page.getByText(/helps people understand what they earn/i)).toBeVisible();
-  await expect(page.getByText(/while helping employers calculate, explain and document/i)).toBeVisible();
+  await expect(page.getByText(/helps people understand what they earn/i)).toHaveCount(0);
+  await expect(page.getByText(/while helping employers calculate, explain and document/i)).toHaveCount(0);
   await expect(page.getByRole("link", { name: /Understand my pay/ })).toHaveAttribute("href", "/talent");
   await expect(page.getByRole("link", { name: /Manage my team's pay/ })).toHaveAttribute("href", "/employers");
   await expect(page.getByRole("heading", { name: "Both sides of pay." })).toBeVisible();

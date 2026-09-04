@@ -79,6 +79,13 @@ export default function RootLayout({
 
   return (
     <html className={`${sourceSans.variable} ${bricolageGrotesque.variable}`} lang="en-NG" data-scroll-behavior="smooth">
+      <head>
+        <script
+          async
+          crossOrigin="anonymous"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9638487224391154"
+        />
+      </head>
       <body>
         <a className="skip-link" href="#main-content">Skip to main content</a>
         <script

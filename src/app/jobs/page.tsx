@@ -19,12 +19,11 @@ export default async function JobsPage() {
       <section className="jobs-hero">
         <span className="eyebrow">Jobs with salaries</span>
         <h1>A job should tell you what it pays.</h1>
-        <p>Every role here shows the salary and original source.</p>
       </section>
       <section className="jobs-board" aria-label="Nigerian job listings"><JobBoard initialJobs={initialJobs} /></section>
       {initialJobs.length > 0 && <section className="jobs-next-actions" aria-label="More job options">
-        <Link href="/suggest-a-job"><span><strong>Found a genuine published-pay job?</strong><small>Send the original source for SalarySabi to review.</small></span><b aria-hidden="true">→</b></Link>
-        <Link href="/post-a-job"><span><strong>Are you hiring?</strong><small>Post a role that shows candidates the salary.</small></span><b aria-hidden="true">→</b></Link>
+        <Link href="/suggest-a-job"><span><strong>Found a genuine published-pay job?</strong></span><b aria-hidden="true">→</b></Link>
+        <Link href="/post-a-job"><span><strong>Are you hiring?</strong></span><b aria-hidden="true">→</b></Link>
       </section>}
       {initialJobs.length > 0 && <JourneyNextSteps
         title="Use the salary before you apply"

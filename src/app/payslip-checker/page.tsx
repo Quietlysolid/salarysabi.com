@@ -3,8 +3,8 @@ import { PublicPageShell } from "@/components/info-page";
 import { PayslipChecker } from "@/components/payslip-checker";
 
 export const metadata: Metadata = {
-  title: "Check Your Nigerian Payslip | SalarySabi",
-  description: "Compare the PAYE and deductions on your Nigerian payslip with a private SalarySabi estimate.",
+  title: "Your Pay Check: Check Your Nigerian Payslip | SalarySabi",
+  description: "Check whether the PAYE on your Nigerian payslip looks right, understand entered deductions and get practical questions for payroll.",
   alternates: { canonical: "/payslip-checker" },
 };
 

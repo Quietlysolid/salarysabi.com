@@ -123,11 +123,10 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
           ? <ProductState
               kind="empty"
               title="New salary-transparent jobs are coming."
-              detail="SalarySabi verifies the pay and original source before publishing each role."
               action={<Link href="/suggest-a-job">Share a job lead</Link>}
               links={<Link href="/post-a-job">Hiring? Post a role</Link>}
             />
-          : <ProductState kind="empty" title="No jobs match your filters." detail="Try a broader role or location." action={<button type="button" onClick={clearFilters}>Clear filters</button>} />)}
+          : <ProductState kind="empty" title="No jobs match your filters." action={<button type="button" onClick={clearFilters}>Clear filters</button>} />)}
 
         <div className="job-list">
           {visible.map((job) => (

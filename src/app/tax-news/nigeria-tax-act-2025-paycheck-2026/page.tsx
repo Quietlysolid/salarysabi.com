@@ -42,7 +42,6 @@ export default function TaxActPaycheckExplainerPage() {
           <Link href="/tax-news">Tax news and explainers</Link>
           <span className="eyebrow">Nigeria Tax Act 2025</span>
           <h1>{article.title}</h1>
-          <p>{article.summary}</p>
           <div className="tax-news-byline"><span>By <Link href="/about">Ozichi Nwosu</Link></span><span>Published <time dateTime={article.publishedIso}>{article.publishedDate}</time></span><span>Ruleset {article.ruleset}</span></div>
         </header>
 

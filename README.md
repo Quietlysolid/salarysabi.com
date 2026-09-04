@@ -93,9 +93,11 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_YOUR_KEY
 NEXT_PUBLIC_SITE_URL=https://YOUR_PUBLIC_HOST
 ```
 
-The Supabase anonymous key is designed for browser use. The migration enables
-Row Level Security so browsers can insert signups and increment aggregate
-analytics but cannot read either table. Never use a service-role key here.
+The Supabase publishable key is safe to include in the application bundle. The
+migration enables Row Level Security so browsers can insert signups but cannot
+read private tables. Analytics is sent through the same-origin Worker endpoint,
+validated and rate-limited there, then recorded as aggregate counters. Never use
+a service-role key in the browser.
 Without the Supabase values, the public information pages remain available,
 but analytics and database-backed features are unavailable.
 

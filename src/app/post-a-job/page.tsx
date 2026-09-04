@@ -14,7 +14,6 @@ export default function PostAJobPage() {
     <PublicPageShell>
       <section className="job-wizard-hero">
         <h1>Post a job</h1>
-        <p>For employers and recruiters. Free during beta. Reviewed within 1–2 business days.</p>
         <Link className="job-suggest-link" href="/suggest-a-job">Found an existing listing? Suggest the job instead.</Link>
       </section>
       <section className="job-wizard-shell">

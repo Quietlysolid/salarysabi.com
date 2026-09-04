@@ -36,6 +36,14 @@
         "limit": 60,
         "period": 60
       }
+    },
+    {
+      "name": "ANALYTICS_API_RATE_LIMITER",
+      "namespace_id": "1008",
+      "simple": {
+        "limit": 120,
+        "period": 60
+      }
     }
   ]
 }

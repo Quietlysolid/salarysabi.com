@@ -4,6 +4,7 @@ import { ArticleStructuredData } from "@/components/article-structured-data";
 import { PublicPageShell } from "@/components/info-page";
 import { PayeGuideTrail } from "@/components/paye-guide-trail";
 import { calculatePaye } from "@/lib/paye";
+import { salaryTerms } from "@/lib/salary-terms";
 import { pitGuidelinesUrl, rulesetVersion, taxActUrl, taxProfessionalReviewIso } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -30,7 +31,6 @@ export default function MethodologyPage() {
         <header className="simple-guide-hero methodology-story-hero">
           <span className="eyebrow">PAYE, explained</span>
           <h1>Your PAYE. Five clear steps.</h1>
-          <p>See how your annual pay becomes the tax on your payslip.</p>
           <Link className="primary-button" href="/payslip-checker">Check my PAYE</Link>
           <p className="methodology-trust-line" aria-label={`Independently reviewed 1 September 2026. Ruleset ${rulesetVersion}.`}>
             <strong>Independently reviewed</strong>
@@ -47,27 +47,20 @@ export default function MethodologyPage() {
           <div className="methodology-equation-heading">
             <span className="eyebrow">The calculation</span>
             <h2 id="equation-title">From annual pay to monthly PAYE</h2>
+            <p className="methodology-term-definition">
+              <strong>Chargeable income (taxable income):</strong> {salaryTerms.chargeableIncome}
+            </p>
           </div>
-          <div
+          <ol
             className="methodology-equation-visual"
-            role="img"
-            aria-label="Step 1, find yearly pay. Step 2, subtract eligible deductions. Step 3, find taxable income. Step 4, apply tax bands. Step 5, divide yearly PAYE by 12 to find monthly PAYE."
+            aria-label="Step 1, find yearly pay. Step 2, subtract eligible deductions. Step 3, find chargeable income, also called taxable income here. Step 4, apply tax bands. Step 5, divide yearly PAYE by 12 to find monthly PAYE."
           >
-            <div>
-              <span><small>1</small>Yearly pay</span>
-              <b aria-hidden="true">−</b>
-              <span><small>2</small>Eligible deductions</span>
-              <b aria-hidden="true">=</b>
-              <span><small>3</small>Taxable income</span>
-            </div>
-            <div>
-              <span><small>4</small>Apply tax bands</span>
-              <b aria-hidden="true">→</b>
-              <span className="methodology-equation-output">Yearly PAYE</span>
-              <b aria-hidden="true">÷ 12 =</b>
-              <span><small>5</small>Monthly PAYE</span>
-            </div>
-          </div>
+            <li><small>01</small><b aria-hidden="true">Start</b><strong>Yearly pay</strong></li>
+            <li><small>02</small><b aria-hidden="true">−</b><strong>Eligible deductions</strong></li>
+            <li className="is-subtotal"><small>03</small><b aria-hidden="true">=</b><strong>Chargeable income <em>(taxable income)</em></strong></li>
+            <li><small>04</small><b aria-hidden="true">Apply bands →</b><strong>Yearly PAYE</strong></li>
+            <li className="is-result"><small>05</small><b aria-hidden="true">÷ 12 =</b><strong>Monthly PAYE</strong></li>
+          </ol>
         </section>
 
         <section className="simple-guide-section methodology-worked-example" aria-labelledby="example-title">
@@ -82,7 +75,7 @@ export default function MethodologyPage() {
               <dl className="methodology-example-inputs">
                 <div><dt>Yearly pay</dt><dd>{naira(example.annualGrossIncome)}</dd></div>
                 <div><dt>Eligible deductions</dt><dd>{naira(example.totalEligibleDeductions)}</dd></div>
-                <div><dt>Taxable income</dt><dd>{naira(example.chargeableIncome)}</dd></div>
+                <div><dt>Chargeable income (taxable income)</dt><dd>{naira(example.chargeableIncome)}</dd></div>
               </dl>
 
               <div className="methodology-band-breakdown" aria-label="Tax band breakdown">
