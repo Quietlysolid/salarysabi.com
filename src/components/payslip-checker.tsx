@@ -343,8 +343,8 @@ export function PayslipChecker() {
         <nav className="pay-check-next-actions" aria-label="Your Pay Check next actions">
           <span>Choose your next move</span>
           <Link href="/how-paye-is-calculated">Understand PAYE <ArrowRight aria-hidden="true" /></Link>
-          <Link href="/offer-checker">Check a job offer <ArrowRight aria-hidden="true" /></Link>
-          <Link href="/salaries">Optional: share anonymous salary data <ArrowRight aria-hidden="true" /></Link>
+          <Link href="/salaries">Compare my salary <ArrowRight aria-hidden="true" /></Link>
+          <Link href="/jobs">See jobs with published pay <ArrowRight aria-hidden="true" /></Link>
         </nav>
       </section>}
     </div>

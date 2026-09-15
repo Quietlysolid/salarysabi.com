@@ -1,15 +1,12 @@
 import type { MetadataRoute } from "next";
 import { legalContentUpdatedIso, rulesVerifiedIso, siteContentUpdatedIso, siteUrl } from "@/lib/site";
 import { getPublishedJobSlugs } from "@/lib/supabase";
-import { salaryExamples } from "@/lib/offer";
 
 export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages = [
     { path: "", lastModified: siteContentUpdatedIso },
-    { path: "/offer-checker", lastModified: siteContentUpdatedIso },
-    ...salaryExamples.map(amount => ({ path: `/salary-after-tax/${amount}`, lastModified: siteContentUpdatedIso })),
     { path: "/talent", lastModified: siteContentUpdatedIso },
     { path: "/employers", lastModified: siteContentUpdatedIso },
     { path: "/paye-guide", lastModified: siteContentUpdatedIso },

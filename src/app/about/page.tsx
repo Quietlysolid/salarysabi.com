@@ -6,7 +6,7 @@ import { InfoPage } from "@/components/info-page";
 import { founderGitHubUrl, founderLinkedInUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About SalarySabi | Salary na promise. Take-home na reality.",
+  title: "About SalarySabi | Pay Should Be Clear",
   description: "SalarySabi helps Nigerians understand their pay and helps employers calculate, explain and document what they pay.",
   alternates: { canonical: "/about" },
 };
@@ -53,7 +53,7 @@ export default function AboutPage() {
   return (
     <InfoPage
       eyebrow="About SalarySabi"
-      title="Salary na promise. Take-home na reality."
+      title="Pay should be clear."
       intro="SalarySabi helps people understand what they earn, while helping employers calculate, explain and document what they pay."
       heroAction={(
         <div className="about-hero-actions">

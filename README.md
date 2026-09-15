@@ -1,15 +1,7 @@
 # SalarySabi
 
-A Nigerian take-home pay and salary decision tool: calculate PAYE and pension,
-check a payslip, or understand a job offer before accepting it.
-
-The homepage leads directly to the calculator. `/offer-checker` adds rent,
-other deductions, annual and daily take-home, and a target-net-to-gross solver.
-Seven static `/salary-after-tax/[amount]` pages use the same calculation engine
-and link to an interactive calculator prefilled with the example salary.
-Offer figures stay in React state; they are not saved or transmitted.
-Jobs, benchmarks, employer tools and contribution routes remain available,
-with the three salary decision tools taking priority in the main navigation.
+A search-first MVP for a free 2026 Nigerian PAYE calculator that can grow into
+lightweight payroll software for small employers.
 
 ## Run locally
 

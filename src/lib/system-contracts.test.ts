@@ -21,9 +21,8 @@ describe("shared product contracts", () => {
     expect(consumers).not.toContain("21 August 2026");
   });
 
-  it("uses the take-home calculator home and the public shell on core public routes", () => {
-    expect(read("src/app/page.tsx")).toContain("PayeGuideCalculator");
-    expect(read("src/app/page.tsx")).toContain("PublicPageShell");
+  it("uses the split gateway home and the public shell on core public routes", () => {
+    expect(read("src/app/page.tsx")).toContain("SplitGatewayHome");
     expect(read("src/app/talent/page.tsx")).toContain('audience="talent"');
     expect(read("src/app/employers/page.tsx")).toContain('audience="employer"');
     for (const route of ["src/app/jobs/page.tsx", "src/app/payslip-checker/page.tsx", "src/app/account/page.tsx", "src/app/post-a-job/page.tsx", "src/app/suggest-a-job/page.tsx", "src/app/paye-guide/page.tsx", "src/app/disclaimer/page.tsx", "src/app/privacy/page.tsx", "src/app/eligible-deductions/page.tsx", "src/app/how-paye-is-calculated/page.tsx", "src/app/salaries-and-jobs/page.tsx", "src/app/business/page.tsx"]) {
@@ -104,7 +103,7 @@ describe("shared product contracts", () => {
     expect(checker).toContain("deduction_tracker_interest_no");
     expect(checker).toContain("does not send the pay figures you entered");
     expect(checker).toContain('href="/salaries"');
-    expect(checker).toContain('href="/offer-checker"');
+    expect(checker).toContain('href="/jobs"');
     expect(checker).not.toContain("fetch(");
     expect(page).toContain("Your Pay Check: Check Your Nigerian Payslip");
   });

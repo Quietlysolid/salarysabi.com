@@ -23,9 +23,9 @@ function parseMoney(value: string) {
   return Number.isFinite(number) ? number : 0;
 }
 
-export function PayeGuideCalculator({ initialGross = 500_000, embedded = false }: { initialGross?: number; embedded?: boolean }) {
-  const [gross, setGross] = useState(initialGross.toLocaleString("en-NG"));
-  const [pensionablePay, setPensionablePay] = useState(initialGross.toLocaleString("en-NG"));
+export function PayeGuideCalculator() {
+  const [gross, setGross] = useState("500,000");
+  const [pensionablePay, setPensionablePay] = useState("500,000");
   const [includePension, setIncludePension] = useState(true);
   const [pensionBaseEdited, setPensionBaseEdited] = useState(false);
   const [hasEdited, setHasEdited] = useState(false);
@@ -34,8 +34,6 @@ export function PayeGuideCalculator({ initialGross = 500_000, embedded = false }
   const payslipTransitionRecorded = useRef(false);
   const monthlyGross = parseMoney(gross);
   const monthlyPensionablePay = parseMoney(pensionablePay);
-  const valid = gross !== "" && monthlyGross > 0 && monthlyGross <= 1_000_000_000
-    && (!includePension || (pensionablePay !== "" && monthlyPensionablePay <= monthlyGross));
   const employeePension = includePension ? monthlyPensionablePay * 0.08 : 0;
   const employerPension = includePension ? monthlyPensionablePay * 0.1 : 0;
   const result = useMemo(
@@ -48,13 +46,13 @@ export function PayeGuideCalculator({ initialGross = 500_000, embedded = false }
   const takeHome = Math.max(0, monthlyGross - employeePension - result.monthlyTax);
 
   useEffect(() => {
-    if (!hasEdited || !valid || calculationRecorded.current) return;
+    if (!hasEdited || monthlyGross <= 0 || calculationRecorded.current) return;
     const timer = window.setTimeout(() => {
       track("paye_calculated");
       calculationRecorded.current = true;
     }, 800);
     return () => window.clearTimeout(timer);
-  }, [employeePension, hasEdited, monthlyGross, valid]);
+  }, [employeePension, hasEdited, monthlyGross]);
 
   function startInput() {
     if (!inputStarted.current) {
@@ -92,7 +90,7 @@ export function PayeGuideCalculator({ initialGross = 500_000, embedded = false }
     <section className="paye-guide-live" aria-labelledby="paye-guide-live-title">
       <div className="paye-guide-live-input">
         <span className="eyebrow">Your PAYE, made clear</span>
-        {embedded ? <h2 id="paye-guide-live-title">Calculate my take-home pay</h2> : <h1 id="paye-guide-live-title">See where your salary goes.</h1>}
+        <h1 id="paye-guide-live-title">See where your salary goes.</h1>
         <label htmlFor="paye-guide-gross">
           <span>Monthly gross salary</span>
           <span className="paye-guide-money-input">
@@ -100,7 +98,6 @@ export function PayeGuideCalculator({ initialGross = 500_000, embedded = false }
             <input
               id="paye-guide-gross"
               inputMode="numeric"
-              maxLength={14}
               value={gross}
               onChange={(event) => updateGross(event.target.value)}
             />
@@ -118,7 +115,6 @@ export function PayeGuideCalculator({ initialGross = 500_000, embedded = false }
             <input
               id="paye-guide-pensionable-pay"
               inputMode="numeric"
-              maxLength={14}
               value={pensionablePay}
               onChange={(event) => updatePensionablePay(event.target.value)}
             />
@@ -128,7 +124,6 @@ export function PayeGuideCalculator({ initialGross = 500_000, embedded = false }
       </div>
 
       <div className="paye-guide-live-result" aria-live="polite">
-        {!valid ? <p role="status">Enter a salary above ₦0 and no more than ₦1 billion. Pensionable pay must not exceed gross salary.</p> : <>
         <span className="eyebrow">From offer letter to bank alert</span>
         <dl className="paye-guide-equation" aria-label={`${money.format(monthlyGross)} gross salary minus ${money.format(employeePension)} employee pension minus ${money.format(result.monthlyTax)} PAYE equals ${money.format(takeHome)} take-home pay`}>
           <div className="is-gross">
@@ -161,8 +156,6 @@ export function PayeGuideCalculator({ initialGross = 500_000, embedded = false }
           <span>Ruleset {rulesetVersion}</span>
         </p>
         <Link href="/payslip-checker" onClick={trackPayslipTransition}>Check this against my payslip <ArrowRight aria-hidden="true" /></Link>
-        <Link href="/offer-checker">Add rent and other deductions in the Offer Checker <ArrowRight aria-hidden="true" /></Link>
-        </>}
       </div>
     </section>
   );

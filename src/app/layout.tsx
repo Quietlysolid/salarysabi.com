@@ -7,7 +7,6 @@ import "./redesign.css";
 import "./split-gateway.css";
 import "./audience-system.css";
 import "./pay-experience.css";
-import "./salary-decisions.css";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
@@ -23,32 +22,32 @@ const bricolageGrotesque = Bricolage_Grotesque({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "SalarySabi | Nigeria Take-Home Pay and Salary Decisions",
+  title: "SalarySabi | Nigeria PAYE, Salaries and Jobs",
   description:
-    "Calculate Nigerian take-home pay after PAYE and pension, check your payslip, and understand what a job offer really pays.",
+    "Calculate Nigerian PAYE and take-home pay, compare salaries, find jobs with published pay, and earn rewards for approved pay information.",
   keywords: [
     "Nigeria PAYE calculator 2026",
     "Nigerian salary calculator",
     "gross to net salary Nigeria",
     "PAYE tax calculator Nigeria",
-    "Nigeria salary offer checker",
-    "salary after tax Nigeria",
+    "jobs with salaries Nigeria",
+    "Nigeria salary benchmarks",
   ],
   icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
     locale: "en_NG",
-    title: "SalarySabi | Nigeria Take-Home Pay Calculator 2026",
+    title: "SalarySabi | Nigeria PAYE, Salaries and Jobs",
     description:
-      "Know what your salary really pays. Calculate take-home pay, check a payslip and understand a job offer.",
+      "Understand your pay, compare salaries and find Nigerian jobs that publish pay.",
     url: "/",
     siteName: "SalarySabi",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SalarySabi | Nigeria Take-Home Pay Calculator 2026",
+    title: "SalarySabi | Nigeria PAYE, Salaries and Jobs",
     description:
-      "Know what your salary really pays. Calculate take-home pay, check a payslip and understand a job offer.",
+      "Understand your pay, compare salaries and find Nigerian jobs that publish pay.",
   },
 };
 

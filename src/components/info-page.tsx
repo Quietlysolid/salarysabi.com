@@ -29,10 +29,9 @@ export function InfoFooter() {
       </div>
       <div className="footer-links">
         <nav aria-labelledby="footer-talent">
-          <h2 id="footer-talent">Your pay</h2>
-          <Link href="/#calculator">Take-home pay</Link>
+          <h2 id="footer-talent">For talent</h2>
+          <Link href="/payslip-checker">Take-home pay</Link>
           <Link href="/payslip-checker">Check payslip PAYE</Link>
-          <Link href="/offer-checker">Check a job offer</Link>
           <Link href="/salaries">Salary benchmarks</Link>
           <Link href="/jobs">Jobs with salaries</Link>
         </nav>
@@ -58,11 +57,9 @@ export function InfoFooter() {
       </div>
       <div className="footer-mobile-links" aria-label="Footer navigation">
         <details>
-          <summary>Your pay</summary>
+          <summary>For talent</summary>
           <div>
-            <Link href="/#calculator">Take-home pay</Link>
-            <Link href="/payslip-checker">Check payslip PAYE</Link>
-            <Link href="/offer-checker">Check a job offer</Link>
+            <Link href="/payslip-checker">Take-home pay</Link>
             <Link href="/salaries">Salary benchmarks</Link>
             <Link href="/jobs">Jobs with salaries</Link>
           </div>
