@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.describe("work-and-pay platform redesign", () => {
   test.beforeEach(async ({ page }) => {
-    await page.route("https://pagead2.googlesyndication.com/**", route => route.abort());
+    await page.route("https://pagead2.googlesyndication.com/**", route => route.fulfill({ contentType: "application/javascript", body: "" }));
   });
 
   test("homepage leads directly to take-home pay and an offer check", async ({ page }) => {
