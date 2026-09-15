@@ -7,9 +7,9 @@ type NavigationLink = { href: string; label: string };
 type AudienceKey = "talent" | "employer" | "community" | "learn";
 
 const globalLinks: NavigationLink[] = [
-  { href: "/talent", label: "For talent" },
-  { href: "/employers", label: "For employers" },
-  { href: "/contributors", label: "Contribute" },
+  { href: "/#calculator", label: "Take-home calculator" },
+  { href: "/payslip-checker", label: "Check payslip" },
+  { href: "/offer-checker", label: "Check offer" },
   { href: "/paye-guide", label: "Learn" },
 ];
 
@@ -46,9 +46,9 @@ const audienceNavigation: Record<AudienceKey, { label: string; home: string; lin
     label: "For talent",
     home: "/talent",
     links: [
-      { href: "/payslip-checker", label: "Pay & tax" },
-      { href: "/salaries", label: "Salary ranges" },
-      { href: "/jobs", label: "Jobs with salary" },
+      { href: "/#calculator", label: "Take-home calculator" },
+      { href: "/payslip-checker", label: "Check payslip" },
+      { href: "/offer-checker", label: "Check offer" },
     ],
   },
   employer: {
@@ -93,11 +93,9 @@ function currentAudience(pathname: string): AudienceKey {
 }
 
 function globalIsCurrent(pathname: string, href: string) {
-  const audience = currentAudience(pathname);
-  if (href === "/talent") return audience === "talent";
-  if (href === "/employers") return audience === "employer";
-  if (href === "/contributors") return audience === "community";
-  return audience === "learn";
+  if (href === "/#calculator") return pathname === "/" || pathname.startsWith("/salary-after-tax/");
+  if (href === "/paye-guide") return currentAudience(pathname) === "learn" && pathname !== "/" && pathname !== "/offer-checker" && !pathname.startsWith("/salary-after-tax/");
+  return matchesPath(pathname, href);
 }
 
 export function SiteNavigation() {
@@ -123,6 +121,8 @@ export function AudienceNavigation() {
   const audience = currentAudience(pathname);
   const navigation = audienceNavigation[audience];
 
+  if (pathname === "/" || pathname === "/offer-checker" || pathname === "/payslip-checker" || pathname.startsWith("/salary-after-tax/")) return null;
+
   return (
     <div className={`audience-navigation audience-navigation--${audience}`} data-audience={audience}>
       <div className="audience-navigation-inner">
@@ -146,20 +146,19 @@ export function AudienceNavigation() {
 export function MobileNavigation() {
   const pathname = usePathname();
   const audience = currentAudience(pathname);
-  const section = audienceNavigation[audience];
 
   return (
     <nav className="mobile-nav" aria-label="Mobile navigation">
-      <Link aria-current={audience === "talent" ? "page" : undefined} href="/talent">Talent</Link>
-      <Link aria-current={audience === "employer" ? "page" : undefined} href="/employers">Employers</Link>
-      <details className={audience === "community" || audience === "learn" ? "has-current-page" : undefined}>
+      <Link aria-current={pathname === "/" ? "page" : undefined} href="/#calculator">Calculator</Link>
+      <Link aria-current={pathname === "/payslip-checker" ? "page" : undefined} href="/payslip-checker">Payslip</Link>
+      <Link aria-current={pathname === "/offer-checker" ? "page" : undefined} href="/offer-checker">Offer</Link>
+      <details>
         <summary>More</summary>
         <div>
           <Link aria-current={audience === "community" ? "page" : undefined} href="/contributors">Contribute</Link>
-          <Link aria-current={audience === "learn" ? "page" : undefined} href="/paye-guide">Learn</Link>
+          <Link aria-current={globalIsCurrent(pathname, "/paye-guide") ? "page" : undefined} href="/paye-guide">Learn</Link>
           <Link href="/tax-updates">Inspect the rules</Link>
-          <span className="mobile-nav-section-label">{section.label}</span>
-          {section.links.map((link) => <Link href={link.href} key={link.href}>{link.label}</Link>)}
+          <Link href="/employers">For employers</Link>
         </div>
       </details>
     </nav>

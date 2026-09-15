@@ -1,32 +1,26 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("work-and-pay platform redesign", () => {
-  test("gateway sends each audience to a focused homepage and useful task", async ({ page }) => {
-    test.setTimeout(90_000);
-    const consoleErrors: string[] = [];
-    page.on("console", (message) => { if (message.type() === "error") consoleErrors.push(message.text()); });
-    await page.context().clearCookies();
+  test.beforeEach(async ({ page }) => {
+    await page.route("https://pagead2.googlesyndication.com/**", route => route.abort());
+  });
+
+  test("homepage leads directly to take-home pay and an offer check", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("dialog")).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "How do you want to use SalarySabi?" })).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "Pay should be clear." })).toBeVisible();
-    await expect(page.locator(".gateway-path-list").getByText("For talent")).toBeVisible();
-    await expect(page.locator(".gateway-path-list").getByText("For employers")).toBeVisible();
-    await expect(page.getByRole("link", { name: /Understand my pay/i })).toHaveAttribute("href", "/talent");
-    await page.getByRole("link", { name: "Run payroll" }).click();
-    await expect(page).toHaveURL(/\/payroll$/);
-    await expect(page.getByRole("heading", { name: "Small-team payroll" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Built for straightforward monthly payroll." })).toBeVisible();
-    await expect(page.getByText(/Bonuses, commissions, arrears or irregular pay/i)).toBeVisible();
-    await expect(page.getByRole("button", { name: "Forgot password?" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Salary na promise/i })).toHaveCount(0);
-    if ((page.viewportSize()?.width ?? 0) <= 760) {
-      await expect(page.getByRole("navigation", { name: "Mobile navigation" }).getByRole("link", { name: "Employers" })).toHaveAttribute("aria-current", "page");
-    } else {
-      await expect(page.getByRole("navigation", { name: "For employers tools" })).toBeVisible();
-      await expect(page.getByRole("link", { name: "For employers" }).last()).toHaveAttribute("href", "/employers");
-    }
-    expect(consoleErrors).toEqual([]);
+    await expect(page.getByRole("heading", { name: "Nigeria Take-Home Pay Calculator" })).toBeVisible();
+    await page.getByRole("link", { name: "Calculate my take-home pay", exact: false }).click();
+    await expect(page.getByLabel("Monthly gross salary")).toBeVisible();
+    await page.getByLabel("Monthly gross salary").fill("650000");
+    await expect(page.locator(".is-take-home dd")).toHaveText("₦507,860");
+    await page.getByLabel("Monthly pensionable pay").fill("900000");
+    await expect(page.getByRole("status")).toContainText("Pensionable pay must not exceed gross");
+    await expect(page.locator(".is-take-home dd")).toHaveCount(0);
+    await page.getByLabel("Monthly pensionable pay").fill("650000");
+    const nav = page.getByRole("navigation", { name: (page.viewportSize()?.width ?? 0) <= 760 ? "Mobile navigation" : "Primary navigation", exact: true });
+    await expect(nav.getByRole("link", { name: /jobs|benchmarks/i })).toHaveCount(0);
+    await page.getByRole("link", { name: "Add rent and other deductions in the Offer Checker" }).click();
+    await expect(page).toHaveURL(/\/offer-checker$/);
+    await expect(page.getByLabel("Monthly gross offer")).toBeVisible();
   });
 
   test("salary contribution validates identity-free context before pay details", async ({ page }) => {
@@ -74,7 +68,7 @@ test.describe("work-and-pay platform redesign", () => {
     await expect(page.getByRole("link", { name: "Share my salary" }).first()).toHaveAttribute("href", /salary-pilot-2026/);
     await expect(page.getByRole("heading", { name: "Share a paid job" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Share a paid job" })).toHaveAttribute("href", "/contributors/job-sourcing");
-    await expect(page.getByText("Your contribution journey")).toBeVisible();
+    await expect(page.getByRole("list", { name: "Example of a private salary report being verified, published safely and rewarded" })).toBeVisible();
     await expect(page.getByText(/Your individual salary stays out of public view/i)).toBeVisible();
     await expect(page.getByLabel("Active funded contributor offer")).toHaveCount(0);
     await page.getByText("Salary-report eligibility and approval rules").click();
@@ -140,7 +134,7 @@ test.describe("work-and-pay platform redesign", () => {
     await page.goto("/talent");
     await expect(page.getByRole("heading", { name: "Know your actual salary." })).toHaveCount(0);
     await expect(page.getByLabel("Example take-home pay calculation")).toHaveCount(0);
-    await expect(page.getByRole("region", { name: "Talent at work" })).toBeVisible();
+    await expect(page.getByRole("img", { name: "Hands checking a Nigerian take-home pay result on a phone" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Everything about your pay in one place." })).toBeVisible();
     await expect(page.getByText("From offer letter to bank alert.")).toBeVisible();
     await expect(page.getByRole("link", { name: "Calculate my pay" })).toHaveAttribute("href", "/payslip-checker");
