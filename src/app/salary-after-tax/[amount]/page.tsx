@@ -7,7 +7,8 @@ import { calculateOffer, defaultOfferAssumptions, formatNaira, salaryExamples } 
 import { pitGuidelinesUrl } from "@/lib/site";
 
 type Props = { params: Promise<{ amount: string }> };
-export const dynamicParams = false;
+// Workers may render without a prerender cache; salaryFromSlug rejects unsupported amounts.
+export const dynamicParams = true;
 export function generateStaticParams() { return salaryExamples.map(amount => ({ amount: String(amount) })); }
 function salaryFromSlug(slug: string) {
   const amount = salaryExamples.find(value => String(value) === slug);
