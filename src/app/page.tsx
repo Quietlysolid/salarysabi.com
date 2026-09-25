@@ -12,7 +12,7 @@ export default function Home() {
     operatingSystem: "Web",
     url: siteUrl,
     offers: { "@type": "Offer", price: "0", priceCurrency: "NGN" },
-    description: "Calculate Nigerian PAYE and take-home pay, compare salaries, find jobs with published pay, run payroll or hire transparently.",
+    description: "Calculate Nigerian PAYE and take-home pay, find jobs with published pay, run payroll or hire transparently.",
   };
 
   return <>

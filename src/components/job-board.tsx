@@ -5,6 +5,7 @@ import Link from "next/link";
 import { track } from "./analytics";
 import { ExternalLinkIcon } from "./external-link-icon";
 import { formatJobDate, jobDeadlineLabel, jobMatches, salarySourceLabel, verificationLabel, type Job, type WorkMode } from "@/lib/jobs";
+import { fetchJobListings } from "@/lib/fetch-job-listings";
 import { ProductState } from "./product-state";
 
 const jobsCacheKey = "salarysabi:jobs-cache:v1";
@@ -34,20 +35,19 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
 
   useEffect(() => {
     if (reloadKey === 0 && initialJobs) return;
+    let active = true;
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 8000);
-    fetch("/api/jobs", { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error("Jobs unavailable");
-        return response.json() as Promise<Job[]>;
-      })
+    fetchJobListings(controller.signal)
       .then((rows) => {
+        if (!active) return;
         window.clearTimeout(timeout);
         setJobs(rows);
         setState("ready");
         try { localStorage.setItem(jobsCacheKey, JSON.stringify({ savedAt: new Date().toISOString(), rows })); } catch {}
       })
       .catch(() => {
+        if (!active) return;
         window.clearTimeout(timeout);
         try {
           const cached = JSON.parse(localStorage.getItem(jobsCacheKey) || "null") as { savedAt: string; rows: Job[] } | null;
@@ -56,6 +56,7 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
         setState("error");
       });
     return () => {
+      active = false;
       window.clearTimeout(timeout);
       controller.abort();
     };
@@ -111,20 +112,19 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
       </aside>}
 
       <div className="job-results-column">
-        {(showDiscoveryControls||state==="loading")&&<div className="job-results-toolbar">
+        {showDiscoveryControls&&<div className="job-results-toolbar">
           <p>{state === "loading" ? <strong>Loading jobs</strong> : <><strong>{visible.length}</strong> {visible.length === 1 ? "job" : "jobs"} available</>}</p>
           {showDiscoveryControls&&<label><span>Sort by</span><select disabled={state === "loading" || state === "error"} value={sort} onChange={(event) => setSort(event.target.value as typeof sort)}><option value="closing">Closing date, earliest first</option><option value="newest">Newest first</option><option value="salary">Highest salary</option></select></label>}
         </div>}
 
-        {state === "loading" && <ProductState kind="loading" title="Loading current jobs" detail="Your filters will remain available." />}
-        {state === "error" && <ProductState kind="error" title="We could not load the jobs" detail="Your filters are still here. Retry now or check back shortly." action={<button type="button" onClick={() => { setState("loading"); setReloadKey((value) => value + 1); }}>Try again</button>} links={<><Link href="/account">Open job workspace</Link><Link href="/suggest-a-job">Share an existing job</Link></>} />}
+        {state === "loading" && <ProductState kind="loading" title="Loading current jobs" />}
+        {state === "error" && <ProductState kind="error" title="We couldn’t load jobs." detail="Please try again." action={<button type="button" onClick={() => { setState("loading"); setReloadKey((value) => value + 1); }}>Try again</button>} />}
         {state === "cached" && <ProductState compact kind="cached" title="Showing recently saved listings" detail="We are reconnecting. Application links may have changed." action={<button type="button" onClick={() => setReloadKey((value) => value + 1)}>Refresh</button>} />}
         {(state === "ready" || state === "cached") && visible.length === 0 && (jobs.length === 0
           ? <ProductState
               kind="empty"
-              title="New salary-transparent jobs are coming."
-              action={<Link href="/suggest-a-job">Share a job lead</Link>}
-              links={<Link href="/post-a-job">Hiring? Post a role</Link>}
+              title="Our first jobs with published salaries are on the way."
+              links={<Link href="/post-a-job">Hiring? Post a job</Link>}
             />
           : <ProductState kind="empty" title="No jobs match your filters." action={<button type="button" onClick={clearFilters}>Clear filters</button>} />)}
 

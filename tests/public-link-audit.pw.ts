@@ -2,11 +2,9 @@ import { expect, test } from "@playwright/test";
 
 const publicPages = [
   "/", "/about", "/accessibility", "/account", "/business", "/calculation-notes",
-  "/company-tax", "/contributors", "/creator-tax", "/disclaimer", "/eligible-deductions",
-  "/foreign-income-tax", "/freelancer-tax", "/how-paye-is-calculated", "/investment-tax",
-  "/jobs", "/paye-guide", "/payroll", "/payslip-checker", "/post-a-job", "/privacy",
-  "/salaries", "/salaries-and-jobs", "/security", "/suggest-a-job", "/tax-bands",
-  "/tax-news", "/tax-news/nigeria-tax-act-2025-paycheck-2026", "/tax-tools", "/tax-updates",
+  "/company-tax", "/creator-tax", "/disclaimer", "/foreign-income-tax", "/freelancer-tax", "/how-paye-is-calculated", "/investment-tax",
+  "/jobs", "/payroll", "/payslip-checker", "/post-a-job", "/privacy",
+  "/salaries-and-jobs", "/security", "/tax-tools", "/tax-updates",
   "/terms",
 ];
 
@@ -35,9 +33,10 @@ test("every unique public internal link completes a browser navigation", async (
     const link = page.locator(`a[href="${href.replaceAll('"', '\\"')}"]`).first();
     await expect(link, `${source} should render ${href}`).toBeAttached();
     await link.evaluate((node: HTMLAnchorElement) => node.click());
-    await expect(page, `${source} click should navigate to ${href}`).toHaveURL(
-      new RegExp(`${href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`),
-      { timeout: 10_000 },
-    );
+    const expected = new URL(response.url());
+    const original = new URL(href, expected.origin);
+    if (original.hash) expected.hash = original.hash;
+    await expect(page, `${source} click should navigate to ${href}`).toHaveURL(expected.href, { timeout: 10_000 });
+    if (expected.hash) await expect(page.locator(expected.hash)).toBeAttached();
   }
 });

@@ -2,7 +2,7 @@ import { PublicPageShell } from "@/components/info-page";
 
 export const metadata = { title: "Nigerian Tax Calculators 2026 | SalarySabi", description: "Planning calculators for Nigerian employees, freelancers, creators, foreign income, companies and investors.", alternates: { canonical: "/tax-tools" } };
 const tools = [
-  ["Salary or wages", "/payslip-checker"],
+  ["Salary or wages", "/calculator"],
   ["Freelance or creator income", "/freelancer-tax"],
   ["Foreign income", "/foreign-income-tax"],
   ["Investment income", "/investment-tax"],

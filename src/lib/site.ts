@@ -3,22 +3,24 @@ export const siteUrl =
   "https://salarysabi.com";
 
 export const rulesetName = "Nigeria Tax Act 2025 and JRB guidance for 2026";
-export const rulesVerifiedDate = "29 July 2026";
-export const rulesVerifiedIso = "2026-07-29";
+export const rulesVerifiedDate = "24 September 2026";
+export const rulesVerifiedIso = "2026-09-24";
 export const legalContentUpdatedDate = "21 August 2026";
 export const legalContentUpdatedIso = "2026-08-21";
 export const siteContentUpdatedIso = "2026-08-12";
-export const rulesetVersion = "2026.1";
-export const taxProfessionalReviewDate = "1 September 2026";
-export const taxProfessionalReviewIso = "2026-09-01";
+export const rulesetVersion = "2026.2";
 export const taxActUrl = "https://nass.gov.ng/documents/download/11249";
 export const pitGuidelinesUrl = "https://www.jrb.gov.ng/assets/2026-pit-guidelines-TJG3n9-T.pdf";
 export const pitGuidelinesReleaseUrl = "https://www.jrb.gov.ng/media-center/jrb-releases-pit-guidelines-2026";
-export const rulesUpdateLabel = "Updated after the JRB issued the Personal Income Tax Guidelines 2026 on 7 April 2026";
-export const taxReviewStatus = `Full PAYE methodology independently reviewed by a Nigerian tax professional on ${taxProfessionalReviewDate}`;
+export const taxTransitionUrl = "https://finance.gov.ng/ministry/federal-government-issues-transition-guidelines-for-tax-acts-2025/";
+export const presumptiveTaxUrl = "https://www.jrb.gov.ng/documents/nigeria-presumptive-tax-regulations-2026.pdf";
+export const virtualAssetsTaxUrl = "https://www.jrb.gov.ng/documents/guidelines-on-taxation-of-virtual-assets-jrb.pdf";
+export const withholdingRegulationsUrl = "https://www.jrb.gov.ng/documents/withholding-regulations-2024.pdf";
+export const rulesUpdateLabel = "Official sources checked on 24 September 2026; see supported scenarios and newer guidance in the tax updates";
+export const taxReviewStatus = "Independent tax-professional review has not been completed";
 export const founderLinkedInUrl = "https://www.linkedin.com/in/ozichinwosu";
 export const founderGitHubUrl = "https://github.com/Quietlysolid";
-export const verificationCadence = "Reviewed monthly and after every relevant JRB, NRS or state revenue-authority notice";
+export const verificationCadence = "See the tax changelog for completed checks and supported calculation scenarios";
 
 // Kept as an alias for older consumers while trust copy migrates to the named token.
 export const lastVerified = rulesVerifiedDate;

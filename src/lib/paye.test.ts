@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ANNUAL_NATIONAL_MINIMUM_WAGE, calculatePaye } from "./paye";
 
 describe("calculatePaye", () => {
-  it("matches the official JRB ₦2.4m no-deduction example", () => {
+  it("applies the official bands to ₦2.4m without deductions", () => {
     const result = calculatePaye({ annualGrossIncome: 2_400_000 });
     expect(result.chargeableIncome).toBe(2_400_000);
     expect(result.annualTax).toBe(240_000);

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Bell, Bookmark, BriefcaseBusiness, LockKeyhole } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
@@ -19,6 +19,10 @@ export function JobSeekerAccount() {
   const [message, setMessage] = useState("");
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordRecovery, setPasswordRecovery] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const activeUser = useRef<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -32,16 +36,27 @@ export function JobSeekerAccount() {
       .then(({ data }) => { if (active) setSession(data.session); })
       .catch(() => { if (active) setMessage("We could not check your account session. You can still sign in below."); })
       .finally(() => { if (active) { window.clearTimeout(timeout); setSessionChecked(true); } });
-    const { data } = supabase.auth.onAuthStateChange((_event, next) => { setSession(next); setSessionChecked(true); });
+    const { data } = supabase.auth.onAuthStateChange((event, next) => {
+      const userId = next?.user.id ?? null;
+      if (activeUser.current !== userId) { setSaved([]); setApplications([]); setAlerts([]); setLoadError(false); }
+      activeUser.current = userId;
+      setSession(next); setSessionChecked(true);
+      if (event === "PASSWORD_RECOVERY") setPasswordRecovery(true);
+    });
     return () => { active = false; window.clearTimeout(timeout); data.subscription.unsubscribe(); };
   }, [supabase]);
 
   const load = useCallback(async () => {
+    const userId = activeUser.current;
+    if (!userId) return;
     const [savedResult, applicationResult, alertResult] = await Promise.all([
-      supabase.from("saved_jobs").select("job_id,jobs(slug,title,company_name,expires_at)").order("created_at", { ascending: false }),
-      supabase.from("job_applications").select("job_id,status,jobs(slug,title,company_name)").order("updated_at", { ascending: false }),
-      supabase.from("job_alerts").select("id,keywords,location,work_mode,active").order("created_at", { ascending: false }),
+      supabase.from("saved_jobs").select("job_id,jobs(slug,title,company_name,expires_at)").order("created_at", { ascending: false }).abortSignal(AbortSignal.timeout(15000)),
+      supabase.from("job_applications").select("job_id,status,jobs(slug,title,company_name)").order("updated_at", { ascending: false }).abortSignal(AbortSignal.timeout(15000)),
+      supabase.from("job_alerts").select("id,keywords,location,work_mode,active").order("created_at", { ascending: false }).abortSignal(AbortSignal.timeout(15000)),
     ]);
+    if (activeUser.current !== userId) return;
+    if (savedResult.error || applicationResult.error || alertResult.error) { setLoadError(true); return; }
+    setLoadError(false);
     setSaved((savedResult.data ?? []) as unknown as SavedJobRow[]);
     setApplications((applicationResult.data ?? []) as unknown as ApplicationJobRow[]);
     setAlerts(alertResult.data ?? []);
@@ -68,8 +83,34 @@ export function JobSeekerAccount() {
     const form = event.currentTarget.form;
     const email = form ? String(new FormData(form).get("email") || "") : "";
     if (!email) { setMessage("Enter your email first, then choose Forgot password."); return; }
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/account` });
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/account?recovery=1` });
     setMessage(error ? "We could not send the reset email. Try again shortly." : "Check your email for a password reset link.");
+  }
+
+  async function updatePassword(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const password = String(data.get("password") || "");
+    if (password !== data.get("confirmation")) { setMessage("The passwords do not match."); return; }
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) { setMessage("We could not update your password. Request a new reset link and try again."); return; }
+      setPasswordRecovery(false); setMessage("Password updated.");
+      window.history.replaceState({}, "", "/account");
+    } catch { setMessage("We could not update your password. Please try again."); }
+    finally { setBusy(false); }
+  }
+
+  async function createAlert(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); if (!session || busy) return;
+    const form = event.currentTarget; const data = new FormData(form); setBusy(true);
+    try {
+      const { error } = await supabase.from("job_alerts").insert({ user_id: session.user.id, email: session.user.email?.toLowerCase(), keywords: String(data.get("keywords") || "").trim(), location: String(data.get("location") || "").trim(), work_mode: data.get("work_mode"), consented_at: new Date().toISOString() });
+      if (error) setMessage("We could not save your alert. Please try again.");
+      else { form.reset(); setMessage("Job alert saved."); track("job_alert_created"); await load(); }
+    } catch { setMessage("We could not confirm your alert was saved. Refresh your alerts before retrying."); }
+    finally { setBusy(false); }
   }
 
   async function updateApplication(jobId: string, status: string) { const { error } = await supabase.from("job_applications").update({ status, updated_at: new Date().toISOString() }).eq("job_id", jobId); if (error) setMessage(error.message); else await load(); }
@@ -77,6 +118,8 @@ export function JobSeekerAccount() {
   async function removeAlert(id: string) { const { error } = await supabase.from("job_alerts").delete().eq("id", id); if (error) setMessage(error.message); else await load(); }
 
   if (!sessionChecked) return <section className="account-loading"><ProductState kind="loading" title="Loading your job search" detail="Checking your private workspace and account session." /></section>;
+
+  if (passwordRecovery && session) return <form className="account-access" onSubmit={updatePassword}><h1>Set a new password</h1><label>New password<input name="password" type="password" autoComplete="new-password" minLength={8} required /></label><label>Confirm password<input name="confirmation" type="password" autoComplete="new-password" minLength={8} required /></label><button className="primary-button" disabled={busy} type="submit">Save new password</button><p role="status">{message}</p></form>;
 
   if (!session) return (
     <section className="account-gateway">
@@ -110,5 +153,7 @@ export function JobSeekerAccount() {
     </section>
   );
 
-  return <JobWorkspace email={session.user.email ?? "Signed-in user"} saved={saved} applications={applications} alerts={alerts} message={message} onSignOut={() => { void supabase.auth.signOut(); }} onRemoveSaved={(jobId) => { void removeSaved(jobId); }} onUpdateApplication={(jobId, status) => { void updateApplication(jobId, status); }} onRemoveAlert={(id) => { void removeAlert(id); }} />;
+  if (loadError) return <ProductState kind="error" title="Your job workspace could not be loaded" detail="Your saved jobs and alerts have not been removed." action={<button type="button" onClick={() => void load()}>Try again</button>} />;
+
+  return <JobWorkspace onCreateAlert={createAlert} busy={busy} email={session.user.email ?? "Signed-in user"} saved={saved} applications={applications} alerts={alerts} message={message} onSignOut={() => { void supabase.auth.signOut(); }} onRemoveSaved={(jobId) => { void removeSaved(jobId); }} onUpdateApplication={(jobId, status) => { void updateApplication(jobId, status); }} onRemoveAlert={(id) => { void removeAlert(id); }} />;
 }

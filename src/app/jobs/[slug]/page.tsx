@@ -1,3 +1,4 @@
+import { jobPayContext } from "@/lib/job-pay-context";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -140,6 +141,10 @@ export default async function JobPage({
             </>
           )}
         </section>
+        <nav className="connected-next" aria-label="Explore this salary">
+          {jobPayContext(job) ? <Link href={`/calculator?job=${encodeURIComponent(job.slug)}`}>Estimate take-home pay for this role</Link> : <p>Automatic take-home estimates require Nigerian employee gross pay in NGN. Confirm the salary basis with the employer.</p>}
+          <Link href="/salaries">Explore community salary ranges</Link>
+        </nav>
         <section className="job-detail-description">
           <h2>About this job</h2>
           <p>{overview}</p>

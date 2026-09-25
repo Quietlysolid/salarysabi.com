@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, ChevronDown, CircleAlert, CircleCheck, Copy, ShieldCheck } from "lucide-react";
 import { checkPayslip } from "@/lib/payslip";
@@ -23,17 +23,20 @@ const initialValues: Values = {
 const money = new Intl.NumberFormat("en-NG", {
   style: "currency",
   currency: "NGN",
-  maximumFractionDigits: 0,
+  maximumFractionDigits: 2,
 });
 
 function parseMoney(value: string) {
-  const number = Number(value.replace(/[^\d.]/g, ""));
+  const number = Number(value.replace(/[^\d.\-]/g, ""));
   return Number.isFinite(number) ? number : 0;
 }
 
 function formatInput(value: string) {
-  const digits = value.replace(/\D/g, "");
-  return digits ? Number(digits).toLocaleString("en-NG") : "";
+  if (value.includes("-")) return value;
+  const clean = value.replace(/[^\d.]/g, "");
+  const [whole, ...fraction] = clean.split(".");
+  const integer = whole ? Number(whole).toLocaleString("en-NG") : "";
+  return fraction.length ? `${integer || "0"}.${fraction.join("").slice(0, 2)}` : integer;
 }
 
 function questionsForPayroll(comparison: "close" | "higher" | "lower") {
@@ -51,17 +54,21 @@ function questionsForPayroll(comparison: "close" | "higher" | "lower") {
   ];
 }
 
-export function PayslipChecker() {
-  const [values, setValues] = useState(initialValues);
+const subscribeToReady = () => () => {};
+
+export function PayslipChecker({ initialMode = "calculate", offer, unavailableOffer = false }: { initialMode?: "calculate" | "check"; unavailableOffer?: boolean; offer?: { title: string; slug: string; minimum: number; maximum: number } }) {
+  const ready = useSyncExternalStore(subscribeToReady, () => true, () => false);
+  const [mode, setMode] = useState<"calculate" | "check">(initialMode);
+  const [error, setError] = useState("");
+  const [values, setValues] = useState({ ...initialValues, gross: offer ? formatInput(String(Math.round(offer.minimum * 100) / 100)) : "" });
   const [checked, setChecked] = useState(false);
-  const [showOptional, setShowOptional] = useState(false);
   const [carriedSalary, setCarriedSalary] = useState(false);
   const [questionsCopied, setQuestionsCopied] = useState(false);
-  const [deductionInterest, setDeductionInterest] = useState<"yes" | "no" | null>(null);
+
   const resultRef = useRef<HTMLElement>(null);
   const checkStarted = useRef(false);
   const checkCompleted = useRef(false);
-  const deductionInterestRecorded = useRef(false);
+
   const monthlyGross = parseMoney(values.gross);
   const enteredPaye = parseMoney(values.paye);
   const result = useMemo(
@@ -78,6 +85,16 @@ export function PayslipChecker() {
     [enteredPaye, monthlyGross, values.nhf, values.nhis, values.other, values.pension, values.rent],
   );
   useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("from") === "home") {
+      let gross = "";
+      try { gross = window.sessionStorage.getItem("salarysabi:home-gross") ?? ""; } catch { return; }
+      if (!Number.isFinite(Number(gross)) || Number(gross) <= 0 || Number(gross) > 1_000_000_000) return;
+      const timer = window.setTimeout(() => {
+        setValues((current) => ({ ...current, gross: formatInput(gross) }));
+        setCarriedSalary(true);
+      }, 0);
+      return () => window.clearTimeout(timer);
+    }
     if (new URLSearchParams(window.location.search).get("from") !== "calculator") return;
     const context = readPayContext(window.localStorage);
     if (!context || parseMoney(context.values.gross) <= 0) return;
@@ -87,6 +104,7 @@ export function PayslipChecker() {
     const restoreTimer = window.setTimeout(() => {
       setValues((current) => ({ ...current, gross: formatInput(String(restoredGross)) }));
       setCarriedSalary(true);
+      setMode("check");
     }, 0);
     return () => window.clearTimeout(restoreTimer);
   }, []);
@@ -95,7 +113,7 @@ export function PayslipChecker() {
     if (!checked) return;
     const focusTimer = window.setTimeout(() => {
       if (window.matchMedia("(max-width: 900px)").matches) {
-        resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        resultRef.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
       }
       resultRef.current?.focus({ preventScroll: true });
     }, 0);
@@ -104,19 +122,27 @@ export function PayslipChecker() {
 
   function update(field: Field, value: string) {
     if (!checkStarted.current) {
-      track("payslip_check_started");
+      track(mode === "check" ? "payslip_check_started" : "paye_input_started");
       checkStarted.current = true;
     }
     setValues((current) => ({ ...current, [field]: formatInput(value) }));
+    setError("");
     setChecked(false);
     setQuestionsCopied(false);
   }
 
   function submit(event: FormEvent) {
     event.preventDefault();
+    if (Object.values(values).some(value => value.includes("-") || !Number.isFinite(Number(value.replace(/,/g, ""))))) { setError("Enter valid, non-negative amounts."); return; }
+    const deductions = ["pension", "nhf", "nhis", "other"].reduce((sum, field) => sum + parseMoney(values[field as Field]), 0);
+    if (monthlyGross <= 0) { setError("Enter a monthly gross salary greater than zero."); return; }
+    if (deductions + (mode === "check" ? enteredPaye : result.expectedMonthlyPaye) > monthlyGross) {
+      setError("Deductions exceed your gross pay. Check the monthly amounts entered."); return;
+    }
+    setError("");
     setChecked(true);
     if (!checkCompleted.current) {
-      track("payslip_checked");
+      track(mode === "check" ? "payslip_checked" : "paye_calculated");
       checkCompleted.current = true;
     }
   }
@@ -129,27 +155,13 @@ export function PayslipChecker() {
     result.comparison === "close"
       ? "Your payslip PAYE is within SalarySabi’s comparison tolerance. Keep the payroll breakdown with your records."
       : "Check the monthly figures you entered, then ask payroll to explain the difference before treating it as an error.";
-  const verdict = {
-    looks_consistent: {
-      label: "Looks consistent",
-      detail: "No material PAYE difference found.",
-    },
-    review_recommended: {
-      label: "Review recommended",
-      detail: "There is a difference worth confirming with payroll.",
-    },
-    likely_discrepancy: {
-      label: "Likely discrepancy",
-      detail: "There is a large difference worth investigating.",
-    },
-  }[result.verdict];
   const payrollQuestions = questionsForPayroll(result.comparison);
   const deductions = [
     {
       label: "PAYE",
-      amount: enteredPaye,
+      amount: mode === "check" ? enteredPaye : result.expectedMonthlyPaye,
       suffix: "",
-      explanation: "Income tax withheld on this payslip. SalarySabi compares this with the 2026 PAYE estimate.",
+      explanation: "Monthly income tax. Calculated from your inputs in estimate mode.",
       show: true,
     },
     {
@@ -202,19 +214,18 @@ export function PayslipChecker() {
     }
   }
 
-  function recordDeductionInterest(response: "yes" | "no") {
-    if (deductionInterestRecorded.current) return;
-    setDeductionInterest(response);
-    track(response === "yes" ? "deduction_tracker_interest_yes" : "deduction_tracker_interest_no");
-    deductionInterestRecorded.current = true;
-  }
-
   return (
     <div className={`payslip-live-workspace${checked ? " has-result" : " is-idle"}`}>
       <div className="payslip-live-entry">
         <section className="payslip-live-hero">
           <span className="eyebrow">Your Pay Check</span>
-          <h1>Know if your pay looks right.</h1>
+          {unavailableOffer && <p role="status">We could not carry this listing into the calculator. Enter a confirmed monthly gross amount in naira to continue.</p>}
+          {offer && <aside className="connected-context"><strong>From {offer.title}</strong><p>Advertised monthly gross: {money.format(offer.minimum)} to {money.format(offer.maximum)}. Start with either end, or enter your offer.</p><button type="button" onClick={() => update("gross", String(Math.round(offer.minimum * 100) / 100))}>Use minimum</button>{offer.maximum !== offer.minimum && <button type="button" onClick={() => update("gross", String(Math.round(offer.maximum * 100) / 100))}>Use maximum</button>}<Link href={`/jobs/${offer.slug}`}>Back to listing</Link></aside>}
+          <h1>{mode === "calculate" ? "Know your take-home pay." : "Check your payslip."}</h1>
+          <p>{mode === "calculate" ? "Estimate what reaches your account after tax and deductions." : "Compare the PAYE on your payslip with our estimate."}</p>
+          <div className="pay-mode-switch" role="group" aria-label="Choose your pay tool">
+            {(["calculate", "check"] as const).map((option) => <a key={option} href={option === "check" ? "/calculator?mode=check" : "/calculator"} aria-current={mode === option ? "page" : undefined} onClick={(event) => { event.preventDefault(); window.history.replaceState({}, "", option === "check" ? "/calculator?mode=check" : "/calculator"); setMode(option); setChecked(false); setError(""); checkStarted.current = false; checkCompleted.current = false; }}>{option === "calculate" ? "Calculate take-home" : "Check my payslip"}</a>)}
+          </div>
           <div className="payslip-trust-row" aria-label="Privacy and calculation freshness">
             <ShieldCheck aria-hidden="true" />
             <span><strong>Private in your browser</strong></span>
@@ -222,6 +233,10 @@ export function PayslipChecker() {
         </section>
 
         <form className="payslip-live-form" onSubmit={submit}>
+          {!ready && <p role="status">Starting calculator...</p>}
+          <noscript>Enable JavaScript to calculate your pay.</noscript>
+          <fieldset className="pay-ready-fields" disabled={!ready}>
+          <p className="pay-period-note">Enter monthly amounts in naira. Annual rent is labelled separately.</p>
           {carriedSalary && (
             <div className="payslip-carried-context" role="status">
               <span>Carried from your PAYE estimate</span>
@@ -232,62 +247,58 @@ export function PayslipChecker() {
             </div>
           )}
           <div className="payslip-fields payslip-required-fields">
-            <MoneyField label="Gross pay" help="Gross pay or Total earnings on your payslip." field="gross" value={values.gross} update={update} placeholder="500,000" required />
-            <MoneyField label="PAYE deducted" help="PAYE or Income tax on your payslip." field="paye" value={values.paye} update={update} placeholder="45,000" required />
-            <MoneyField label="Pension deducted" help="Enter the employee pension on your payslip, or 0 if none is shown." field="pension" value={values.pension} update={update} placeholder="40,000" required />
+            <MoneyField label="Monthly gross pay" help="Your salary before tax and deductions." field="gross" value={values.gross} update={update} placeholder="500,000" required />
+            {mode === "check" && <MoneyField label="PAYE deducted" help="PAYE or Income tax on your payslip." field="paye" value={values.paye} update={update} placeholder="45,000" required />}
+            {mode === "check" && <MoneyField label="Pension deducted" help="Enter the employee pension on your payslip, or 0 if none is shown." field="pension" value={values.pension} update={update} placeholder="40,000" required />}
           </div>
-          <button className="primary-button payslip-live-submit" type="submit">Check my PAYE <ArrowRight aria-hidden="true" /></button>
-          <button className="payslip-optional-toggle" type="button" aria-expanded={showOptional} onClick={() => setShowOptional((current) => !current)}>
-            <span><strong>Optional deductions</strong><small>Add them for a more useful take-home breakdown.</small></span>
+
+          <details className="payslip-deductions"><summary className="payslip-optional-toggle">
+            <span><strong>Deductions &amp; reliefs</strong><small>{mode === "calculate" ? "Optional. Blank amounts are treated as zero." : "Add other deductions and annual rent."}</small></span>
             <ChevronDown aria-hidden="true" />
-          </button>
-          {showOptional && (
+          </summary>
             <div className="payslip-fields payslip-optional-fields">
+              {mode === "calculate" && <MoneyField label="Monthly pension" field="pension" value={values.pension} update={update} placeholder="0" />}
               <MoneyField label="NHF" field="nhf" value={values.nhf} update={update} placeholder="10,000" />
               <MoneyField label="NHIS contribution" help="Enter only an eligible NHIS contribution shown on the payslip." field="nhis" value={values.nhis} update={update} placeholder="5,000" />
               <MoneyField label="Annual rent paid" help="Used to calculate rent relief. It is not counted as a payslip deduction." field="rent" value={values.rent} update={update} placeholder="1,200,000" />
               <MoneyField label="Other deductions" field="other" value={values.other} update={update} placeholder="12,000" />
             </div>
-          )}
+          </details>
+          {error && <p className="pay-form-error" role="alert">{error}</p>}
+          <button className="primary-button payslip-live-submit" type="submit">{mode === "calculate" ? "Calculate take-home pay" : "Check my PAYE"}<ArrowRight aria-hidden="true" /></button>
+          </fieldset>
         </form>
       </div>
 
       {checked && <section className={`payslip-live-result is-${result.comparison}`} ref={resultRef} tabIndex={-1} aria-labelledby="payslip-result-title" aria-live="polite">
         <span className="eyebrow">Your Pay Check</span>
-        <div className={`pay-check-verdict is-${result.verdict}`}>
-          {result.verdict === "looks_consistent" ? <CircleCheck aria-hidden="true" /> : <CircleAlert aria-hidden="true" />}
-          <div>
-            <small>Verdict</small>
-            <strong>{verdict.label}</strong>
-            <span>{verdict.detail}</span>
-          </div>
-        </div>
-        <h2 id="payslip-result-title">{comparisonTitle}</h2>
-        <p className="pay-check-caveat">This is an independent estimate, not proof of a payroll error. Bonuses, benefits, arrears and payroll adjustments can change PAYE.</p>
-
-        <div className="payslip-result-comparison" aria-label={`Your payslip PAYE is ${money.format(enteredPaye)} and the SalarySabi estimate is ${money.format(result.expectedMonthlyPaye)}`}>
-          <div><span>PAYE on your payslip</span><strong>{money.format(enteredPaye)}</strong></div>
-          <div><span>SalarySabi PAYE estimate</span><strong>{money.format(result.expectedMonthlyPaye)}</strong></div>
-        </div>
+        <h2 id="payslip-result-title">{mode === "calculate" ? "Your estimated take-home" : result.comparison === "close" ? "Your PAYE matches our estimate closely." : "Your PAYE differs from our estimate."}</h2>
+        <p className="pay-check-caveat">{mode === "calculate" ? "Based on the current 2026 calculation rules and the deductions you entered. Blank deductions are treated as zero." : "An estimate, not proof of a payroll error. Bonuses, benefits and payroll adjustments can change PAYE."}</p>
+        {mode === "check" && <><p>{comparisonTitle} Compared with our estimate.</p>
+        <div className="payslip-result-comparison">
+          <div><span>Monthly PAYE on your payslip</span><strong>{money.format(enteredPaye)}</strong></div>
+          <div><span>Estimated monthly PAYE</span><strong>{money.format(result.expectedMonthlyPaye)}</strong></div>
+        </div></>}
 
         <div className="payslip-result-equation" aria-label={`${money.format(monthlyGross)} gross salary minus estimated PAYE and entered deductions equals ${money.format(result.expectedTakeHome)} expected take-home pay`}>
-          <span>Expected take-home with entered deductions</span>
+          <span>Estimated take-home per month</span>
           <strong>{money.format(result.expectedTakeHome)}</strong>
           <small>{money.format(monthlyGross)} gross − {money.format(result.expectedMonthlyPaye)} estimated PAYE − {money.format(result.totalDeductions - enteredPaye)} other entered deductions</small>
         </div>
 
-        <div className={`payslip-live-status is-${result.comparison}`}>
+        {mode === "check" && <div className={`payslip-live-status is-${result.comparison}`}>
           {result.comparison === "close" ? <CircleCheck aria-hidden="true" /> : <CircleAlert aria-hidden="true" />}
           <div>
             <strong>What to do next</strong>
             <span>{comparisonGuidance}</span>
           </div>
-        </div>
+        </div>}
 
+        <details className="pay-result-details"><summary>View calculation breakdown</summary>
         <section className="pay-check-breakdown" aria-labelledby="pay-check-breakdown-title">
           <div className="pay-check-section-heading">
             <span>What each amount means</span>
-            <h3 id="pay-check-breakdown-title">Your entered deductions</h3>
+            <h3 id="pay-check-breakdown-title">{mode === "check" ? "Your entered deductions" : "Your calculation"}</h3>
           </div>
           <dl>
             {deductions.map((deduction) => (
@@ -297,16 +308,18 @@ export function PayslipChecker() {
               </div>
             ))}
             <div className="is-total">
-              <dt><strong>Total entered deductions</strong><span>PAYE plus every optional deduction you entered.</span></dt>
-              <dd>{money.format(result.totalDeductions)}</dd>
+              <dt><strong>Total deductions</strong><span>PAYE plus pension and other deductions.</span></dt>
+              <dd>{money.format(mode === "check" ? result.totalDeductions : result.totalDeductions - enteredPaye + result.expectedMonthlyPaye)}</dd>
             </div>
             <div className="is-take-home">
-              <dt><strong>Take-home from entered figures</strong><span>Gross pay minus the deductions entered above.</span></dt>
-              <dd>{money.format(result.estimatedTakeHome)}</dd>
+              <dt><strong>{mode === "check" ? "Take-home from your payslip figures" : "Estimated monthly take-home"}</strong><span>Gross pay minus the deductions entered above.</span></dt>
+              <dd>{money.format(mode === "check" ? result.estimatedTakeHome : result.expectedTakeHome)}</dd>
             </div>
           </dl>
         </section>
 
+        </details>
+        {mode === "check" && <details className="pay-result-details"><summary>Questions to ask payroll</summary>
         <section className="pay-check-payroll" aria-labelledby="payroll-questions-title">
           <div className="pay-check-section-heading">
             <span>Do not argue from the estimate</span>
@@ -321,29 +334,15 @@ export function PayslipChecker() {
           </button>
         </section>
 
-        <section className="pay-check-research" aria-labelledby="deduction-tracker-question">
-          <span>Help choose what SalarySabi builds next</span>
-          <h3 id="deduction-tracker-question">Would you like SalarySabi to help confirm whether your PAYE and pension deductions were actually remitted?</h3>
-          <p>Your response records only yes or not now. SalarySabi does not send the pay figures you entered.</p>
-          {deductionInterest === null ? (
-            <div>
-              <button type="button" onClick={() => recordDeductionInterest("yes")}>Yes, help me track it</button>
-              <button type="button" onClick={() => recordDeductionInterest("no")}>Not now</button>
-            </div>
-          ) : (
-            <p className="pay-check-research-response" role="status">
-              <Check aria-hidden="true" />
-              {deductionInterest === "yes"
-                ? "Thank you. Your interest was recorded without your pay figures."
-                : "Thanks. We recorded ‘not now’ and nothing from your payslip."}
-            </p>
-          )}
-        </section>
+        </details>}
 
+        <div className="connected-next">
+          {mode === "calculate" && <button type="button" onClick={() => { setMode("check"); setChecked(false); setError(""); window.history.replaceState({}, "", "/calculator?mode=check"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Check my payslip with these figures <ArrowRight aria-hidden="true" /></button>}
+          <Link href="/salaries">Explore or share salary knowledge <ArrowRight aria-hidden="true" /></Link>
+        </div>
         <nav className="pay-check-next-actions" aria-label="Your Pay Check next actions">
           <span>Choose your next move</span>
           <Link href="/how-paye-is-calculated">Understand PAYE <ArrowRight aria-hidden="true" /></Link>
-          <Link href="/salaries">Compare my salary <ArrowRight aria-hidden="true" /></Link>
           <Link href="/jobs">See jobs with published pay <ArrowRight aria-hidden="true" /></Link>
         </nav>
       </section>}
@@ -363,8 +362,8 @@ function MoneyField({ label, help, field, value, update, placeholder, required =
   return (
     <label>
       <span>{label}</span>
-      {help && <small>{help}</small>}
-      <div><span aria-hidden="true">₦</span><input inputMode="numeric" value={value} onChange={(event) => update(field, event.target.value)} placeholder={placeholder} required={required} /></div>
+      {help && <small id={`pay-${field}-help`}>{help}</small>}
+      <div><span aria-hidden="true">₦</span><input aria-describedby={help ? `pay-${field}-help` : undefined} inputMode="decimal" value={value} onChange={(event) => update(field, event.target.value)} placeholder={placeholder} required={required} /></div>
     </label>
   );
 }

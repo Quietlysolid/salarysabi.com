@@ -22,8 +22,8 @@ describe("route-owned style isolation", () => {
     expect(css).toMatch(/a\.primary-button:focus-visible,[^}]*outline:\s*3px solid var\(--button-focus-ring,\s*var\(--ink\)\);/s);
   });
 
-  it("keeps the disclaimer ledger under a disclaimer namespace", () => {
-    expect(disclaimer).toContain('className="disclaimer-summary-grid"');
+  it("keeps the retired disclaimer route pointed at the terms", () => {
+    expect(disclaimer).toContain('permanentRedirect("/terms#estimates")');
     expect(disclaimer).not.toMatch(/className="evidence-(page|row|ledger|actions)/);
     expect(css).not.toMatch(/(^|[\s,{])\.evidence-row(?=[\s:{>,.#])/m);
   });
@@ -31,7 +31,7 @@ describe("route-owned style isolation", () => {
   it("does not reuse critical ledger row classes across routes", () => {
     expect(methodology).toContain('className="methodology-evidence-row"');
     expect(methodology).not.toContain("disclaimer-ledger-row");
-    expect(privacy).toContain('className="privacy-ledger-row"');
+    expect(privacy).toContain('className="privacy-feature-list"');
     expect(privacy).not.toContain("disclaimer-ledger-row");
   });
 
@@ -68,7 +68,7 @@ describe("sitewide typography contract", () => {
   });
 
   it("gives job and account titles the shared display treatment", () => {
-    expect(css).toMatch(/#main-content\s+:is\([\s\S]*\.job-detail-heading,[\s\S]*\.account-preview,[\s\S]*\) h1 \{[\s\S]*font-family:\s*var\(--font-display\);/);
+    expect(css).toMatch(/#main-content h1:not\(\.admin-shell \*, \.admin-login \*\),[^{}]*\{[^}]*font-family:\s*var\(--font-display\);/);
   });
 
   it("does not duplicate fallback families already owned by font tokens", () => {

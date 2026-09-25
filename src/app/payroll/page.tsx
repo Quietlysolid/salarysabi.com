@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function PayrollPage() {
-  return <PublicPageShell><PayrollWorkspace /></PublicPageShell>;
+export default async function PayrollPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
+  const { view } = await searchParams;
+  return <PublicPageShell><PayrollWorkspace initialView={view === "team" ? "team" : "run"} /></PublicPageShell>;
 }

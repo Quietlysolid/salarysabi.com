@@ -1,5 +1,8 @@
 node_modules
 .next
+.next-staging/
+.next-staging-dev/
+scripts/__pycache__/
 .open-next
 .open-next-stale-*/
 .open-next-locked-*/
@@ -12,6 +15,8 @@ playwright-report/
 test-results/
 .env
 .env.local
+.env.*
+!.env.example
 *.log
 *.tsbuildinfo
 launch-site.tar.gz

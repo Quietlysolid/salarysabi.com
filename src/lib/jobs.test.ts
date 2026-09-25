@@ -11,6 +11,7 @@ import {
 } from "./jobs";
 
 const job: Job = {
+  salary_currency: "NGN", salary_source: "employer_disclosed", source_kind: "official_page", source_name: null, source_job_id: null, canonical_url: null, source_last_seen_at: null, global_remote: false, engagement_type: "employee",
   id: "1",
   slug: "frontend-developer-example-limited-12345678",
   title: "Frontend Developer",

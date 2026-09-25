@@ -21,8 +21,16 @@ export async function GET(request: Request) {
   const requestedLimit = positiveInteger(url.searchParams.get("limit"), DEFAULT_PAGE_SIZE);
   const limit = Math.min(requestedLimit, MAX_PAGE_SIZE);
   const offset = (page - 1) * limit;
+  if (!Number.isSafeInteger(offset) || !Number.isSafeInteger(offset + limit - 1)) {
+    return NextResponse.json({ error: "Page is out of range." }, {
+      status: 400, headers: { "Cache-Control": "no-store" },
+    });
+  }
 
-  const { env } = getCloudflareContext();
+  // The isolated local staging runner uses Node, without Workers bindings.
+  // Public deployments continue to require the Cloudflare context.
+  const localStaging = process.env.SALARYSABI_STAGING === "1" && ["localhost", "127.0.0.1"].includes(url.hostname);
+  const { env } = localStaging ? { env: {} } : getCloudflareContext();
   const limiter = (env as unknown as { JOBS_API_RATE_LIMITER?: RateLimiter }).JOBS_API_RATE_LIMITER;
   if (limiter) {
     const requester = request.headers.get("cf-connecting-ip") || "anonymous";

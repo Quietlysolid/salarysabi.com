@@ -14,14 +14,14 @@ export function JobActions({ jobId }: { jobId: string }) {
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       const id = data.user?.id ?? null;
-      setUserId(id);
-      if (!id) return;
+      if (!id) { setUserId(null); return; }
       const [savedResult, appliedResult] = await Promise.all([
         supabase.from("saved_jobs").select("job_id").eq("job_id", jobId).maybeSingle(),
         supabase.from("job_applications").select("job_id").eq("job_id", jobId).maybeSingle(),
       ]);
       setSaved(Boolean(savedResult.data));
       setApplied(Boolean(appliedResult.data));
+      setUserId(id);
     });
   }, [jobId, supabase]);
 

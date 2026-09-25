@@ -1,34 +1,39 @@
-import { createClient } from "npm:@supabase/supabase-js@2";
+﻿import { createClient } from "npm:@supabase/supabase-js@2";
 
-const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
+  auth: { persistSession: false },
+  global: { fetch: (input, init) => fetch(input, { ...init, signal: AbortSignal.timeout(5000) }) },
+});
 
 Deno.serve(async request => {
   if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
-  const { data: authorized } = await supabase.rpc("verify_job_alert_cron_secret", { p_secret: request.headers.get("x-cron-secret") || "" });
-  if (!authorized) return new Response("Unauthorized", { status: 401 });
-  const { data: jobs, error } = await supabase.from("jobs").select("id,application_url,stale_check_failures").eq("status", "published").not("source_job_id", "is", null).limit(250);
-  if (error) return Response.json({ error: error.message }, { status: 500 });
-  const result = { checked: 0, healthy: 0, expired: 0, heldForReview: 0 };
-  for (const job of jobs || []) {
-    result.checked++;
-    try {
-      const response = await fetch(job.application_url, { method: "GET", redirect: "follow", signal: AbortSignal.timeout(12000), headers: { "user-agent": "SalarySabi job freshness checker/1.0 (+https://salarysabi.com/jobs)" } });
-      if (response.ok) {
-        result.healthy++;
-        await supabase.from("jobs").update({ stale_check_failures: 0, last_availability_check_at: new Date().toISOString(), source_last_seen_at: new Date().toISOString() }).eq("id", job.id);
-      } else if (response.status === 404 || response.status === 410) {
-        result.expired++;
-        await supabase.from("jobs").update({ status: "expired", stale_check_failures: (job.stale_check_failures || 0) + 1, last_availability_check_at: new Date().toISOString() }).eq("id", job.id);
-      } else {
-        const failures = (job.stale_check_failures || 0) + 1;
-        if (failures >= 3) result.heldForReview++;
-        await supabase.from("jobs").update({ status: failures >= 3 ? "draft" : "published", stale_check_failures: failures, last_availability_check_at: new Date().toISOString() }).eq("id", job.id);
-      }
-    } catch {
-      const failures = (job.stale_check_failures || 0) + 1;
-      if (failures >= 3) result.heldForReview++;
-      await supabase.from("jobs").update({ status: failures >= 3 ? "draft" : "published", stale_check_failures: failures, last_availability_check_at: new Date().toISOString() }).eq("id", job.id);
+  const started = Date.now();
+  const result = { checked: 0, healthy: 0, expired: 0, heldForReview: 0, unavailable: 0, changed: 0, failures: [] as string[] };
+  try {
+    const auth = await supabase.rpc("verify_job_alert_cron_secret", { p_secret: request.headers.get("x-cron-secret") || "" });
+    if (auth.error) throw auth.error;
+    if (!auth.data) return new Response("Unauthorized", { status: 401 });
+    while (result.checked < 20 && Date.now() - started < 20000) {
+      const claimed = await supabase.rpc("claim_job_freshness");
+      if (claimed.error) throw claimed.error;
+      const job = claimed.data?.[0];
+      if (!job) return Response.json(result);
+      let status = 0;
+      try {
+        const response = await fetch(job.application_url, { redirect: "follow", signal: AbortSignal.timeout(8000),
+          headers: { "user-agent": "SalarySabi job freshness checker/2.0 (+https://salarysabi.com/jobs)" } });
+        status = response.status;
+        await response.body?.cancel();
+      } catch { /* An unavailable page is an observation, not a successful check. */ }
+      const saved = await supabase.rpc("finish_job_freshness", { p_job_id: job.job_id, p_token: job.claim_token, p_status: status });
+      if (saved.error) throw saved.error;
+      result.checked++;
+      const outcome = saved.data as "healthy" | "expired" | "heldForReview" | "unavailable" | "changed";
+      result[outcome]++;
     }
+    return Response.json(result, { status: 202 });
+  } catch (error) {
+    result.failures.push(error instanceof Error ? error.message : String((error as { message?: string }).message || error));
+    return Response.json(result, { status: 503 });
   }
-  return Response.json(result);
 });

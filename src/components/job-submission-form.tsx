@@ -1,6 +1,8 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { createBrowserSupabaseClient } from "@/lib/supabase";
 import { Check } from "lucide-react";
 import { track } from "./analytics";
 
@@ -14,6 +16,7 @@ type Preview = {
   salaryMax: number;
   salaryPeriod: string;
   salaryType: string;
+  currency: string;
 };
 
 type FormErrors = Record<string, string>;
@@ -28,19 +31,32 @@ const initialPreview: Preview = {
   salaryMax: 0,
   salaryPeriod: "monthly",
   salaryType: "gross",
+  currency: "NGN",
 };
 
-function money(value: number) {
-  return value > 0 ? `₦${value.toLocaleString("en-NG")}` : "Not set";
+function money(value: number, currency: string) {
+  return value > 0 ? new Intl.NumberFormat("en-NG", { style: "currency", currency, maximumFractionDigits: 0 }).format(value) : "Not set";
+}
+function tomorrow() {
+  const date = new Date(); date.setDate(date.getDate() + 1);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
 export function JobSubmissionForm() {
+  const [accountState, setAccountState] = useState<"checking" | "signed-in" | "guest">("checking");
+  const [submittedWithAccount, setSubmittedWithAccount] = useState(false);
+  useEffect(() => {
+    const { data } = createBrowserSupabaseClient().auth.onAuthStateChange((_event, session) => setAccountState(session ? "signed-in" : "guest"));
+    return () => data.subscription.unsubscribe();
+  }, []);
   const [step, setStep] = useState(1);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [submitterType, setSubmitterType] = useState<"employer" | "recruiter">("employer");
   const [preview, setPreview] = useState<Preview>(initialPreview);
   const [errors, setErrors] = useState<FormErrors>({});
+  const submittingRef = useRef(false);
+  const panelRef = useRef<HTMLElement>(null);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
 
   function updatePreview(form: HTMLFormElement) {
@@ -59,6 +75,7 @@ export function JobSubmissionForm() {
       salaryMax: Number(data.get("salary_max")) || 0,
       salaryPeriod: String(data.get("salary_period") || "monthly"),
       salaryType: String(data.get("salary_type") || "gross"),
+      currency: String(data.get("salary_currency") || "NGN"),
     });
   }
 
@@ -67,10 +84,16 @@ export function JobSubmissionForm() {
       form.querySelectorAll<HTMLElement>(`[data-step="${activeStep}"] input, [data-step="${activeStep}"] select, [data-step="${activeStep}"] textarea`),
     );
     const nextErrors: FormErrors = {};
+    (form.elements.namedItem("salary_max") as HTMLInputElement)?.setCustomValidity("");
     for (const field of fields) {
       const input = field as HTMLInputElement;
       if (!input.name || input.checkValidity()) continue;
       nextErrors[input.name] = input.validationMessage;
+    }
+    if (activeStep === 3) {
+      const deadline = form.elements.namedItem("expires_at") as HTMLInputElement;
+      deadline.min = tomorrow();
+      if (!deadline.checkValidity()) nextErrors.expires_at = "Choose a future application deadline.";
     }
     if (activeStep === 2) {
       const min = Number(new FormData(form).get("salary_min"));
@@ -104,14 +127,16 @@ export function JobSubmissionForm() {
   function goNext(form: HTMLFormElement) {
     if (validateStep(form, step)) {
       setStep((current) => Math.min(3, current + 1));
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.requestAnimationFrame(() => panelRef.current?.focus());
     }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
-    if (!validateStep(form, 3)) return;
+    if (submittingRef.current || status === "success") return;
+    if (step < 3) { goNext(form); return; }
+    for (const part of [1, 2, 3]) { if (!validateStep(form, part)) { setStep(part); return; } }
     const data = new FormData(form);
     if (data.get("website")) return setStatus("success");
     if (event.timeStamp < 1500) {
@@ -128,6 +153,7 @@ export function JobSubmissionForm() {
       return;
     }
 
+    submittingRef.current = true;
     setStatus("submitting");
     setMessage("");
     track("job_submission_started");
@@ -156,39 +182,45 @@ export function JobSubmissionForm() {
     };
 
     try {
+      const { data: { session } } = await createBrowserSupabaseClient().auth.getSession();
       const response = await fetch(`${url.replace(/\/$/, "")}/rest/v1/job_submissions`, {
         method: "POST",
-        headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+        headers: { apikey: key, Authorization: `Bearer ${session?.access_token ?? key}`, "Content-Type": "application/json", Prefer: "return=minimal" },
         body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(15000),
       });
       if (!response.ok) throw new Error("Submission failed");
+      setSubmittedWithAccount(Boolean(session));
       setStatus("success");
       setMessage("Submitted for review. We normally review listings within 1–2 business days and will contact you at the private email provided.");
       track("job_submission_succeeded");
     } catch {
       setStatus("error");
-      setMessage("We could not save this job. Please check the highlighted details and try again.");
-    }
+      setMessage("We could not confirm whether this job was saved. Your entries are still here. Check with support before retrying to avoid a duplicate.");
+    } finally { submittingRef.current = false; }
   }
 
-  const salaryLine = `${money(preview.salaryMin)}–${money(preview.salaryMax)} per ${preview.salaryPeriod === "annual" ? "year" : "month"}`;
+  const salaryLine = `${money(preview.salaryMin, preview.currency)}–${money(preview.salaryMax, preview.currency)} per ${preview.salaryPeriod === "annual" ? "year" : "month"}`;
+
+  if (status === "success") return <section className="wizard-panel" role="status"><h2>Job submitted for review</h2><p>{message || "Your submission has been received."}</p><p>It will appear on the job board only after approval.</p><nav className="connected-next" aria-label="Employer next steps">{submittedWithAccount ? <Link href="/hiring">Manage my listings</Link> : <span>Submitted as a guest. This job is not linked to an account.</span>}<Link href="/jobs">Browse jobs</Link></nav></section>;
 
   return (
     <form className="job-wizard" noValidate onInput={(event) => handleInput(event.currentTarget, event.target as EventTarget & HTMLElement)} onSubmit={submit}>
+      <p className="wizard-account-note" role="status">{accountState === "checking" ? "Checking sign-in..." : accountState === "signed-in" ? <>Signed in. Track this submission in <Link href="/hiring">Manage my listings</Link>.</> : <>Posting as a guest. <Link href="/hiring">Sign in before filling this form</Link> to track your listing.</>}</p>
       <nav className="wizard-progress" aria-label="Job submission progress">
-        {["Role", "Pay", "Application"].map((label, index) => {
+        {["Role", "Salary", "Application"].map((label, index) => {
           const number = index + 1;
-          return <button className={step === number ? "current" : step > number ? "complete" : ""} key={label} onClick={() => number < step && setStep(number)} type="button"><span>{step > number ? <Check aria-hidden="true" /> : number}</span><strong>{label}</strong></button>;
+          return <button aria-current={step === number ? "step" : undefined} disabled={number > step} className={step === number ? "current" : step > number ? "complete" : ""} key={label} onClick={() => number < step && (setErrors({}), setStep(number), window.requestAnimationFrame(() => panelRef.current?.focus()))} type="button"><span>{step > number ? <Check aria-hidden="true" /> : number}</span><strong>{label}</strong></button>;
         })}
       </nav>
 
       <div className="wizard-layout wizard-layout--simple">
-        <section className="wizard-panel">
+        <section className="wizard-panel" ref={panelRef} tabIndex={-1} aria-label={`Step ${step} of 3`}>
           {Object.keys(errors).length > 0 && <div className="wizard-error-summary" ref={errorSummaryRef} role="alert" tabIndex={-1}><strong>Check the highlighted fields.</strong><span>{Object.keys(errors).length} {Object.keys(errors).length === 1 ? "answer needs" : "answers need"} your attention.</span></div>}
           <div data-step="1" hidden={step !== 1}>
             <p className="wizard-required-note">All fields are required.</p>
             <div className="wizard-fields">
-              <label>I am a<select name="submitter_type" required value={submitterType} onChange={(event) => setSubmitterType(event.target.value as "employer" | "recruiter")}><option value="employer">Direct employer</option><option value="recruiter">Recruiter or agency</option></select></label>
+              <label>Posting as<select name="submitter_type" required value={submitterType} onChange={(event) => setSubmitterType(event.target.value as "employer" | "recruiter")}><option value="employer">Direct employer</option><option value="recruiter">Recruiter or agency</option></select></label>
               <label>Job title<input name="title" required minLength={3} maxLength={120} {...errorProps("title")} />{fieldError("title")}</label>
               {submitterType === "recruiter" && <><label>Recruiting company<input name="recruiter_company" required minLength={2} maxLength={120} {...errorProps("recruiter_company")} />{fieldError("recruiter_company")}</label><label>Client shown publicly<input name="client_display_name" required minLength={2} maxLength={120} placeholder="Client name or Confidential employer" {...errorProps("client_display_name")} />{fieldError("client_display_name")}</label><label className="wizard-check wide"><input name="authority_confirmed" type="checkbox" required {...errorProps("authority_confirmed")} />I confirm that we have written authority to recruit for this position.{fieldError("authority_confirmed")}</label></>}
               <label>Company name<input name="company_name" required minLength={2} maxLength={120} {...errorProps("company_name")} />{fieldError("company_name")}</label>
@@ -203,8 +235,8 @@ export function JobSubmissionForm() {
             <div className="wizard-fields">
               <label>Salary type<select name="salary_type" required><option value="gross">Gross, before deductions</option><option value="net">Net, after deductions</option></select><small>Gross includes PAYE, pension and other deductions.</small></label>
               <label>Salary currency<select name="salary_currency" required><option value="NGN">NGN, Nigerian naira</option><option value="USD">USD, US dollar</option><option value="GBP">GBP, British pound</option><option value="EUR">EUR, euro</option></select></label>
-              <label>Minimum salary<span className="wizard-money"><b>NGN</b><input name="salary_min" type="number" min="1" step="1" required {...errorProps("salary_min")} /></span>{fieldError("salary_min")}<small>The lowest amount you will pay.</small></label>
-              <label>Maximum salary<span className="wizard-money"><b>NGN</b><input name="salary_max" type="number" min="1" step="1" required {...errorProps("salary_max")} onChange={(event) => event.currentTarget.setCustomValidity("")} /></span>{fieldError("salary_max")}<small>Must be equal to or greater than minimum.</small></label>
+              <label>Minimum salary<span className="wizard-money"><b>{preview.currency}</b><input name="salary_min" type="number" min="1" step="1" required {...errorProps("salary_min")} /></span>{fieldError("salary_min")}<small>The lowest amount you will pay.</small></label>
+              <label>Maximum salary<span className="wizard-money"><b>{preview.currency}</b><input name="salary_max" type="number" min="1" step="1" required {...errorProps("salary_max")} onChange={(event) => event.currentTarget.setCustomValidity("")} /></span>{fieldError("salary_max")}<small>Must be equal to or greater than minimum.</small></label>
               <label>Salary period<select name="salary_period" required><option value="monthly">Monthly</option><option value="annual">Annual</option></select></label>
               <label>Engagement<select name="engagement_type" required><option value="employee">Employee</option><option value="contractor">Independent contractor</option></select></label>
               <div className="salary-preview wide"><span>How this appears to candidates</span><strong>{salaryLine}</strong><small>{preview.salaryType === "net" ? "Net, after deductions" : "Gross, before deductions"}</small></div>
@@ -214,9 +246,9 @@ export function JobSubmissionForm() {
           <div data-step="3" hidden={step !== 3}>
             <p className="wizard-required-note">All fields are required.</p>
             <div className="wizard-fields">
-              <label>Application deadline<input name="expires_at" type="date" min="2026-08-06" required {...errorProps("expires_at")} />{fieldError("expires_at")}<small>Must be after 5 August 2026.</small></label>
+              <label>Application deadline<input name="expires_at" type="date" min={tomorrow()} required {...errorProps("expires_at")} />{fieldError("expires_at")}<small>Choose a future date.</small></label>
               <label>Application link<input name="application_url" type="url" required placeholder="https://company.com/careers/..." {...errorProps("application_url")} />{fieldError("application_url")}</label>
-              <label className="wide">Contact email<input name="contact_email" type="email" required placeholder="work@company.com" {...errorProps("contact_email")} />{fieldError("contact_email")}<small>This stays private. Candidates will never see it.</small></label>
+              <label className="wide">Contact email<input name="contact_email" type="email" required placeholder="work@company.com" {...errorProps("contact_email")} />{fieldError("contact_email")}<small>Used to contact you about this submission; not displayed on the listing.</small></label>
               <label className="wide">Full job description<textarea name="description" required minLength={80} maxLength={8000} rows={8} placeholder="Describe responsibilities, requirements and what success looks like." {...errorProps("description")} />{fieldError("description")}<small>Minimum 80 characters. Be specific about the work, tools and impact.</small></label>
               <label className="wizard-check wide"><input name="no_candidate_fees_confirmed" type="checkbox" required {...errorProps("no_candidate_fees_confirmed")} />I confirm that candidates will not be charged any application, placement or processing fee.{fieldError("no_candidate_fees_confirmed")}</label>
               <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
@@ -224,10 +256,10 @@ export function JobSubmissionForm() {
           </div>
 
           <div className="wizard-actions">
-            {step > 1 && <button onClick={() => setStep((current) => Math.max(1, current - 1))} type="button">Back</button>}
-            {step < 3 ? <button className="primary-button" onClick={(event) => goNext(event.currentTarget.form!)} type="button">Continue to {step === 1 ? "pay" : "application"}</button> : <button className="primary-button" disabled={status === "submitting"} type="submit">{status === "submitting" ? "Submitting…" : "Submit job for review"}</button>}
+            {step > 1 && <button onClick={() => { setErrors({}); setStep((current) => Math.max(1, current - 1)); window.requestAnimationFrame(() => panelRef.current?.focus()); }} type="button">Back</button>}
+            {step < 3 ? <button className="primary-button" onClick={(event) => { event.preventDefault(); goNext(event.currentTarget.form!); }} type="button">Next: {step === 1 ? "Salary details" : "Application details"}</button> : <button className="primary-button" disabled={status === "submitting"} type="submit">{status === "submitting" ? "Submitting…" : "Submit job for review"}</button>}
           </div>
-          <p className={`form-message ${status === "error" ? "error" : status === "success" ? "success" : ""}`} role="status">{message}</p>
+          <p className={`form-message ${status === "error" ? "error" : ""}`} role="status">{message}</p>
         </section>
 
       </div>

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function JobsPage() {
-  const initialJobs = (await getPublishedJobs()) ?? [];
+  const initialJobs = await getPublishedJobs();
 
   return (
     <PublicPageShell>
@@ -21,15 +21,13 @@ export default async function JobsPage() {
         <h1>A job should tell you what it pays.</h1>
       </section>
       <section className="jobs-board" aria-label="Nigerian job listings"><JobBoard initialJobs={initialJobs} /></section>
-      {initialJobs.length > 0 && <section className="jobs-next-actions" aria-label="More job options">
-        <Link href="/suggest-a-job"><span><strong>Found a genuine published-pay job?</strong></span><b aria-hidden="true">→</b></Link>
+      {(initialJobs?.length ?? 0) > 0 && <section className="jobs-next-actions" aria-label="More job options">
         <Link href="/post-a-job"><span><strong>Are you hiring?</strong></span><b aria-hidden="true">→</b></Link>
       </section>}
-      {initialJobs.length > 0 && <JourneyNextSteps
+      {(initialJobs?.length ?? 0) > 0 && <JourneyNextSteps
         title="Use the salary before you apply"
         steps={[
           { href: "/payslip-checker", title: "Estimate take-home pay", description: "See what an advertised gross salary may leave after PAYE." },
-          { href: "/salaries", title: "Compare the salary", description: "Check reviewed ranges as public groups become available." },
           { href: "/account", title: "Track applications", description: "Save jobs and keep your progress together." },
         ]}
       />}

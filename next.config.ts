@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  distDir: process.env.SALARYSABI_STAGING === "1" ? (process.env.NODE_ENV === "development" ? ".next-staging-dev" : ".next-staging") : ".next",
   reactStrictMode: true,
+  // Some browsers report transferSize=0 for fresh pages. The React debug
+  // channel mistakes these for cached documents and reloads before hydration.
+  experimental: { reactDebugChannel: false },
   images: { unoptimized: true },
   turbopack: {
     root: process.cwd(),
@@ -11,7 +15,8 @@ const nextConfig: NextConfig = {
       {
         source: "/:path*",
         headers: [
-          { key: "Content-Security-Policy", value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com https://challenges.cloudflare.com https://pagead2.googlesyndication.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" },
+          ...(process.env.SALARYSABI_STAGING === "1" ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : []),
+          { key: "Content-Security-Policy", value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com https://challenges.cloudflare.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
@@ -26,4 +31,4 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-initOpenNextCloudflareForDev();
+if (process.env.SALARYSABI_STAGING !== "1") initOpenNextCloudflareForDev();

@@ -15,7 +15,7 @@ describe("shared product contracts", () => {
       "src/app/disclaimer/page.tsx",
       "src/app/privacy/page.tsx",
     ].map(read).join("\n");
-    expect(rulesVerifiedDate).toBe("29 July 2026");
+    expect(rulesVerifiedDate).toBe("24 September 2026");
     expect(legalContentUpdatedDate).toBe("21 August 2026");
     expect(consumers).not.toContain("29 July 2026");
     expect(consumers).not.toContain("21 August 2026");
@@ -23,9 +23,11 @@ describe("shared product contracts", () => {
 
   it("uses the split gateway home and the public shell on core public routes", () => {
     expect(read("src/app/page.tsx")).toContain("SplitGatewayHome");
-    expect(read("src/app/talent/page.tsx")).toContain('audience="talent"');
+    expect(read("src/app/individuals/page.tsx")).toContain('audience="talent"');
     expect(read("src/app/employers/page.tsx")).toContain('audience="employer"');
-    for (const route of ["src/app/jobs/page.tsx", "src/app/payslip-checker/page.tsx", "src/app/account/page.tsx", "src/app/post-a-job/page.tsx", "src/app/suggest-a-job/page.tsx", "src/app/paye-guide/page.tsx", "src/app/disclaimer/page.tsx", "src/app/privacy/page.tsx", "src/app/eligible-deductions/page.tsx", "src/app/how-paye-is-calculated/page.tsx", "src/app/salaries-and-jobs/page.tsx", "src/app/business/page.tsx"]) {
+    expect(read("src/app/disclaimer/page.tsx")).toContain('permanentRedirect("/terms#estimates")');
+    expect(read("src/app/privacy/page.tsx")).toContain("GatewayHeader");
+    for (const route of ["src/app/jobs/page.tsx", "src/app/calculator/page.tsx", "src/app/account/page.tsx", "src/app/post-a-job/page.tsx", "src/app/how-paye-is-calculated/page.tsx", "src/app/salaries-and-jobs/page.tsx", "src/app/business/page.tsx"]) {
       expect(read(route)).toContain("PublicPageShell");
     }
   });
@@ -39,9 +41,9 @@ describe("shared product contracts", () => {
     const board = read("src/components/job-board.tsx");
     const page = read("src/app/jobs/page.tsx");
     expect(board).toContain("jobs.length === 0");
-    expect(board).toContain("New salary-transparent jobs are coming.");
+    expect(board).toContain("Our first jobs with published salaries are on the way.");
     expect(board).toContain("No jobs match your filters.");
-    expect(page).toContain("initialJobs.length > 0");
+    expect(page).toContain("(initialJobs?.length ?? 0) > 0");
   });
 
   it("keeps analytics events free of sensitive financial and credential properties", () => {
@@ -71,8 +73,6 @@ describe("shared product contracts", () => {
   });
 
   it("keeps gross salary, chargeable income and net salary definitions synchronized", () => {
-    const grossNetGuide = read("src/app/net-salary-vs-gross-salary-nigeria/page.tsx");
-    const taxBandsGuide = read("src/app/tax-bands/page.tsx");
     const payeGuide = read("src/app/how-paye-is-calculated/page.tsx");
     const payslipChecker = read("src/components/payslip-checker.tsx");
 
@@ -80,11 +80,8 @@ describe("shared product contracts", () => {
     expect(salaryTerms.grossSalary).toContain("basic salary and taxable allowances");
     expect(salaryTerms.chargeableIncome).toContain("after eligible deductions and reliefs");
     expect(salaryTerms.netSalary).toContain("PAYE and every other applicable payroll deduction");
-    expect(grossNetGuide).toContain("salaryTerms.grossSalary");
-    expect(grossNetGuide).toContain("salaryTerms.netSalary");
-    expect(taxBandsGuide).toContain("salaryTerms.chargeableIncome");
     expect(payeGuide).toContain("salaryTerms.chargeableIncome");
-    expect(payslipChecker).toContain('label="Gross pay"');
+    expect(payslipChecker).toContain('label="Monthly gross pay"');
     expect(payslipChecker).toContain('label="PAYE deducted"');
     expect(payslipChecker).toContain('label="Pension deducted"');
     expect(payslipChecker).toContain('placeholder="40,000" required');
@@ -92,26 +89,21 @@ describe("shared product contracts", () => {
 
   it("keeps Your Pay Check private, actionable and connected to the next journey", () => {
     const checker = read("src/components/payslip-checker.tsx");
-    const page = read("src/app/payslip-checker/page.tsx");
+    const page = read("src/app/calculator/page.tsx");
 
-    for (const outcome of ["Looks consistent", "Review recommended", "Likely discrepancy"]) {
-      expect(checker).toContain(outcome);
-    }
+    expect(checker).toContain('"calculate" | "check"');
+    expect(checker).toContain("Your PAYE differs from our estimate.");
     expect(checker).toContain("navigator.clipboard.writeText");
     expect(checker).toContain("Ask payroll these questions");
-    expect(checker).toContain("deduction_tracker_interest_yes");
-    expect(checker).toContain("deduction_tracker_interest_no");
-    expect(checker).toContain("does not send the pay figures you entered");
     expect(checker).toContain('href="/salaries"');
     expect(checker).toContain('href="/jobs"');
     expect(checker).not.toContain("fetch(");
-    expect(page).toContain("Your Pay Check: Check Your Nigerian Payslip");
+    expect(page).toContain("Take-home Pay Calculator & Payslip Check");
   });
 
   it("keeps the analytics allow-list synchronized with the database migration", () => {
     const migration = read("supabase/migrations/202609020001_repair_product_analytics.sql");
     const interestMigration = read("supabase/migrations/202609020002_deduction_tracker_interest.sql");
-    const calculator = read("src/components/paye-guide-calculator.tsx");
     const payslip = read("src/components/payslip-checker.tsx");
     for (const event of ["page_view", "paye_input_started", "paye_calculated", "paye_to_payslip_clicked", "payslip_check_started", "payslip_checked", "account_signup_succeeded", "job_apply_clicked"]) {
       expect(migration).toContain(`'${event}'`);
@@ -126,21 +118,7 @@ describe("shared product contracts", () => {
     }
     expect(interestMigration).toContain("deduction_tracker_interest_yes");
     expect(interestMigration).toContain("deduction_tracker_interest_no");
-    expect(calculator).toContain('track("paye_input_started")');
-    expect(calculator).toContain('track("paye_calculated")');
-    expect(calculator).toContain('track("paye_to_payslip_clicked")');
-    expect(calculator).toContain("payslipTransitionRecorded.current");
-    expect(payslip).toContain('track("payslip_check_started")');
     expect(payslip).toContain("checkCompleted.current");
-  });
-
-  it("treats statutory pension as a first-class take-home input", () => {
-    const calculator = read("src/components/paye-guide-calculator.tsx");
-    expect(calculator).toContain("monthlyPensionablePay * 0.08");
-    expect(calculator).toContain("monthlyPensionablePay * 0.1");
-    expect(calculator).toContain("pensionContribution: employeePension * 12");
-    expect(calculator).toContain("monthlyGross - employeePension - result.monthlyTax");
-    expect(calculator).toContain("Turn this off only if you are exempt");
   });
 
   it("finalises payroll through one owner-scoped database transaction", () => {
@@ -195,13 +173,14 @@ describe("shared product contracts", () => {
     expect(wordmark).not.toContain("ı");
   });
 
-  it("credits all three SalarySabi stakeholders as the product team", () => {
+  it("credits the SalarySabi product team", () => {
     const about = read("src/app/about/page.tsx");
     expect(about).toContain("Meet the team.");
     expect(about).toContain("Ozichi Nwosu");
     expect(about).toContain("Victoria Green");
     expect(about).toContain("https://www.linkedin.com/in/victoria-green1/");
     expect(about).toContain("Veno Green");
+    expect(about).toContain("Udy Nwosu");
     expect(about).toContain("https://www.linkedin.com/in/veno-green-583766183/");
   });
 
@@ -219,110 +198,12 @@ describe("shared product contracts", () => {
     expect(migration).toContain("-request.amount_kobo");
   });
 
-  it("keeps both funded contributor pilots explicit and independently verified", () => {
-    const page = read("src/components/contributor-program.tsx");
-    const campaignSource = read("src/lib/active-contribution-campaigns.ts");
-    const jobProgramme = read("src/components/job-scout-program.tsx");
-    const jobForm = read("src/components/job-suggestion-form.tsx");
-    const admin = read("src/components/admin-contributor-program.tsx");
-    const safeguards = read("supabase/migrations/202608200003_connect_job_scout_campaign.sql");
-    const migration = read("supabase/migrations/202608120003_activate_salary_report_pilot.sql");
-    const rewardIncrease = read("supabase/migrations/202608190001_raise_salary_report_pilot_reward.sql");
-    expect(campaignSource).toContain("campaign.budget_remaining_kobo >= campaign.reward_kobo");
-    expect(page).toContain("Your evidence makes pay visible");
-    expect(page).toContain("How your pay contribution becomes useful");
-    expect(page).toContain("Only anonymous groups of at least five approved reports become benchmarks");
-    expect(page).not.toContain("campaignEnd");
-    expect(page).not.toContain("· Ends");
-    expect(page).toContain("Only one paid salary report is allowed per person");
-    expect(page).toContain("/contributors/job-sourcing");
-    expect(jobProgramme).toContain("Find a salary-transparent job");
-    expect(jobProgramme).not.toContain("Reward TBD");
-    expect(jobForm).toContain("item.slug === requested || item.id === requested");
-    expect(jobForm).toContain("No reward claim was created");
-    expect(admin).toContain("admin_set_contribution_campaign_status");
-    expect(admin).toContain("Complete checks to approve");
-    expect(safeguards).toContain("Closed campaigns cannot be reopened");
-    expect(safeguards).toContain("Complete all four source checks");
-    expect(safeguards).toContain("update public.salary_reports set approved = true");
-    expect(migration).toContain("target_approved=20");
-    expect(migration).toContain("budget_kobo=1000000");
-    expect(migration).toContain("Minimum payout is NGN 500");
-    expect(rewardIncrease).toContain("reward_kobo = 100000");
-    expect(rewardIncrease).toContain("budget_kobo = 2000000");
-  });
-
-  it("gives contributors a private, abuse-resistant path from claim to payout", () => {
-    const migration = read("supabase/migrations/202608210003_contributor_accounts.sql");
-    const riskArrayFix = read("supabase/migrations/202608210005_fix_contributor_risk_array.sql");
-    const lifecycleFix = read("supabase/migrations/202608210006_fix_reward_lifecycle_analytics.sql");
-    const dashboard = read("src/components/contributor-dashboard.tsx");
-    const terms = read("src/app/terms/page.tsx");
-    expect(migration).toContain("function public.contributor_claim_history");
-    expect(migration).toContain("available_to_request_kobo");
-    expect(migration).toContain("add column if not exists payout_destination text");
-    expect(migration).toContain("payout_destination is not null");
-    expect(migration).toContain("payout_destination_fingerprint");
-    expect(migration).toContain("pg_advisory_xact_lock");
-    expect(migration).toContain("payout destination is already linked to another contributor");
-    expect(riskArrayFix).toContain("reasons text[] := '{}'::text[]");
-    expect(lifecycleFix).toContain("lifecycle_event_name");
-    expect(lifecycleFix).not.toContain("declare event_name text");
-    for (const event of ["reward_submission_succeeded", "reward_claim_approved", "reward_claim_rejected", "reward_payout_requested", "reward_payout_completed"]) {
-      expect(migration).toContain(`'${event}'`);
-    }
-    expect(dashboard).toContain("Rewards and review status");
-    expect(dashboard).toContain("Review note");
-    expect(dashboard).toContain("Pilot target: reviewed within 5 business days");
-    expect(dashboard).toContain("Request a payout");
-    expect(terms).toContain("Contributor rewards");
-    expect(terms).toContain("ask for a review within 14 days");
-  });
-
-  it("separates rewarded submission, payment and benchmark publication", () => {
-    const migration = read("supabase/migrations/202608210004_contributor_integrity.sql");
-    const edge = read("supabase/functions/submit-rewarded-contribution/index.ts");
-    const salaryForm = read("src/components/salary-benchmarks.tsx");
-    const jobForm = read("src/components/job-suggestion-form.tsx");
-    const admin = read("src/components/admin-contributor-program.tsx");
-    expect(migration).toContain("service_submit_rewarded_salary_report");
-    expect(migration).toContain("service_submit_rewarded_job_source");
-    expect(migration).toContain("revoke all on function public.submit_rewarded_salary_report");
-    expect(migration).toContain("publication_status='quarantined'");
-    expect(migration).toContain("approved and publication_status='published'");
-    expect(migration).toContain("admin_release_salary_report");
-    expect(migration).toContain("available_at");
-    expect(migration).toContain("contributor_admin_audit_log");
-    expect(migration).toContain("purge_expired_contribution_risk_data");
-    expect(edge).toContain("challenges.cloudflare.com/turnstile/v0/siteverify");
-    expect(edge).toContain("assertPublicHost");
-    expect(edge).toContain("service_consume_contribution_rate_limit");
-    expect(edge).toContain("RISK_FINGERPRINT_SECRET");
-    expect(edge).toContain('"message" in error');
-    expect(salaryForm).toContain("/functions/v1/submit-rewarded-contribution");
-    expect(jobForm).toContain("/functions/v1/submit-rewarded-contribution");
-    expect(salaryForm).not.toContain('functionName=campaignId?"submit_rewarded_salary_report"');
-    expect(jobForm).not.toContain("/rest/v1/rpc/submit_rewarded_job_source");
-    expect(admin).toContain("Benchmark quarantine");
-    expect(admin).toContain("Protected risk review required");
-  });
-
-  it("makes funded contribution offers shareable and trackable", () => {
-    const programme = read("src/components/contributor-program.tsx");
-    const share = read("src/components/contributor-share.tsx");
-    const navigation = read("src/components/site-navigation.tsx");
-    expect(programme).toContain("ContributorShare");
-    expect(share).toContain("Share on WhatsApp");
-    expect(share).toContain('track("reward_offer_shared")');
-    expect(navigation).toContain("My contributions");
-  });
-
   it("keeps manual ATS imports admin-only and source-scoped", () => {
     const importer = read("supabase/functions/import-ats-jobs/index.ts");
     const dashboard = read("src/components/admin-dashboard.tsx");
     expect(importer).toContain("isAdminRequest");
     expect(importer).toContain('.from("admin_users")');
-    expect(importer).toContain("adminAuthorized && !sourceId");
+    expect(importer).toContain("admin && !sourceId");
     expect(importer).toContain("sourceResults");
     expect(dashboard).toContain("Test & import now");
     expect(dashboard).toContain('body: { sourceId: source.id }');
@@ -359,17 +240,7 @@ describe("search visibility contracts", () => {
     expect(sitemap).toContain("legalContentUpdatedIso");
   });
 
-  it("keeps tax explainers source-backed and discoverable", () => {
-    const article = read("src/app/tax-news/nigeria-tax-act-2025-paycheck-2026/page.tsx");
-    const sitemap = read("src/app/sitemap.ts");
-    expect(article).toContain('"@type": "Article"');
-    expect(article).toContain("https://www.jrb.gov.ng/policies-reforms");
-    expect(article).toContain("https://www.jrb.gov.ng/assets/2026-pit-guidelines-TJG3n9-T.pdf");
-    expect(article).toContain("SalarySabi&apos;s full PAYE calculation methodology was independently reviewed by a Nigerian tax professional on 1 September 2026.");
-    expect(sitemap).toContain("/tax-news/nigeria-tax-act-2025-paycheck-2026");
-  });
-
-  it("publishes Article structured data on every core PAYE guide", () => {
+  it("publishes Article structured data on the calculation methodology", () => {
     const structuredData = read("src/components/article-structured-data.tsx");
     expect(structuredData).toContain('"@type": "Article"');
     expect(structuredData).toContain("mainEntityOfPage");
@@ -379,9 +250,6 @@ describe("search visibility contracts", () => {
 
     for (const route of [
       "src/app/how-paye-is-calculated/page.tsx",
-      "src/app/tax-bands/page.tsx",
-      "src/app/eligible-deductions/page.tsx",
-      "src/app/net-salary-vs-gross-salary-nigeria/page.tsx",
     ]) {
       expect(read(route)).toContain("<ArticleStructuredData");
     }

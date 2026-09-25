@@ -9,8 +9,7 @@ export const metadata: Metadata = {
 };
 
 const contacts = [
-  ["General questions", "hello@salarysabi.com", "SalarySabi question"],
-  ["Tax corrections or professional review", "tax@salarysabi.com", "PAYE review"],
+  ["Tax corrections", "tax@salarysabi.com", "PAYE review"],
   ["Privacy requests", "privacy@salarysabi.com", "Privacy request"],
   ["Security reports", "security@salarysabi.com", "Security report"],
 ] as const;
@@ -19,22 +18,23 @@ export default function ContactPage() {
   return (
     <InfoPage title="Contact SalarySabi">
       <div className="contact-page contact-page-simple">
-        <section className="contact-options" aria-label="Contact options">
+        <section className="contact-general" aria-labelledby="contact-general-title">
+          <h2 id="contact-general-title">Questions or feedback?</h2>
+          <a href="mailto:hello@salarysabi.com?subject=SalarySabi%20question">hello@salarysabi.com</a>
+        </section>
+        <section className="contact-specialists" aria-label="Specialist contacts">
           {contacts.map(([title, email, subject]) => (
             <article key={title}>
               <h2>{title}</h2>
               <a href={`mailto:${email}?subject=${encodeURIComponent(subject)}`}>{email}</a>
+              {title === "Security reports" && <p><Link href="/security">How to report a security issue</Link></p>}
             </article>
           ))}
         </section>
 
         <p className="contact-safety">Do not email payslips, passwords, bank details or payroll records.</p>
 
-        <nav className="contact-links" aria-label="Contact information">
-          <Link href="/about">About SalarySabi</Link>
-          <Link href="/privacy">Privacy notice</Link>
-          <Link href="/tax-updates">Tax update history</Link>
-        </nav>
+
       </div>
     </InfoPage>
   );

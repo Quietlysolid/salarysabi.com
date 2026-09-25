@@ -81,3 +81,41 @@ describe("small-team payroll", () => {
     expect(result.errors.join(" ")).toContain("duplicate employee_number SS-001");
   });
 });
+
+it("tax relief paid outside payroll does not reduce cash wages", () => {
+  const base = calculatePayrollLine(employee);
+  const relief = calculatePayrollLine({...employee, annualMortgageInterestRelief:120_000, precedingYearLifeInsuranceRelief:60_000});
+  expect(relief.monthlyPaye).toBeCloseTo(base.monthlyPaye - 2700);
+  expect(relief.monthlyStatutoryDeductions).toBe(base.monthlyStatutoryDeductions);
+  expect(relief.monthlyNetPay).toBeCloseTo(base.monthlyNetPay + 2700);
+});
+it("current insurance withholding is cash only, not preceding-year relief", () => {
+  const base = calculatePayrollLine(employee);
+  const withheld = calculatePayrollLine({...employee, monthlyLifeInsurance:5000, monthlyMortgageInterest:10000});
+  expect(withheld.monthlyPaye).toBe(base.monthlyPaye);
+  expect(withheld.monthlyNetPay).toBe(base.monthlyNetPay - 15000);
+});
+it("imports separate annual reliefs", () => {
+  const csv = payrollCsvTemplate().replace('100000,0,0,0', '100000,0,120000,60000');
+  const parsed = parsePayrollCsv(csv);
+  expect(parsed.errors).toEqual([]);
+  expect(parsed.rows[0].precedingYearLifeInsuranceRelief).toBe(60000);
+  expect(parsed.rows[0].annualMortgageInterestRelief).toBe(120000);
+});
+
+it("labels draft and saved exports explicitly", () => {
+  const lines = [calculatePayrollLine(employee)];
+  expect(buildPayrollCsv("2026-09","Test",lines)).toContain("Status,Draft");
+  const saved = buildPayrollCsv("2026-09","Test",lines,"2026.2","Finalised",2);
+  expect(saved).toContain("Status,Finalised");
+  expect(saved).toContain("Revision,2");
+  expect(saved).toContain("not proof of payment");
+});
+it("rounds PAYE and net to amounts that can be saved in payroll", () => {
+  const line = calculatePayrollLine({...employee, monthlyGross:250000.01,monthlyPension:0,monthlyRent:0});
+  expect(line.monthlyPaye).toBe(27500);
+  expect(line.monthlyNetPay).toBe(212500.01);
+});
+it("escapes spreadsheet formula text", () => {
+  expect(buildPayrollCsv("2026-09","=1+1",[calculatePayrollLine(employee)])).toContain("'=1+1");
+});

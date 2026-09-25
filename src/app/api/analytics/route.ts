@@ -16,6 +16,7 @@ function noContent() {
 }
 
 export async function POST(request: Request) {
+  if (process.env.SALARYSABI_STAGING === "1") return noContent();
   const contentLength = Number(request.headers.get("content-length") || 0);
   if (contentLength > 1024) return new Response(null, { status: 413 });
 

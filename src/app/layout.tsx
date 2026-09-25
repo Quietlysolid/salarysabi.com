@@ -7,6 +7,7 @@ import "./redesign.css";
 import "./split-gateway.css";
 import "./audience-system.css";
 import "./pay-experience.css";
+import "./salary-community.css";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
@@ -24,22 +25,21 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "SalarySabi | Nigeria PAYE, Salaries and Jobs",
   description:
-    "Calculate Nigerian PAYE and take-home pay, compare salaries, find jobs with published pay, and earn rewards for approved pay information.",
+    "Calculate Nigerian PAYE and take-home pay, find jobs with published pay.",
   keywords: [
     "Nigeria PAYE calculator 2026",
     "Nigerian salary calculator",
     "gross to net salary Nigeria",
     "PAYE tax calculator Nigeria",
     "jobs with salaries Nigeria",
-    "Nigeria salary benchmarks",
-  ],
+      ],
   icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
     locale: "en_NG",
     title: "SalarySabi | Nigeria PAYE, Salaries and Jobs",
     description:
-      "Understand your pay, compare salaries and find Nigerian jobs that publish pay.",
+      "Understand your pay and find Nigerian jobs that publish pay.",
     url: "/",
     siteName: "SalarySabi",
   },
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SalarySabi | Nigeria PAYE, Salaries and Jobs",
     description:
-      "Understand your pay, compare salaries and find Nigerian jobs that publish pay.",
+      "Understand your pay and find Nigerian jobs that publish pay.",
   },
 };
 
@@ -79,15 +79,9 @@ export default function RootLayout({
 
   return (
     <html className={`${sourceSans.variable} ${bricolageGrotesque.variable}`} lang="en-NG" data-scroll-behavior="smooth">
-      <head>
-        <script
-          async
-          crossOrigin="anonymous"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9638487224391154"
-        />
-      </head>
       <body>
         <a className="skip-link" href="#main-content">Skip to main content</a>
+        {process.env.SALARYSABI_STAGING === "1" && <aside className="staging-indicator" aria-label="Test environment">Staging &middot; Test data only</aside>}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteIdentity) }}

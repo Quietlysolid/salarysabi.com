@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleStructuredData } from "@/components/article-structured-data";
 import { PublicPageShell } from "@/components/info-page";
-import { PayeGuideTrail } from "@/components/paye-guide-trail";
 import { calculatePaye } from "@/lib/paye";
 import { salaryTerms } from "@/lib/salary-terms";
-import { pitGuidelinesUrl, rulesetVersion, taxActUrl, taxProfessionalReviewIso } from "@/lib/site";
+import { pitGuidelinesUrl, rulesetVersion, taxActUrl, rulesVerifiedIso } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "How PAYE Is Calculated in Nigeria (2026 Guide)",
+  title: "How SalarySabi Calculates PAYE",
   description: "See how annual pay becomes monthly Nigerian PAYE, with five clear steps and a worked example.",
   alternates: { canonical: "/how-paye-is-calculated" },
 };
@@ -32,16 +31,15 @@ export default function MethodologyPage() {
           <span className="eyebrow">PAYE, explained</span>
           <h1>Your PAYE. Five clear steps.</h1>
           <Link className="primary-button" href="/payslip-checker">Check my PAYE</Link>
-          <p className="methodology-trust-line" aria-label={`Independently reviewed 1 September 2026. Ruleset ${rulesetVersion}.`}>
-            <strong>Independently reviewed</strong>
+          <p className="methodology-trust-line" aria-label={`Source check 24 September 2026. Ruleset ${rulesetVersion}.`}>
+            <strong>Source checked</strong>
             <span aria-hidden="true">·</span>
-            <time dateTime={taxProfessionalReviewIso}>1 September 2026</time>
+            <time dateTime={rulesVerifiedIso}>24 September 2026</time>
             <span aria-hidden="true">·</span>
             <span>Ruleset {rulesetVersion}</span>
           </p>
-        </header>
+        <p>No independent professional review is documented. See the calculation limits before relying on an estimate.</p></header>
 
-        <PayeGuideTrail compactOnMobile current="methodology" />
 
         <section className="methodology-equation" aria-labelledby="equation-title">
           <div className="methodology-equation-heading">
@@ -105,7 +103,6 @@ export default function MethodologyPage() {
           <summary>Verify the rules and sources</summary>
           <div>
             <p>The first ₦800,000 of taxable income is taxed at 0%. Higher rates apply only to the portion inside each later band. Employment income at or below the national minimum wage may be exempt.</p>
-            <p><Link href="/eligible-deductions">See eligible deductions</Link><span aria-hidden="true"> · </span><Link href="/tax-bands">See all tax bands</Link></p>
             <p><a className="methodology-evidence-row" href={taxActUrl} rel="noreferrer" target="_blank">Nigeria Tax Act 2025 ↗</a><br /><a href={pitGuidelinesUrl} rel="noreferrer" target="_blank">JRB Personal Income Tax Guidelines 2026 ↗</a></p>
           </div>
         </details>

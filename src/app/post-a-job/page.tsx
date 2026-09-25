@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { JobSubmissionForm } from "@/components/job-submission-form";
 import { PublicPageShell } from "@/components/info-page";
 
@@ -14,7 +13,7 @@ export default function PostAJobPage() {
     <PublicPageShell>
       <section className="job-wizard-hero">
         <h1>Post a job</h1>
-        <Link className="job-suggest-link" href="/suggest-a-job">Found an existing listing? Suggest the job instead.</Link>
+        <p>Post a role with a published salary range. We review every submission.</p>
       </section>
       <section className="job-wizard-shell">
         <JobSubmissionForm />

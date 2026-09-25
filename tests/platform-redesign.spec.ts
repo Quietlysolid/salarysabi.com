@@ -9,38 +9,26 @@ test.describe("work-and-pay platform redesign", () => {
     await page.goto("/");
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(page.getByRole("heading", { name: "How do you want to use SalarySabi?" })).toHaveCount(0);
-    await expect(page.getByRole("heading", { name: "Pay should be clear." })).toBeVisible();
-    await expect(page.locator(".gateway-path-list").getByText("For talent")).toBeVisible();
-    await expect(page.locator(".gateway-path-list").getByText("For employers")).toBeVisible();
-    await expect(page.getByRole("link", { name: /Understand my pay/i })).toHaveAttribute("href", "/talent");
-    await page.getByRole("link", { name: "Run payroll" }).click();
+    await expect(page.getByRole("heading", { name: "Salary na promise. Take-home na reality." })).toBeVisible();
+    await expect(page.locator(".gateway-path-list, .gateway-directory")).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Calculate my pay", exact: true })).toHaveAttribute("href", "#home-gross");
+    await page.getByRole("link", { name: /^(For employers|Employers)$/ }).filter({ visible: true }).click();
+    await expect(page).toHaveURL(/\/employers$/);
+    await page.getByRole("main").getByRole("link", { name: "Run payroll" }).click();
     await expect(page).toHaveURL(/\/payroll$/);
     await expect(page.getByRole("heading", { name: "Small-team payroll" })).toBeVisible();
+    await page.getByText("Supported payroll and limitations", { exact: true }).click();
     await expect(page.getByRole("heading", { name: "Built for straightforward monthly payroll." })).toBeVisible();
     await expect(page.getByText(/Bonuses, commissions, arrears or irregular pay/i)).toBeVisible();
     await expect(page.getByRole("button", { name: "Forgot password?" })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Salary na promise/i })).toHaveCount(0);
     if ((page.viewportSize()?.width ?? 0) <= 760) {
-      await expect(page.getByRole("navigation", { name: "Mobile navigation" }).getByRole("link", { name: "Employers" })).toHaveAttribute("aria-current", "page");
+      await expect(page.getByRole("navigation", { name: "Mobile navigation" }).getByRole("link", { name: "For employers" })).toHaveAttribute("aria-current", "page");
     } else {
       await expect(page.getByRole("navigation", { name: "For employers tools" })).toBeVisible();
       await expect(page.getByRole("link", { name: "For employers" }).last()).toHaveAttribute("href", "/employers");
     }
     expect(consoleErrors).toEqual([]);
-  });
-
-  test("salary contribution validates identity-free context before pay details", async ({ page }) => {
-    await page.goto("/salaries");
-    await expect(page.getByRole("heading", { name: "Know what your work is worth." })).toBeVisible();
-    await page.getByRole("button", { name: "Share my salary" }).click();
-    await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.locator('input[name="role"]')).toBeFocused();
-    await page.locator('input[name="role"]').fill("Product designer");
-    await page.locator('input[name="industry"]').fill("Technology");
-    await page.locator('input[name="location"]').fill("Lagos");
-    await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByText("Step 2 of 2")).toBeVisible();
-    await expect(page.locator('input[name="gross"]')).toBeVisible();
   });
 
   test("homepage reflows without horizontal overflow", async ({ page }) => {
@@ -50,108 +38,24 @@ test.describe("work-and-pay platform redesign", () => {
     expect(overflow).toBe(false);
   });
 
-  test("contributor programme explains approval and budget boundaries", async ({ page }) => {
-    await page.route("**/rest/v1/rpc/public_active_contribution_campaigns", async (route) => {
-      await route.fulfill({
-        contentType: "application/json",
-        body: JSON.stringify([{
-          slug: "salary-pilot-2026",
-          contribution_type: "salary_report",
-          reward_kobo: 100000,
-          budget_remaining_kobo: 2000000,
-          ends_at: "2026-11-09T00:00:00.000Z",
-        }, {
-          slug: "transparent-jobs-pilot-2026",
-          contribution_type: "job_source",
-          reward_kobo: 100000,
-          budget_remaining_kobo: 6000000,
-          ends_at: "2026-11-09T00:00:00.000Z",
-        }]),
-      });
-    });
-    await page.goto("/contributors");
-    await expect(page.getByRole("heading", { name: "Your evidence makes pay visible." })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Share my salary" }).first()).toHaveAttribute("href", /salary-pilot-2026/);
-    await expect(page.getByRole("heading", { name: "Share a paid job" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Share a paid job" })).toHaveAttribute("href", "/contributors/job-sourcing");
-    await expect(page.getByText("Your contribution journey")).toBeVisible();
-    await expect(page.getByText(/Your individual salary stays out of public view/i)).toBeVisible();
-    await expect(page.getByLabel("Active funded contributor offer")).toHaveCount(0);
-    await page.getByText("Salary-report eligibility and approval rules").click();
-    await expect(page.getByText(/Only one paid salary report is allowed per person/i)).toBeVisible();
-    await expect(page.getByText(/benchmark needs five similar approved reports/i)).toBeVisible();
-  });
-
-  test("contributor account explains every claim state and safely previews payout", async ({ page }) => {
-    await page.goto("/contributions?fixture=1");
-    await expect(page.getByRole("heading", { name: "Rewards and review status" })).toBeVisible();
-    await expect(page.getByText("In review", { exact: true })).toBeVisible();
-    await expect(page.getByText("Approved", { exact: true })).toBeVisible();
-    await expect(page.getByText("Not approved", { exact: true })).toBeVisible();
-    await expect(page.getByText("The employer page no longer accepted applications when reviewed.")).toBeVisible();
-    await expect(page.getByText("Pilot target: reviewed within 5 business days.")).toBeVisible();
-    await page.getByLabel("Amount in naira").fill("500");
-    await page.getByLabel("Mobile number").fill("08012345678");
-    await page.getByLabel(/I checked these payout details/).check();
-    await page.getByRole("button", { name: "Request payout" }).click();
-    await expect(page.getByText("Local preview payout requested. No production data changed.")).toBeVisible();
-    await expect(page.getByText("Requested", { exact: true })).toBeVisible();
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
-    expect(overflow).toBe(false);
-  });
-
-  test("job scout offer never promises a reward while its campaign is inactive", async ({ page }) => {
-    await page.route("**/rest/v1/rpc/public_active_contribution_campaigns", async (route) => {
-      await route.fulfill({ contentType: "application/json", body: "[]" });
-    });
-    await page.goto("/contributors/job-sourcing");
-    await expect(page.getByRole("heading", { name: "Help uncover salary-transparent Nigerian jobs." })).toBeVisible();
-    await expect(page.getByText("Paid submissions are not open right now.")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Share an unpaid job tip" })).toBeVisible();
-
-    await page.goto("/suggest-a-job?campaign=transparent-jobs-pilot-2026");
-    await expect(page.getByText("This paid campaign is not accepting submissions.")).toBeVisible();
-    await expect(page.getByText("No reward will be promised or reserved from this link.")).toBeVisible();
-  });
-
-  test("contributor admin fixture exposes evidence and locks reward approval", async ({ page }) => {
-    await page.goto("/admin/contributors?fixture=1");
-    await expect(page.getByText("Local review fixture—no production data will change.")).toBeVisible();
-    await expect(page.getByText("Example Payments", { exact: true })).toBeVisible();
-    const jobClaim = page.locator(".admin-claim-card").filter({ hasText: "Example Payments" });
-    await expect(jobClaim.getByRole("button", { name: "Complete checks to approve" })).toBeDisabled();
-    const checks = jobClaim.getByRole("checkbox");
-    await expect(checks).toHaveCount(5);
-    for (let index = 0; index < 5; index += 1) await checks.nth(index).check();
-    await expect(jobClaim.getByRole("button", { name: "Approve reward" })).toBeEnabled();
-
-    const salaryClaim = page.locator(".admin-claim-card").filter({ hasText: "Operations Analyst" });
-    await expect(salaryClaim.getByRole("checkbox")).toHaveCount(2);
-    await expect(page.getByRole("heading", { name: "Benchmark quarantine" })).toBeVisible();
-    await expect(page.getByText("Quarantined · not public")).toBeVisible();
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
-    expect(overflow).toBe(false);
-  });
-
-  test("talent and employer homepages contain only their own tasks", async ({ page }) => {
+  test("individual and employer homepages contain only their own tasks", async ({ page }) => {
     const consoleErrors: string[] = [];
     page.on("console", (message) => { if (message.type() === "error") consoleErrors.push(message.text()); });
     await page.context().clearCookies();
-    await page.goto("/talent");
+    await page.goto("/individuals");
     await expect(page.getByRole("heading", { name: "Know your actual salary." })).toHaveCount(0);
     await expect(page.getByLabel("Example take-home pay calculation")).toHaveCount(0);
-    await expect(page.getByRole("region", { name: "Talent at work" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Everything about your pay in one place." })).toBeVisible();
-    await expect(page.getByText("From offer letter to bank alert.")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Calculate my pay" })).toHaveAttribute("href", "/payslip-checker");
+    await expect(page.getByRole("main").getByRole("link", { name: "Check my payslip" })).toHaveAttribute("href", "/calculator?mode=check");
+    await expect(page.getByRole("heading", { name: "Know your pay. Plan your next move." })).toBeVisible();
+    await expect(page.locator(".audience-navigation")).toHaveCount(0);
+    await expect(page.getByRole("main").getByRole("link", { name: "Calculate my take-home" })).toHaveAttribute("href", "/calculator");
     await expect(page.getByText(/See your PAYE, deductions, and take-home pay/i)).toHaveCount(0);
-    await expect(page.getByRole("link", { name: "Compare salaries" })).toHaveAttribute("href", "/salaries");
-    await expect(page.getByRole("link", { name: "Explore jobs" })).toHaveAttribute("href", "/jobs");
-    await expect(page.getByText(/Built on Nigeria's official tax rules/i)).toBeVisible();
-    await expect(page.getByRole("link", { name: "Inspect the rules" }).last()).toHaveAttribute("href", "/tax-updates");
-    await expect(page.getByRole("link", { name: "Run payroll" })).toHaveCount(0);
+    await expect(page.getByRole("main").getByRole("link", { name: "Compare and share salaries" })).toHaveAttribute("href", "/salaries");
+    await expect(page.locator(".talent-trust-strip")).toHaveCount(0);
+    await expect(page.locator(".info-footer a[href='/tax-updates']").first()).toHaveAttribute("href", "/tax-updates");
+    await expect(page.getByRole("main").getByRole("link", { name: "Run payroll" })).toHaveCount(0);
     await page.goto("/employers");
-    await expect(page.getByRole("link", { name: "Post open roles" })).toHaveAttribute("href", "/post-a-job");
+    await expect(page.getByRole("main").getByRole("link", { name: "Post a job" })).toHaveAttribute("href", "/post-a-job");
     await expect(page.getByRole("link", { name: "Calculate & verify pay" })).toHaveCount(0);
     expect(consoleErrors).toEqual([]);
   });
@@ -204,17 +108,22 @@ test.describe("work-and-pay platform redesign", () => {
   });
 
   test("admin jobs workspace separates lifecycles and guards permanent deletion", async ({ page }) => {
+    await page.clock.setFixedTime(new Date("2026-08-20T12:00:00Z"));
     await page.goto("/admin?fixture=1");
     await page.getByRole("button", { name: "Jobs", exact: true }).click();
-    await expect(page.getByRole("heading", { name: "Manage every listing" })).toBeVisible();
-    await expect(page.getByRole("tab", { name: /Live 1/ })).toHaveAttribute("aria-selected", "true");
-    await expect(page.getByRole("heading", { name: "Product Manager" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Jobs", exact: true })).toBeVisible();
+    await expect(page.getByRole("tab", { name: /All jobs/ })).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator(".admin-job-list").getByText("Operations Manager", { exact: true })).toBeVisible();
+    await page.getByRole("tab", { name: /Live 1/ }).click();
+    await expect(page.locator(".admin-job-list").getByText("Product Manager", { exact: true })).toBeVisible();
+    await expect(page.locator(".admin-job-detail")).toBeHidden();
     await expect(page.getByText("Operations Manager", { exact: true })).toHaveCount(0);
 
     await page.getByRole("tab", { name: /Expired 1/ }).click();
     await expect(page.getByText("Operations Manager", { exact: true }).first()).toBeVisible();
-    await page.locator(".admin-job-more-actions > summary").click();
-    await page.locator(".admin-job-detail").getByRole("button", { name: "Delete permanently" }).click();
+    await page.locator(".admin-job-list article > button").filter({ hasText: "Operations Manager" }).click();
+    await expect(page.getByLabel("Title", { exact: true })).toBeHidden();
+    await page.getByRole("button", { name: "Delete listing", exact: true }).click();
     const confirmation = page.getByLabel(/Type Operations Manager to confirm/);
     const deleteButton = page.locator(".admin-delete-confirmation").getByRole("button", { name: "Delete permanently" });
     await expect(deleteButton).toBeDisabled();
@@ -231,4 +140,33 @@ test.describe("work-and-pay platform redesign", () => {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     expect(overflow).toBe(false);
   });
+});
+
+ test("admin empty review is compact and header has breathing room", async ({ page }) => {
+  await page.goto("/admin?fixture=1");
+  await expect(page.getByRole("heading", { name: "Senior DevOps Engineer" })).toBeVisible();
+  for (let i = 0; i < 3; i++) await page.getByRole("button", { name: "Reject", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "All caught up." })).toBeVisible();
+  await expect(page.locator(".admin-review-workspace")).toHaveCount(0);
+  await expect(page.locator(".admin-import-status")).not.toHaveAttribute("open");
+  const header = await page.locator(".admin-topbar").boundingBox();
+  expect(header?.y).toBeGreaterThanOrEqual(16);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+  await page.getByText("Automatic imports", { exact: true }).click();
+  await expect(page.getByRole("button", { name: "Manage sources" })).toBeVisible();
+ });
+
+test("expired jobs support confirmed bulk deletion", async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2026-08-20T12:00:00Z"));
+  await page.goto("/admin?fixture=1");
+  await page.getByRole("button", { name: "Jobs", exact: true }).click();
+  await page.getByRole("tab", { name: /Expired 1/ }).click();
+  await page.getByLabel("Select all expired jobs", { exact: true }).check();
+  page.once("dialog", dialog => dialog.dismiss());
+  await page.getByRole("button", { name: "Delete selected", exact: true }).click();
+  await expect(page.getByText("Operations Manager", { exact: true })).toBeVisible();
+  page.once("dialog", dialog => dialog.accept());
+  await page.getByRole("button", { name: "Delete selected", exact: true }).click();
+  await expect(page.getByText("No expired jobs.")).toBeVisible();
+  await expect(page.getByText("1 expired listings deleted.")).toBeVisible();
 });

@@ -4,6 +4,7 @@ import { siteUrl } from "@/lib/site";
 export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
+  if (process.env.SALARYSABI_STAGING === "1") return { rules: { userAgent: "*", disallow: "/" } };
   return {
     rules: {
       userAgent: "*",

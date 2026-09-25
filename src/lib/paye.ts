@@ -1,5 +1,7 @@
 export type PayeInputs = {
   annualGrossIncome: number;
+  incomeType?: "employment" | "business";
+  otherEligibleDeductions?: number;
   pensionContribution?: number;
   nhfContribution?: number;
   nhisContribution?: number;
@@ -44,7 +46,7 @@ const TAX_BANDS = [
 ] as const;
 
 // National Minimum Wage (Amendment) Act 2024: ₦70,000 per month.
-// Nigeria Tax Act 2025, s. 163(1)(t), exempts employment income where gross
+// National Assembly's January 2026 text, s. 162(1)(t), exempts employment income where gross
 // income is no more than the national minimum wage.
 export const ANNUAL_NATIONAL_MINIMUM_WAGE = 70_000 * 12;
 
@@ -60,21 +62,23 @@ export function calculatePaye(inputs: PayeInputs): PayeResult {
     asMoney(inputs.nhisContribution) +
     asMoney(inputs.mortgageInterest) +
     asMoney(inputs.lifeInsurancePremium) +
+    asMoney(inputs.otherEligibleDeductions) +
     rentRelief;
   const chargeableIncome = Math.max(
     0,
     annualGrossIncome - totalEligibleDeductions,
   );
 
+  const exemptEmployment = inputs.incomeType !== "business" && annualGrossIncome <= ANNUAL_NATIONAL_MINIMUM_WAGE;
   let remaining = chargeableIncome;
   const bands = TAX_BANDS.map((band) => {
     const taxableAmount = Math.min(remaining, band.width);
-    const tax = taxableAmount * band.rate;
+    const tax = exemptEmployment ? 0 : taxableAmount * band.rate;
     remaining = Math.max(0, remaining - taxableAmount);
     return { ...band, taxableAmount, tax };
   });
   const annualTax =
-    annualGrossIncome <= ANNUAL_NATIONAL_MINIMUM_WAGE
+    exemptEmployment
       ? 0
       : bands.reduce((total, band) => total + band.tax, 0);
 

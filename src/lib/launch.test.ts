@@ -24,15 +24,15 @@ describe("launch input validation", () => {
     expect(isAnalyticsEvent("payslip_check_started")).toBe(true);
     expect(isAnalyticsEvent("deduction_tracker_interest_yes")).toBe(true);
     expect(isAnalyticsEvent("deduction_tracker_interest_no")).toBe(true);
-    expect(isAnalyticsEvent("reward_offer_viewed")).toBe(true);
-    expect(isAnalyticsEvent("reward_offer_clicked")).toBe(true);
-    expect(isAnalyticsEvent("reward_submission_succeeded")).toBe(true);
-    expect(isAnalyticsEvent("reward_payout_completed")).toBe(true);
+    expect(isAnalyticsEvent("reward_offer_viewed")).toBe(false);
+    expect(isAnalyticsEvent("reward_offer_clicked")).toBe(false);
+    expect(isAnalyticsEvent("reward_submission_succeeded")).toBe(false);
+    expect(isAnalyticsEvent("reward_payout_completed")).toBe(false);
     expect(isAnalyticsEvent("salary_value")).toBe(false);
   });
 
   it("limits paths and reduces referrers to hostnames", () => {
-    expect(normalizePath("/tax-bands")).toBe("/tax-bands");
+    expect(normalizePath("/tax-updates")).toBe("/tax-updates");
     expect(normalizePath("https://bad.example")).toBe("/");
     expect(normalizeReferrerHost("https://www.google.com/search?q=paye")).toBe(
       "www.google.com",
@@ -42,7 +42,7 @@ describe("launch input validation", () => {
   });
 
   it("excludes internal routes from product analytics", () => {
-    expect(isPublicAnalyticsPath("/paye-guide")).toBe(true);
+    expect(isPublicAnalyticsPath("/payslip-checker")).toBe(true);
     expect(isPublicAnalyticsPath("/admin")).toBe(false);
     expect(isPublicAnalyticsPath("/admin/contributors")).toBe(false);
     expect(isPublicAnalyticsPath("/e2e-fixtures/workspace")).toBe(false);

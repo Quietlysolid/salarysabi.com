@@ -3,7 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
+    "dev:staging": "node scripts/dev-staging.mjs",
+    "build:staging": "node scripts/dev-staging.mjs --build",
+    "start:staging": "node scripts/dev-staging.mjs --start",
+    "test:staging:api": "python scripts/verify-staging.py",
+    "test:staging:browser": "node scripts/verify-staging-browser.mjs && node scripts/verify-staging-publication.mjs",
     "build": "next build",
     "preview:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy:cloudflare": "opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars",
@@ -18,25 +23,26 @@
     "@supabase/supabase-js": "^2.112.0",
     "jspdf": "4.2.1",
     "lucide-react": "^1.28.0",
-    "next": "16.2.12",
+    "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.20.2",
+    "@electric-sql/pglite": "^0.5.8",
+    "@opennextjs/cloudflare": "^1.20.6",
     "@playwright/test": "^1.62.1",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "16.2.12",
+    "eslint-config-next": "16.3.6",
     "supabase": "^2.113.0",
     "typescript": "6.0.3",
-    "vitest": "4.1.10",
-    "wrangler": "^4.115.0"
+    "vitest": "4.1.11",
+    "wrangler": "^4.125.0"
   },
   "overrides": {
     "postcss": "8.5.25",
-    "sharp": "0.35.3"
+    "sharp": "0.35.4"
   }
 }

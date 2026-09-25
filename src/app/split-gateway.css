@@ -355,10 +355,10 @@
 
 .audience-home .audience-editorial-hero--employer {
   width: min(1360px, calc(100% - 48px));
-  min-height: 670px;
+  min-height: 0;
   margin-top: 48px;
   margin-bottom: 72px;
-  padding: clamp(58px, 6vw, 84px) clamp(42px, 6vw, 84px);
+  padding: clamp(40px, 4vw, 56px) clamp(42px, 6vw, 84px);
   color: #fff;
   background: #042f22;
 }
@@ -391,7 +391,7 @@
     gap: 48px;
   }
 
-  .audience-home .audience-editorial-hero--employer { margin-top: 24px; margin-bottom: 42px; padding: 42px 24px 58px; }
+  .audience-home .audience-editorial-hero--employer { margin-top: 24px; margin-bottom: 42px; padding: 32px 24px 42px; }
   .audience-home .talent-story-heading,
   .audience-home .employer-editorial-copy { width: 100%; padding: 0; }
   #main-content .audience-home .talent-story-heading h1,

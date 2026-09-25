@@ -1,0 +1,70 @@
+.salary-community { width: min(1120px, calc(100% - 48px)); margin: 0 auto; padding: 64px 0; }
+.community-heading { max-width: 760px; margin-bottom: 48px; }
+#main-content .community-heading h1 { max-width: 19ch; margin: 16px 0 20px; font-size: clamp(2.5rem, 4.5vw, 4.5rem); line-height: 1.06; }
+.community-heading p { max-width: 55ch; font-size: 1.15rem; line-height: 1.6; color: #42564c; }
+.community-heading button { margin-top: 16px; gap: 16px; }
+.community-heading > small { display: block; margin-top: 16px; max-width: 65ch; color: #52665b; line-height: 1.5; }
+.community-heading svg { width: 18px; }
+.community-ranges { padding-top: 32px; border-top: 1px solid #d7dad5; }
+.community-ranges h2,.community-share h2 { margin: 0 0 12px; font-size: 1.8rem; }
+.community-ranges header p,.community-share > p { color: #42564c; line-height: 1.6; }
+.community-empty { margin-top: 24px; padding: 32px; background: #f2f6ef; }
+.community-empty > svg { width: 32px; height: 32px; color: #075b41; }
+.community-empty h3 { margin: 16px 0 8px; font-size: 1.35rem; }
+.community-empty p { max-width: 65ch; line-height: 1.6; }
+.community-share { margin-bottom: 48px; padding: 32px; border: 1px solid #becfc4; background: #f8faf7; scroll-margin-top: 24px; }
+.community-share fieldset { border: 0; padding: 0; margin: 24px 0 0; min-width: 0; }
+.community-share legend { margin-bottom: 18px; font-weight: 700; }
+.community-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+.community-fields label,.community-search { display: grid; gap: 8px; font-weight: 650; }
+.community-fields input,.community-fields select,.community-search input { width: 100%; min-width: 0; min-height: 48px; padding: 12px; border: 1px solid #8ca597; border-radius: 0; background: #fff; color: #06251a; font: inherit; }
+.community-fields small { color: #52665b; font-weight: 400; }
+.community-consent { margin: 24px 0; display: flex; align-items: flex-start; gap: 12px; line-height: 1.5; }
+.community-consent input { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; }
+.community-form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.community-search { max-width: 520px; margin: 24px 0; }
+.community-range-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+.community-range-list article { padding: 24px; border: 1px solid #d7dad5; overflow-wrap: anywhere; }
+.community-range-list h3 { margin: 0 0 12px; font-size: 1.35rem; }
+.community-range-list strong { display: block; margin: 20px 0 12px; font-size: 1.7rem; color: #075b41; }
+.community-range-list strong small { font-size: .9rem; font-weight: 400; }
+.community-range-list p,.community-note { color: #52665b; line-height: 1.5; }
+.talent-community-link { display: inline-flex; align-items: center; gap: 16px; min-height: 48px; margin-top: 16px; color: #075b41; font-weight: 700; text-underline-offset: 5px; }
+.talent-community-link svg { width: 18px; }
+@media(max-width:760px) {
+ .salary-community { width: calc(100% - 36px); padding: 40px 0; }
+ .community-fields,.community-range-list { grid-template-columns: 1fr; }
+ .community-share,.community-empty { padding: 22px 18px; }
+ .community-heading { margin-bottom: 32px; }
+}
+
+.salary-community .primary-button { width: fit-content; min-height: 52px; padding: 14px 22px; display: inline-flex; align-items: center; justify-content: center; gap: 16px; color: #06251a; background: var(--lime); border: 0; border-radius: 0; box-shadow: none; font-weight: 750; }
+.salary-community .secondary-button { min-height: 44px; padding: 10px 16px; border: 1px solid #075b41; border-radius: 0; color: #075b41; background: transparent; font-weight: 650; }
+.salary-community button:disabled { opacity: .55; cursor: not-allowed; }
+.salary-community button:focus-visible,.salary-community input:focus-visible,.salary-community select:focus-visible { outline: 3px solid #075b41; outline-offset: 3px; }
+
+/* Exploration comes first; sharing stays close without dominating. */
+.salary-community { padding-top: 40px; }
+.community-heading { max-width: 850px; margin-bottom: 28px; }
+#main-content .community-heading h1 { max-width: 24ch; font-size: clamp(2rem, 3.6vw, 3.25rem); margin: 12px 0 16px; }
+.community-heading p { margin: 0; font-size: 1.05rem; }
+.community-ranges { padding-top: 24px; }
+.community-explore-header { display: flex; align-items: start; justify-content: space-between; gap: 24px; }
+.community-explore-header h2 { font-size: 1.4rem; margin-bottom: 8px; }
+.community-explore-header p { margin: 0; }
+.community-share-action { max-width: 310px; }
+.community-share-action button { display: inline-flex; gap: 12px; align-items: center; }
+.community-share-action svg,.community-empty button svg { width: 18px; }
+.community-share-action small { display: block; margin-top: 8px; color: #52665b; line-height: 1.5; }
+.community-search { max-width: 640px; margin: 24px 0; }
+.community-search input:disabled { background: #f5f7f4; cursor: not-allowed; }
+.community-empty { margin-top: 0; padding: 24px; }
+.community-empty h3 { margin-top: 0; }
+.community-empty > svg { margin-bottom: 12px; }
+.community-empty p { margin-bottom: 16px; }
+.community-share { margin: 32px 0 0; }
+@media(max-width:760px) {
+ .community-explore-header { flex-direction: column; gap: 18px; }
+ .community-share-action { max-width: none; }
+ .salary-community { padding-top: 28px; }
+}
