@@ -17,6 +17,7 @@ type Preview = {
   salaryPeriod: string;
   salaryType: string;
   currency: string;
+  client: string;
 };
 
 type FormErrors = Record<string, string>;
@@ -32,6 +33,7 @@ const initialPreview: Preview = {
   salaryPeriod: "monthly",
   salaryType: "gross",
   currency: "NGN",
+  client: "",
 };
 
 function money(value: number, currency: string) {
@@ -76,6 +78,7 @@ export function JobSubmissionForm() {
       salaryPeriod: String(data.get("salary_period") || "monthly"),
       salaryType: String(data.get("salary_type") || "gross"),
       currency: String(data.get("salary_currency") || "NGN"),
+      client: String(data.get("client_display_name") || ""),
     });
   }
 
@@ -200,7 +203,13 @@ export function JobSubmissionForm() {
     } finally { submittingRef.current = false; }
   }
 
-  const salaryLine = `${money(preview.salaryMin, preview.currency)}–${money(preview.salaryMax, preview.currency)} per ${preview.salaryPeriod === "annual" ? "year" : "month"}`;
+  const validSalary = Number.isSafeInteger(preview.salaryMin) && Number.isSafeInteger(preview.salaryMax) && preview.salaryMin > 0 && preview.salaryMax >= preview.salaryMin;
+  const salaryLine = validSalary ? `${money(preview.salaryMin, preview.currency)}–${money(preview.salaryMax, preview.currency)} per ${preview.salaryPeriod === "annual" ? "year" : "month"}` : "Enter a valid minimum and maximum salary to preview the range.";
+
+  function editStep(nextStep: number) {
+    setErrors({}); setStep(nextStep);
+    window.requestAnimationFrame(() => panelRef.current?.focus());
+  }
 
   if (status === "success") return <section className="wizard-panel" role="status"><h2>Job submitted for review</h2><p>{message || "Your submission has been received."}</p><p>It will appear on the job board only after approval.</p><nav className="connected-next" aria-label="Employer next steps">{submittedWithAccount ? <Link href="/hiring">Manage my listings</Link> : <span>Submitted as a guest. This job is not linked to an account.</span>}<Link href="/jobs">Browse jobs</Link></nav></section>;
 
@@ -239,7 +248,7 @@ export function JobSubmissionForm() {
               <label>Maximum salary<span className="wizard-money"><b>{preview.currency}</b><input name="salary_max" type="number" min="1" step="1" required {...errorProps("salary_max")} onChange={(event) => event.currentTarget.setCustomValidity("")} /></span>{fieldError("salary_max")}<small>Must be equal to or greater than minimum.</small></label>
               <label>Salary period<select name="salary_period" required><option value="monthly">Monthly</option><option value="annual">Annual</option></select></label>
               <label>Engagement<select name="engagement_type" required><option value="employee">Employee</option><option value="contractor">Independent contractor</option></select></label>
-              <div className="salary-preview wide"><span>How this appears to candidates</span><strong>{salaryLine}</strong><small>{preview.salaryType === "net" ? "Net, after deductions" : "Gross, before deductions"}</small></div>
+              <div className="salary-preview wide"><span>How this appears to candidates</span><strong>{salaryLine}</strong>{validSalary && <small>{preview.salaryType === "net" ? "Net, after deductions" : "Gross, before deductions"}</small>}</div>
             </div>
           </div>
 
@@ -253,6 +262,11 @@ export function JobSubmissionForm() {
               <label className="wizard-check wide"><input name="no_candidate_fees_confirmed" type="checkbox" required {...errorProps("no_candidate_fees_confirmed")} />I confirm that candidates will not be charged any application, placement or processing fee.{fieldError("no_candidate_fees_confirmed")}</label>
               <label className="honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
             </div>
+            <section className="job-review" aria-labelledby="job-review-title">
+              <h2 id="job-review-title">Review your listing</h2>
+              <div><dl><dt>Role and company</dt><dd><strong>{preview.title}</strong><br />{preview.company}{submitterType === "recruiter" && preview.client && <><br />Client: {preview.client}</>}<br />{preview.location} · {preview.workMode} · {preview.employmentType}</dd></dl><button type="button" onClick={() => editStep(1)}>Edit role</button></div>
+              <div><dl><dt>Salary</dt><dd><strong>{salaryLine}</strong>{validSalary && <><br />{preview.salaryType === "net" ? "Net, after deductions" : "Gross, before deductions"}</>}</dd></dl><button type="button" onClick={() => editStep(2)}>Edit salary</button></div>
+            </section>
           </div>
 
           <div className="wizard-actions">

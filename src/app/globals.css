@@ -10807,6 +10807,17 @@ body .admin-shell { width: min(1240px, calc(100% - 64px)); margin-inline: auto; 
 .connected-next a, .connected-next button { display: inline-flex; align-items: center; gap: 10px; color: var(--green-dark); font-weight: 700; }
 .connected-next button, .connected-context button { padding: 12px 16px; border: 1px solid var(--line); background: white; cursor: pointer; }
 .connected-next svg { width: 18px; }
+.payslip-live-result .connected-next a { color: var(--lime); text-decoration: underline; text-underline-offset: 4px; }
+.payslip-live-result .connected-next a:hover { color: white; }
+.payslip-live-result .connected-next a:focus-visible { outline: 2px solid var(--lime); outline-offset: 5px; }
+.job-review { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+.job-review h2 { font-size: 1.2rem; margin: 0 0 16px; }
+.job-review > div { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.job-review dl { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.job-review dt { color: var(--muted); font-size: .85rem; margin-bottom: 6px; }
+.job-review dd { margin: 0; line-height: 1.7; }
+.job-review button { flex-shrink: 0; padding: 8px; color: var(--green-dark); background: transparent; border: 1px solid var(--line); cursor: pointer; }
+@media (max-width: 480px) { .job-review > div { flex-direction: column; } }
 .connected-context { padding: 18px; margin-bottom: 24px; background: #f2f7eb; border: 1px solid var(--line); }
 .connected-context p { font-size: .9rem; }
 .connected-context button, .connected-context a { margin: 6px 12px 0 0; }
@@ -10815,6 +10826,8 @@ body .admin-shell { width: min(1240px, calc(100% - 64px)); margin-inline: auto; 
 .hiring-sign-in label { display: grid; gap: 8px; }
 .hiring-sign-in input { padding: 12px; border: 1px solid var(--line); }
 .hiring-sign-in button { padding: 12px; color: white; background: var(--green-dark); border: 0; }
+.hiring-sign-in .hiring-auth-link { color: var(--green-dark); background: transparent; text-align: left; text-decoration: underline; text-underline-offset: 3px; padding: 8px 0; cursor: pointer; }
+.hiring-auth-options { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .hiring-record { padding: 24px 0; border-top: 1px solid var(--line); }
 .hiring-record h2 { font-size: 1.25rem; margin: 0; }
 .hiring-note { color: var(--muted); font-size: .85rem; }
