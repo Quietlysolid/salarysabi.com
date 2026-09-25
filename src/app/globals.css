@@ -11033,7 +11033,6 @@ body .terms-page-shell #main-content .terms-heading h1 { font-family: Georgia, "
 .tax-rule-details summary { padding: 15px 0; cursor: pointer; color: #084c38; font-weight: 600; line-height: 1.5; }
 .tax-rule-details summary:focus-visible { outline: 3px solid #0d6849; outline-offset: 3px; }
 .tax-rule-details details > div { padding: 0 0 12px 20px; }
-.tax-update-history summary time { font-size: .85rem; font-weight: 400; margin-right: 16px; }
 .tax-updates-limits { margin-top: 14px; }
 .tax-updates-document .tax-source-list { list-style: none; padding: 0; }
 .tax-source-list li { padding: 12px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 24px; }
@@ -11041,7 +11040,6 @@ body .terms-page-shell #main-content .terms-heading h1 { font-family: Georgia, "
 .tax-source-list span { display: block; font-size: .9rem; color: #52665b; line-height: 1.6; margin-top: 3px; }
 .tax-updates-contact { margin-top: 20px; }
 @media (max-width: 600px) {
-  .tax-update-history summary time { display: block; margin: 0 0 2px; }
   .tax-rule-details details > div { padding-left: 0; }
 }
 .salary-report-review label:has(input[type=checkbox]) { display: flex; align-items: start; }
