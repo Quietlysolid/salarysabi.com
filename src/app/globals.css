@@ -11066,3 +11066,9 @@ body .terms-page-shell #main-content .terms-heading h1 { font-family: Georgia, "
 @media(min-width:761px) {
  .payroll-workspace .payroll-table [role="row"] > :nth-child(n+2):nth-child(-n+5) { text-align: right; }
 }
+
+.wizard-draft-note { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; font-size: 0.875rem; }
+.wizard-draft-note p { margin: 0; }
+.wizard-draft-note button { text-decoration: underline; padding: 10px; }
+
+.discovery-availability { display: block; font-size: 0.8rem; font-weight: 400; line-height: 1.5; margin-top: 4px; color: inherit; }

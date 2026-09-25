@@ -1,3 +1,4 @@
+import { DiscoveryAvailability } from "./discovery-availability";
 import { HomePayAction, HomePayPreview } from "@/components/home-pay-preview";
 import Link from "next/link";
 import {
@@ -43,8 +44,8 @@ export function SplitGatewayHome() {
 
         <section className="home-audiences" aria-label="Explore SalarySabi">
           <div className="home-task-group"><h2>For individuals</h2><nav aria-label="Tools for individuals">
-            <Link href="/jobs">Find jobs with salaries <ArrowRight aria-hidden="true" /></Link>
-            <Link href="/salaries">Compare salaries <ArrowRight aria-hidden="true" /></Link>
+            <Link href="/jobs"><span>Browse the job board<DiscoveryAvailability kind="jobs" /></span> <ArrowRight aria-hidden="true" /></Link>
+            <Link href="/salaries"><span>Explore the salary community<DiscoveryAvailability kind="salaries" /></span> <ArrowRight aria-hidden="true" /></Link>
             <Link href="/calculator?mode=check">Check my payslip <ArrowRight aria-hidden="true" /></Link>
           </nav></div>
           <div className="home-task-group"><h2>For employers</h2><nav aria-label="Tools for employers">
@@ -62,8 +63,8 @@ export function SplitGatewayHome() {
 const talentTools = [
   { title: "Calculate my take-home", description: "See your pay after tax and deductions.", href: "/calculator", icon: Calculator },
   { title: "Check my payslip", description: "Compare your payslip's PAYE with an estimate.", href: "/calculator?mode=check", icon: FileText },
-  { title: "Find jobs with salaries", description: "Know the advertised pay before applying.", href: "/jobs", icon: BriefcaseBusiness },
-  { title: "Compare and share salaries", description: "Explore pay reported by the community.", href: "/salaries", icon: Users },
+  { title: "Browse the job board", description: "Check available roles with published salary ranges.", href: "/jobs", icon: BriefcaseBusiness },
+  { title: "Explore the salary community", description: "Share your pay. Comparisons need at least five reviewed reports per group.", href: "/salaries", icon: Users },
 ];
 const employerTools = [
   { title: "Run payroll", description: "Calculate monthly pay and create payslips for up to 20 employees.", href: "/payroll", icon: FileText },
@@ -77,7 +78,7 @@ function AudienceTools({ audience }: { audience: Audience }) {
   const tools = talent ? talentTools : employerTools;
   return <section className="audience-tools" aria-labelledby="audience-tools-title">
     <header><span className="eyebrow">{talent ? "For individuals" : "For employers"}</span><h1 id="audience-tools-title">{talent ? "Know your pay. Plan your next move." : "Your team. Your next hire. Your numbers."}</h1></header>
-    <div className="audience-tool-list">{tools.map(({ title, description, href, icon: Icon }, index) => <Link key={href} href={href} className={`audience-tool${index === 0 ? " audience-tool-primary" : ""}`}><span className="audience-tool-icon"><Icon aria-hidden="true" size={24} /></span><div><h2>{title}</h2><p>{description}</p></div><ArrowRight className="audience-tool-arrow" aria-hidden="true" size={20} /></Link>)}</div>
+    <div className="audience-tool-list">{tools.map(({ title, description, href, icon: Icon }, index) => <Link key={href} href={href} className={`audience-tool${index === 0 ? " audience-tool-primary" : ""}`}><span className="audience-tool-icon"><Icon aria-hidden="true" size={24} /></span><div><h2>{title}</h2><p>{description}</p>{href === "/jobs" && <DiscoveryAvailability kind="jobs" />}{href === "/salaries" && <DiscoveryAvailability kind="salaries" />}</div><ArrowRight className="audience-tool-arrow" aria-hidden="true" size={20} /></Link>)}</div>
     <Link className="audience-switch" href={talent ? "/employers" : "/individuals"}>{talent ? "Managing a team? Explore employer tools" : "Looking after your own pay? Explore tools for individuals"}<ArrowRight aria-hidden="true" size={16} /></Link>
   </section>;
 }

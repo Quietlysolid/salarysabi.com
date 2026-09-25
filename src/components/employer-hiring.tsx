@@ -5,7 +5,7 @@ import { HiringAccount } from "./hiring-account";
 import { ProductState } from "./product-state";
 import { createBrowserSupabaseClient } from "@/lib/supabase";
 type HiringRecord = { id: string; title: string; company_name: string; review_status: string; created_at: string; expires_at: string; job_slug: string | null; job_status: string | null };
-export function EmployerHiring({ initialRecovery = false }: { initialRecovery?: boolean }) {
+export function EmployerHiring({ initialRecovery = false, returnToDraft = false }: { initialRecovery?: boolean; returnToDraft?: boolean }) {
   const [recovery, setRecovery] = useState(initialRecovery);
   const supabase = useMemo(() => createBrowserSupabaseClient(), []);
   const [signedIn, setSignedIn] = useState(false);
@@ -43,6 +43,7 @@ export function EmployerHiring({ initialRecovery = false }: { initialRecovery?: 
   }, [supabase, retry]);
   return <section className="hiring-workspace" aria-labelledby="hiring-title">
     <header className="hiring-heading"><div><h1 id="hiring-title">Manage my listings</h1><p>Track your job submissions and publication status.</p></div><Link className="primary-button" href="/post-a-job">Post a job</Link></header>
+    {returnToDraft && <p><Link href="/post-a-job">Return to your job draft</Link></p>}
     {loading ? <ProductState kind="loading" title="Loading your listings" compact /> : !signedIn || recovery ? <HiringAccount recovery={recovery} hasSession={signedIn} onRecovered={() => { setRecovery(false); window.history.replaceState({}, "", "/hiring"); setRetry(value => value + 1); }} /> : message ? <ProductState kind="error" title="Listings could not be loaded" detail="Try again to reconnect." action={<button className="primary-button" type="button" onClick={() => setRetry(value => value + 1)}>Try again</button>} /> : !records.length ? <ProductState kind="empty" title="No listings yet" detail="Jobs posted from this account will appear here. Guest submissions are not linked automatically." /> : <div className="hiring-list" aria-label="Your job listings">
       {records.map(record => {
         const live = record.review_status === "approved" && record.job_status === "published" && record.expires_at >= new Date().toISOString().slice(0,10);

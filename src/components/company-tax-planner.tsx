@@ -59,7 +59,7 @@ export function CompanyTaxPlanner() {
       </form>
       <aside id="company-estimate" tabIndex={-1} className={`tax-planner-result${result ? "" : " company-estimate-empty"}`} aria-label="Company tax estimate" aria-live="polite">
         <span className="eyebrow">{result ? "Estimated company taxes" : "Your estimate"}</span>
-        {result ? <><strong>{money.format(result.total)}</strong><dl>
+        {result ? <><strong>{money.format(result.total)}</strong>{result.total === 0 && <p>{result.isSmallCompany ? "Your figures fall within both small-company size limits used by this planner." : "The profit figures used here produce no company income tax or development levy."}</p>}<dl>
           <div><dt>Assessable profits (levy base)</dt><dd>{money.format(result.assessableProfits)}</dd></div><div><dt>Total profits (income-tax base)</dt><dd>{money.format(result.totalProfits)}</dd></div>
           <div><dt>Small-company size thresholds</dt><dd>{result.isSmallCompany ? "Within both limits" : "Above a limit"}</dd></div>
           <div><dt>Company income tax ({result.isSmallCompany ? "0" : "30"}%)</dt><dd>{money.format(result.companyIncomeTax)}</dd></div>

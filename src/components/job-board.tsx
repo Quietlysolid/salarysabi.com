@@ -123,10 +123,10 @@ export function JobBoard({ initialJobs }: { initialJobs: Job[] | null }) {
         {(state === "ready" || state === "cached") && visible.length === 0 && (jobs.length === 0
           ? <ProductState
               kind="empty"
-              title="Our first jobs with published salaries are on the way."
-              detail="Have a salary in mind? Estimate your take-home pay after tax and deductions."
-              action={<Link className="primary-button" href="/calculator">Check a salary’s take-home pay</Link>}
-              links={<Link href="/post-a-job">Hiring? Post a job</Link>}
+              title="No published jobs are available right now."
+              detail="There are no roles to apply for here yet. Check again for reviewed listings with salary ranges."
+              action={<button className="primary-button" type="button" onClick={() => { setState("loading"); setReloadKey(value => value + 1); }}>Refresh jobs</button>}
+              links={<><Link href="/calculator">Estimate take-home pay</Link><Link href="/post-a-job">Hiring? Post a job</Link></>}
             />
           : <ProductState kind="empty" title="No jobs match your filters." action={<button type="button" onClick={clearFilters}>Clear filters</button>} />)}
 

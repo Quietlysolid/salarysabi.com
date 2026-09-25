@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { DiscoveryAvailability } from "./discovery-availability";
 import { ArrowRight, Check, ChevronDown, CircleAlert, CircleCheck, Copy, ShieldCheck } from "lucide-react";
 import { checkPayslip } from "@/lib/payslip";
 import { readPayContext } from "@/lib/pay-context";
@@ -258,10 +259,10 @@ export function PayslipChecker({ initialMode = "calculate", offer, unavailableOf
           </summary>
             <div className="payslip-fields payslip-optional-fields">
               {mode === "calculate" && <MoneyField label="Monthly pension" field="pension" value={values.pension} update={update} placeholder="0" />}
-              <MoneyField label="NHF" field="nhf" value={values.nhf} update={update} placeholder="10,000" />
+              <MoneyField label="NHF" help="Your monthly National Housing Fund contribution. Leave blank if none." field="nhf" value={values.nhf} update={update} placeholder="10,000" />
               <MoneyField label="NHIS contribution" help="Enter only an eligible NHIS contribution shown on the payslip." field="nhis" value={values.nhis} update={update} placeholder="5,000" />
               <MoneyField label="Annual rent paid" help="Used to calculate rent relief. It is not counted as a payslip deduction." field="rent" value={values.rent} update={update} placeholder="1,200,000" />
-              <MoneyField label="Other deductions" field="other" value={values.other} update={update} placeholder="12,000" />
+              <MoneyField label="Other deductions" help="Monthly deductions such as loan repayments or union dues. These reduce take-home pay, not taxable income. Exclude amounts entered above." field="other" value={values.other} update={update} placeholder="12,000" />
             </div>
           </details>
           {error && <p className="pay-form-error" role="alert">{error}</p>}
@@ -338,12 +339,12 @@ export function PayslipChecker({ initialMode = "calculate", offer, unavailableOf
 
         <div className="connected-next">
           {mode === "calculate" && <button type="button" onClick={() => { setMode("check"); setChecked(false); setError(""); window.history.replaceState({}, "", "/calculator?mode=check"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Check my payslip with these figures <ArrowRight aria-hidden="true" /></button>}
-          <Link href="/salaries">Explore or share salary knowledge <ArrowRight aria-hidden="true" /></Link>
+          <Link href="/salaries"><span>Explore or share salary knowledge<DiscoveryAvailability kind="salaries" /></span> <ArrowRight aria-hidden="true" /></Link>
         </div>
         <nav className="pay-check-next-actions" aria-label="Your Pay Check next actions">
           <span>Choose your next move</span>
           <Link href="/how-paye-is-calculated">Understand PAYE <ArrowRight aria-hidden="true" /></Link>
-          <Link href="/jobs">See jobs with published pay <ArrowRight aria-hidden="true" /></Link>
+          <Link href="/jobs"><span>Browse the job board<DiscoveryAvailability kind="jobs" /></span> <ArrowRight aria-hidden="true" /></Link>
         </nav>
       </section>}
     </div>
@@ -361,9 +362,9 @@ function MoneyField({ label, help, field, value, update, placeholder, required =
 }) {
   return (
     <label>
-      <span>{label}</span>
+      <span id={`pay-${field}-label`}>{label}</span>
       {help && <small id={`pay-${field}-help`}>{help}</small>}
-      <div><span aria-hidden="true">₦</span><input aria-describedby={help ? `pay-${field}-help` : undefined} inputMode="decimal" value={value} onChange={(event) => update(field, event.target.value)} placeholder={placeholder} required={required} /></div>
+      <div><span aria-hidden="true">₦</span><input aria-labelledby={`pay-${field}-label`} aria-describedby={help ? `pay-${field}-help` : undefined} inputMode="decimal" value={value} onChange={(event) => update(field, event.target.value)} placeholder={`Example: ${placeholder}`} required={required} /></div>
     </label>
   );
 }

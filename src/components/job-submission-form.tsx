@@ -22,6 +22,8 @@ type Preview = {
 
 type FormErrors = Record<string, string>;
 
+const draftKey = "salarysabi:job-draft:v1";
+
 const initialPreview: Preview = {
   title: "Your job title",
   company: "Your company",
@@ -60,6 +62,74 @@ export function JobSubmissionForm() {
   const submittingRef = useRef(false);
   const panelRef = useRef<HTMLElement>(null);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const draftReady = useRef(false);
+  const [restoredDraft, setRestoredDraft] = useState<{ fields: Record<string, unknown> } | null>(null);
+  const [draftNotice, setDraftNotice] = useState("");
+
+  function saveDraft(form: HTMLFormElement, activeStep = step) {
+    if (!draftReady.current) return;
+    const fields: Record<string, string | boolean> = {};
+    for (const element of Array.from(form.elements)) {
+      if (!(element instanceof HTMLInputElement || element instanceof HTMLSelectElement || element instanceof HTMLTextAreaElement) || !element.name || element.name === "website") continue;
+      fields[element.name] = element instanceof HTMLInputElement && element.type === "checkbox" ? element.checked : element.value;
+    }
+    try {
+      sessionStorage.setItem(draftKey, JSON.stringify({ step: activeStep, fields }));
+      setDraftNotice("Draft saved in this browser tab.");
+    } catch { setDraftNotice("Draft could not be saved. Keep this page open to retain your entries."); }
+  }
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      try {
+        const draft = JSON.parse(sessionStorage.getItem(draftKey) || "null");
+        if (draft && [1, 2, 3].includes(draft.step) && draft.fields && typeof draft.fields === "object") {
+          setSubmitterType(draft.fields.submitter_type === "recruiter" ? "recruiter" : "employer");
+          setStep(draft.step);
+          setRestoredDraft(draft);
+          return;
+        }
+      } catch { /* Invalid or unavailable storage must not block posting. */ }
+      draftReady.current = true;
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!restoredDraft) return;
+    // Conditional recruiter fields must be mounted before restoring their values.
+    const timer = window.setTimeout(() => {
+      const form = formRef.current;
+      if (!form) return;
+      for (const element of Array.from(form.elements)) {
+        if (!(element instanceof HTMLInputElement || element instanceof HTMLSelectElement || element instanceof HTMLTextAreaElement) || element.name === "website") continue;
+        const value = restoredDraft.fields[element.name];
+        if (element instanceof HTMLInputElement && element.type === "checkbox") element.checked = value === true;
+        else if (typeof value === "string") element.value = value;
+      }
+      updatePreview(form);
+      setDraftNotice("Your draft has been restored in this browser tab.");
+      draftReady.current = true;
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [restoredDraft]);
+
+  useEffect(() => {
+    if (formRef.current && draftReady.current) saveDraft(formRef.current, step);
+    // Save navigation independently of input events.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
+  function discardDraft() {
+    try { sessionStorage.removeItem(draftKey); } catch { /* Form can still be reset. */ }
+    draftReady.current = false;
+    formRef.current?.reset();
+    setSubmitterType("employer"); setPreview(initialPreview); setStep(1); setErrors({}); setMessage(""); setStatus("idle");
+    setDraftNotice("Draft discarded.");
+    requestAnimationFrame(() => { draftReady.current = true; panelRef.current?.focus(); });
+  }
 
   function updatePreview(form: HTMLFormElement) {
     const data = new FormData(form);
@@ -123,6 +193,7 @@ export function JobSubmissionForm() {
 
   function handleInput(form: HTMLFormElement, target: EventTarget & HTMLElement) {
     updatePreview(form);
+    saveDraft(form);
     const name = (target as HTMLInputElement).name;
     if (name && errors[name]) setErrors((current) => { const next = { ...current }; delete next[name]; return next; });
   }
@@ -193,6 +264,7 @@ export function JobSubmissionForm() {
         signal: AbortSignal.timeout(15000),
       });
       if (!response.ok) throw new Error("Submission failed");
+      try { sessionStorage.removeItem(draftKey); } catch {}
       setSubmittedWithAccount(Boolean(session));
       setStatus("success");
       setMessage("Submitted for review. We normally review listings within 1–2 business days and will contact you at the private email provided.");
@@ -214,8 +286,9 @@ export function JobSubmissionForm() {
   if (status === "success") return <section className="wizard-panel" role="status"><h2>Job submitted for review</h2><p>{message || "Your submission has been received."}</p><p>It will appear on the job board only after approval.</p><nav className="connected-next" aria-label="Employer next steps">{submittedWithAccount ? <Link href="/hiring">Manage my listings</Link> : <span>Submitted as a guest. This job is not linked to an account.</span>}<Link href="/jobs">Browse jobs</Link></nav></section>;
 
   return (
-    <form className="job-wizard" noValidate onInput={(event) => handleInput(event.currentTarget, event.target as EventTarget & HTMLElement)} onSubmit={submit}>
-      <p className="wizard-account-note" role="status">{accountState === "checking" ? "Checking sign-in..." : accountState === "signed-in" ? <>Signed in. Track this submission in <Link href="/hiring">Manage my listings</Link>.</> : <>Posting as a guest. <Link href="/hiring">Sign in before filling this form</Link> to track your listing.</>}</p>
+    <form ref={formRef} className="job-wizard" noValidate onInput={(event) => handleInput(event.currentTarget, event.target as EventTarget & HTMLElement)} onSubmit={submit}>
+      <p className="wizard-account-note" role="status">{accountState === "checking" ? "Checking sign-in..." : accountState === "signed-in" ? <>Signed in. Track this submission in <Link href="/hiring">Manage my listings</Link>.</> : <>Posting as a guest. <Link href="/hiring?from=post-a-job">Sign in to track your listing</Link>.</>}</p>
+      <div className="wizard-draft-note"><p role="status">{draftNotice || "Your draft is saved in this browser tab as you type."}</p><button type="button" disabled={status === "submitting"} onClick={discardDraft}>Discard draft</button></div>
       <nav className="wizard-progress" aria-label="Job submission progress">
         {["Role", "Salary", "Application"].map((label, index) => {
           const number = index + 1;

@@ -30,4 +30,5 @@ test("job wizard validates, displays currency and prevents resubmission after su
  await expect(page.getByRole("heading",{name:"Job submitted for review"})).toBeVisible();
  await expect(page.getByRole("button",{name:"Submit job for review"})).toHaveCount(0);
  expect(saves).toBe(1);
+ expect(await page.evaluate(() => sessionStorage.getItem("salarysabi:job-draft:v1"))).toBeNull();
 });
